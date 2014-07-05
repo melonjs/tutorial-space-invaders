@@ -49,6 +49,7 @@ var game = {
       
         // add our player entity in the entity pool
         me.pool.register("player", game.Player);
+        me.pool.register("laser", game.Laser);
             
         // enable the keyboard
         me.input.bindKey(me.input.KEY.LEFT,     "left");
