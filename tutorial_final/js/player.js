@@ -2,7 +2,7 @@ game.Player = me.SpriteObject.extend({
     init: function () {
         var image = me.loader.getImage("player");
         this.parent(me.game.viewport.width / 2 - image.width / 2, me.game.viewport.height - image.height - 20, image);
-        this.velx = 250;
+        this.velx = 450;
         this.maxX = me.game.viewport.width - this.width;
     },
 
