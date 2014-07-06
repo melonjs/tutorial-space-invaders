@@ -12,6 +12,8 @@ game.PlayScreen = me.ScreenObject.extend({
         me.input.bindKey(me.input.KEY.A, "left");
         me.input.bindKey(me.input.KEY.D, "right");
         me.input.bindKey(me.input.KEY.SPACE, "shoot", true);
+
+        me.game.world.addChild(me.pool.pull("enemy"), 32, 32);
     },
     
     
