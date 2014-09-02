@@ -1,6 +1,6 @@
-game.Enemy = me.SpriteObject.extend({
+game.Enemy = me.Sprite.extend({
     init: function (x, y) {
-        this.parent(x, y, me.loader.getImage('ships'), 32, 32);
+        this._super(me.Sprite, "init", [x, y, me.loader.getImage('ships'), 32, 32]);
 
         this.chooseShipImage();
     },

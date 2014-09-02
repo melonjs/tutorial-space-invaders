@@ -1,13 +1,13 @@
-game.Player = me.SpriteObject.extend({
+game.Player = me.Sprite.extend({
     init: function () {
         var image = me.loader.getImage("player");
-        this.parent(me.game.viewport.width / 2 - image.width / 2, me.game.viewport.height - image.height - 20, image);
+        this._super(me.Sprite, "init", [me.game.viewport.width / 2 - image.width / 2, me.game.viewport.height - image.height - 20, image]);
         this.velx = 450;
         this.maxX = me.game.viewport.width - this.width;
     },
 
     update: function (time) {
-        this.parent(time);
+        this._super(me.Sprite, "update", [time]);
         if (me.input.isKeyPressed("left")) {
           this.pos.x -= this.velx * me.timer.getDelta() / 1000;
         }

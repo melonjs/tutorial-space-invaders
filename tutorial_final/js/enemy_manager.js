@@ -1,6 +1,6 @@
-game.EnemyManager = me.ObjectContainer.extend({
+game.EnemyManager = me.Container.extend({
   init: function () {
-    this.parent(0, 32, 9 * 64 - 32, 4 * 64 - 32);
+    this._super(me.Container, "init", [0, 32, 9 * 64 - 32, 4 * 64 - 32]);
     this.z = 2;
     this.time = me.timer.getTime();
     this.vel = 16;
@@ -14,7 +14,7 @@ game.EnemyManager = me.ObjectContainer.extend({
   },
 
   update: function (time) {
-    this.parent(time);
+    this._super(me.Container, "update", [time]);
 
     if ((this.vel > 0 && this.right >= me.game.viewport.width) || (this.vel < 0 && this.left <= 0)) {
       this.vel *= -1;
