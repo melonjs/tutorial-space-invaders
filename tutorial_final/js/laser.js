@@ -2,6 +2,11 @@ game.Laser = me.Renderable.extend({
     init: function (x, y) {
         this._super(me.Renderable, "init", [x, y, game.Laser.width, game.Laser.height]);
         this.z = 5;
+        this.body = new me.Body(this);
+        this.body.addShape(new me.PolyShape(0, 0, [
+            new me.Vector2d(0, 0), new me.Vector2d(this.width, 0),
+            new me.Vector2d(this.width, this.height), new me.Vector2d(0, this.height)
+        ]));
     },
 
     draw: function (renderer) {
