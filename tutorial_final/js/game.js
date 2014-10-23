@@ -41,9 +41,6 @@ var game = {
 
     // Run on game resources loaded.
     "loaded" : function () {
-       // set the "Play/Ingame" Screen Object
-        me.state.set(me.state.MENU, new game.TitleScreen());
-      
         // set the "Play/Ingame" Screen Object
         me.state.set(me.state.PLAY, new game.PlayScreen());
       

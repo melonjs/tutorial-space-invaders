@@ -10,10 +10,14 @@ game.Laser = me.Renderable.extend({
     },
 
     draw: function (renderer) {
-        renderer.fillRect(this.pos.x, this.pos.y, this.width, this.height, '#5EFF7E');
+        var color = renderer.getColor();
+        renderer.setColor('#5EFF7E');
+        renderer.fillRect(this.pos.x, this.pos.y, this.width, this.height);
+        renderer.setColor(color);
     },
 
     update: function (time) {
+        this._super(me.Renderable, "update", [time]);
         this.pos.y -= 750 * me.timer.getDelta() / 1000;
         if (this.pos.y + this.height <= 0) {
             me.game.world.removeChild(this);
