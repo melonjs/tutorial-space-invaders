@@ -2,6 +2,16 @@ game.Laser = me.Renderable.extend({
     init: function (x, y) {
         this._super(me.Renderable, "init", [x, y, game.Laser.width, game.Laser.height]);
         this.z = 5;
+        this.body = new me.Body(this, ([
+            new me.Polygon(0, 0, [
+                new me.Vector2d(0, 0),
+                new me.Vector2d(this.width, 0),
+                new me.Vector2d(this.width, this.height),
+                new me.Vector2d(0, this.height)
+            ])
+        ]));
+        this.body.updateBounds();
+        this.body.setVelocity(0, 20);
     },
 
     draw: function (renderer) {
@@ -13,10 +23,14 @@ game.Laser = me.Renderable.extend({
 
     update: function (time) {
         this._super(me.Renderable, "update", [time]);
-        this.pos.y -= 750 * me.timer.getDelta() / 1000;
+        this.body.vel.y -= this.body.accel.y * me.timer.tick;
         if (this.pos.y + this.height <= 0) {
             me.game.world.removeChild(this);
         }
+
+        this.body.update();
+
+        return true;
     }
 });
 
