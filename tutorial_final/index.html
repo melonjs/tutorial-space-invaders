@@ -10,47 +10,23 @@
 </head>
 
 <body>
-    <div id="main">
-        <div id="header">
-            <div id="logo">
-                <div id="logo_text">
-                    <!-- class="logo_colour", allows you to change the colour of the text -->
-                    <h1><a href="http://www.melonjs.org">melon<span class="logo_colour">JS</span></a></h1>
-                    <h2>A lightweight HTML5 game engine</h2>
-                </div>
-            </div>
-        </div>
-        <div id="site_content">
-            <center>
-                <div id="content">
-                    <h2>melonJS space invaders clone tutorial</h2>
-                    <p>The final result of a step by step tutorial, showing how to create a game with melonJS, see <a href="../index.html">here</a> for more details.</p>
-                    <div id="screen"></div>
-                    <script type="text/javascript" src="../lib/melonJS-2.0.2-min.js"></script>
-                    <script type="text/javascript" src="../lib/plugins/debugPanel.js"></script>
+    <div id="screen"></div>
+    <script type="text/javascript" src="../lib/melonJS-2.0.2-min.js"></script>
+    <script type="text/javascript" src="../lib/plugins/debugPanel.js"></script>
 
-                    <script type="text/javascript" src="js/game.js"></script>
-                    <script type="text/javascript" src="js/resources.js"></script>
-                    <script type="text/javascript" src="js/screens/play.js"></script>
-                    <script type="text/javascript" src="js/enemy.js"></script>
-                    <script type="text/javascript" src="js/laser.js"></script>
-                    <script type="text/javascript" src="js/player.js"></script>
-                    <script type="text/javascript" src="js/enemy_manager.js"></script>
+    <script type="text/javascript" src="js/game.js"></script>
+    <script type="text/javascript" src="js/resources.js"></script>
+    <script type="text/javascript" src="js/screens/play.js"></script>
+    <script type="text/javascript" src="js/enemy.js"></script>
+    <script type="text/javascript" src="js/laser.js"></script>
+    <script type="text/javascript" src="js/player.js"></script>
+    <script type="text/javascript" src="js/enemy_manager.js"></script>
 
-                    <script type="text/javascript">
-                        /* Bootstrap */
-                        window.onReady(function onReady() {
-                            game.onload();
-                        });
-                    </script>
-                    <p>instructions : arrow keys to move, spacebar to shoot</p>
-                </div>
-            </center>
-        </div>
-        <div id="content_footer"></div>
-        <div id="footer">
-          Copyright &copy; melonJS 2011 - 2015
-        </div>
-    </div>
+    <script type="text/javascript">
+        /* Bootstrap */
+        window.onReady(function onReady() {
+            game.onload();
+        });
+    </script>
 </body>
 </html>
