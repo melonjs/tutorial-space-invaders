@@ -1,99 +1,114 @@
 <!DOCTYPE HTML>
-<head>
+<html>
+  <head>
     <title>melonJS</title>
     <meta name="description" content="melonJS Tutorial"/>
-    <meta name="keywords" content=
-            "melonJS, lightweight, HTML5 game engine, HTML5, javascript, canvas, game, engine, framework, tiled, tile, map, loader, parser, TMX, XML, tutorial"/>
+    <meta name="keywords" content="melonJS, lightweight, HTML5 game engine, HTML5, javascript, canvas, game, engine, framework, tiled, tile, map, loader, parser, TMX, XML, tutorial"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-    <link rel="stylesheet" type="text/css" href="style/style.css" title="style"/>
+    <link rel="stylesheet" type="text/css" href="style/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="style/style.css"/>
     <script type="text/javascript">
-        //<![CDATA[
+      //<![CDATA[
 
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-13050059-3']);
-        _gaq.push(['_trackPageview']);
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-13050059-3']);
+      _gaq.push(['_trackPageview']);
 
-        (function() {
-            var ga = document.createElement('script');
-            ga.type = 'text/javascript';
-            ga.async = true;
-            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(ga, s);
-        })();
+      (function() {
+        var ga = document.createElement('script');
+        ga.type = 'text/javascript';
+        ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(ga, s);
+      })();
 
-        //]]>
+      //]]>
     </script>
     <script type="text/javascript" src="SyntaxHighlighter/shCore.js"></script>
     <script type="text/javascript" src="SyntaxHighlighter/shBrushJScript.js"></script>
     <link href="SyntaxHighlighter/shCore.css" rel="stylesheet" type="text/css" />
     <link href="SyntaxHighlighter/shThemeDefault.css" rel="stylesheet" type="text/css" />
     <style type="text/css">
-        /*<![CDATA[*/
-        pre.c2 {
-            font-family: Andale Mono, Lucida Console, Monaco, fixed, monospace;
-            color: #000000;
-            background-color: #eee;
-            font-size: 12px;
-            border: 1px dashed #999999;
-            line-height: 14px;
-            padding: 5px;
-            overflow: auto;
-            width: 100%
-        }
+      /*<![CDATA[*/
+      pre.c2 {
+        font-family: Andale Mono, Lucida Console, Monaco, fixed, monospace;
+        color: #000000;
+        background-color: #eee;
+        font-size: 12px;
+        border: 1px dashed #999999;
+        line-height: 14px;
+        padding: 5px;
+        overflow: auto;
+        width: 100%
+      }
 
-        p.c1 {
-            font-weight: bold;
-            padding: 0;
-        }
-        /*]]>*/
+      p.c1 {
+        font-weight: bold;
+        padding: 0;
+      }
+
+      /*]]>*/
     </style>
-</head>
+  </head>
 
-<body>
-<div id="main">
-    <div id="header">
-        <div id="logo">
-            <div id="logo_text">
-                <!-- class="logo_colour", allows you to change the colour of the text -->
+  <body>
+   <!--  <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <h1>melon<span class="colourer">JS</span></h1>
+          <p>A lightweight HTML5 game engine.</p>
+        </div>
+        <a href="https://github.com/melonjs/melonjs"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 10000" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub"></a>
+      </div>
+    </nav>
+ -->
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">
+            <img src="https://raw.githubusercontent.com/melonjs/melonJS/master/tasks/jsdoc-template/template/static/images/melon.png" alt="melonJS" height='30'>
+          </a>
+        </div>
 
-                <h1><a href="http://www.melonjs.org">melon<span class="logo_colour">JS</span></a></h1>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="http://melonjs.org">Home</a></li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+    <!-- the "Fork me!" sticker -->
 
-                <h2>A lightweight HTML5 game engine</h2>
+    <div id="main">
+      <div class="row">
+        <div id="sidebar" class="col-md-2 col-md-offset-1 sidebar">
+          <ul class="nav nav-sidebar">
+            <li><h3>Content</h3></li>
+            <li><a href="#intro">Introduction</a></li>
+
+          </ul>
+        </div>
+
+        <div id="content" class="col-md-8 col-md-offset-3 main">
+          <h1>Space Invaders Tutorial</h1>
+          <p>In this tutorial, we will create a space invaders clone.</p>
+
+          <!-- INTRO ================================================================== -->
+          <div>
+            <a id="intro" class="offset-anchor"></a>
+            <div class="subcontent">
             </div>
-        </div>
-    </div>
+          </div>
 
-    <div id="site_content">
-        <a href="https://github.com/melonjs/melonjs"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub"></a>
-        <div class="sidebar">
-            <p><img src="media/HTML5_Badge_128.png" alt="HTML5 badge"/></p>
+        </div> <!-- end content -->
+      </div> <!-- end row -->
+    </div> <!-- end container -->
 
-            <h3>Useful Links</h3>
-
-            <ul>
-                <li><a href="http://www.melonjs.org/">melonJS Homepage</a></li>
-                <li><a href="http://www.mapeditor.org/">Tiled Homepage</a></li>
-                <li><a href="http://melonjs.github.io/docs/">melonJS online documentation</a></li>
-            </ul>
-        </div>
-        <div id="content">
-            <!-- insert the page content here -->
-            <h1>A step by step tutorial to creating a Space Invaders game</h1>
-
-
-        </div>
-    </div>
     <script type="text/javascript">
-        SyntaxHighlighter.all()
+      SyntaxHighlighter.all();
     </script>
-
-
-    <div id="content_footer"></div>
-
-    <div id="footer">
-        Copyright &copy; melonJS 2011 - 2014
-    </div>
-</div>
-</body>
+  </body>
 </html>

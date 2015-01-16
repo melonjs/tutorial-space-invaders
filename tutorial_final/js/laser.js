@@ -21,6 +21,14 @@ game.Laser = me.Renderable.extend({
         renderer.setColor(color);
     },
 
+    onCollision: function (res, other) {
+        console.log(other);
+        if (other.name === "ship") {
+            me.game.world.removeChild(this);
+            me.game.world.removeChild(other);
+        }
+    },
+
     update: function (time) {
         this._super(me.Renderable, "update", [time]);
         this.body.vel.y -= this.body.accel.y * me.timer.tick;
@@ -29,6 +37,7 @@ game.Laser = me.Renderable.extend({
         }
 
         this.body.update();
+        me.collision.check(this);
 
         return true;
     }

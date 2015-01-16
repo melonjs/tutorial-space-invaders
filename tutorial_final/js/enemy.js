@@ -7,6 +7,7 @@ game.Enemy = me.Entity.extend({
         }]);
         this.chooseShipImage();
         this.body.setVelocity(0, 0);
+        this.name = 'ship';
     },
 
     chooseShipImage: function () {
