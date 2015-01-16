@@ -12,6 +12,7 @@ game.Laser = me.Renderable.extend({
         ]));
         this.body.updateBounds();
         this.body.setVelocity(0, 20);
+        this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
     },
 
     draw: function (renderer) {
@@ -22,7 +23,7 @@ game.Laser = me.Renderable.extend({
     },
 
     onCollision: function (res, other) {
-        console.log(other);
+        console.log(other.name);
         if (other.name === "ship") {
             me.game.world.removeChild(this);
             me.game.world.removeChild(other);

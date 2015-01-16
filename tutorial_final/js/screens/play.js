@@ -1,5 +1,5 @@
 game.PlayScreen = me.ScreenObject.extend({
-    /**    
+    /**
      *  action to perform on state change
      */
     onResetEvent: function() {
@@ -17,9 +17,9 @@ game.PlayScreen = me.ScreenObject.extend({
         this.enemyManager.createEnemies();
         me.game.world.addChild(this.enemyManager, 2);
     },
-    
-    
-    /**    
+
+
+    /**
      *  action to perform when leaving this screen (state change)
      */
     onDestroyEvent: function() {
