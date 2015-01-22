@@ -16,7 +16,7 @@ game.Laser = me.Renderable.extend({
     },
 
     draw: function (renderer) {
-        var color = renderer.getColor();
+        var color = renderer.globalColor;
         renderer.setColor('#5EFF7E');
         renderer.fillRect(this.pos.x, this.pos.y, this.width, this.height);
         renderer.setColor(color);

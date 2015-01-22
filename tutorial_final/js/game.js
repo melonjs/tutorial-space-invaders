@@ -49,11 +49,6 @@ var game = {
         me.pool.register("laser", game.Laser);
         me.pool.register("enemy", game.Enemy);
 
-        // enable the keyboard
-        me.input.bindKey(me.input.KEY.LEFT,     "left");
-        me.input.bindKey(me.input.KEY.RIGHT, "right");
-        me.input.bindKey(me.input.KEY.X,     "jump", true);
-
         // start the game
         me.state.change(me.state.PLAY);
     }
