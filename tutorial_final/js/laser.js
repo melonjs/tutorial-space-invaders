@@ -11,7 +11,7 @@ game.Laser = me.Renderable.extend({
             ])
         ]));
         this.body.updateBounds();
-        this.body.setVelocity(0, 20);
+        this.body.setVelocity(0, 0);
         this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
     },
 
@@ -32,10 +32,10 @@ game.Laser = me.Renderable.extend({
 
     update: function (time) {
         this._super(me.Renderable, "update", [time]);
-        this.body.vel.y -= this.body.accel.y * me.timer.tick;
-        if (this.pos.y + this.height <= 0) {
-            me.game.world.removeChild(this);
-        }
+        // this.body.vel.y -= this.body.accel.y * me.timer.tick;
+        // if (this.pos.y + this.height <= 0) {
+        //     me.game.world.removeChild(this);
+        // }
 
         this.body.update();
         me.collision.check(this);

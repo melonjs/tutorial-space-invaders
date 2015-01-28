@@ -14,8 +14,6 @@ game.EnemyManager = me.Container.extend({
   },
 
   update: function (time) {
-    this._super(me.Container, "update", [time]);
-
     if ((this.vel > 0 && this.right >= me.game.viewport.width) || (this.vel < 0 && this.left <= 0)) {
       this.vel *= -1;
       this.pos.y += 16;
@@ -25,5 +23,6 @@ game.EnemyManager = me.Container.extend({
       this.pos.x += this.vel;
       this.time = me.timer.getTime();
     }
+    this._super(me.Container, "update", [time]);
   }
 });
