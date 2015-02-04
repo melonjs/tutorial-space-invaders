@@ -6,6 +6,7 @@ game.Enemy = me.Entity.extend({
             height: 32
         }]);
         this.chooseShipImage();
+        this.body.addShape(new me.Rect(0, 0, 32, 32));
         this.body.setVelocity(0, 0);
         this.body.collisionType = me.collision.types.ENEMY_OBJECT;
         this.name = 'ship';
@@ -21,7 +22,6 @@ game.Enemy = me.Entity.extend({
         this._super(me.Entity, "update", [time]);
 
         this.body.update();
-
 
         return true;
     }

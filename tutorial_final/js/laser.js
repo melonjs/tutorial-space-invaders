@@ -1,32 +1,31 @@
-game.Laser = me.Renderable.extend({
+game.Laser = me.Entity.extend({
     init: function (x, y) {
-        this._super(me.Renderable, "init", [x, y, game.Laser.width, game.Laser.height]);
+        this._super(me.Entity, "init", [x, y, { width: game.Laser.width, height: game.Laser.height }]);
         this.z = 5;
-        this.body = new me.Body(this, ([
-            new me.Polygon(0, 0, [
-                new me.Vector2d(0, 0),
-                new me.Vector2d(this.width, 0),
-                new me.Vector2d(this.width, this.height),
-                new me.Vector2d(0, this.height)
-            ])
-        ]));
+        this.body.addShape(new me.Rect(0, 0, this.width, this.height));
         this.body.updateBounds();
         this.body.setVelocity(0, 30);
         this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
-    },
-
-    draw: function (renderer) {
-        var color = renderer.globalColor;
-        renderer.setColor('#5EFF7E');
-        renderer.fillRect(this.pos.x, this.pos.y, this.width, this.height);
-        renderer.setColor(color);
+        this.renderable = new (me.Renderable.extend({
+            init: function () {
+                this._super(me.Renderable, "init", [0, 0, game.Laser.width, game.Laser.height]);
+            },
+            destroy: function () {},
+            draw: function (renderer) {
+                var color = renderer.globalColor;
+                renderer.setColor('#5EFF7E');
+                renderer.fillRect(0, 0, this.width, this.height);
+                renderer.setColor(color);
+            }
+        }));
+        this.alwaysUpdate = true;
     },
 
     onCollision: function (res, other) {
-        console.log(other.name);
         if (other.name === "ship") {
             me.game.world.removeChild(this);
             me.game.world.removeChild(other);
+            return false;
         }
     },
 
