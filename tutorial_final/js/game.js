@@ -42,7 +42,8 @@ var game = {
     // Run on game resources loaded.
     "loaded" : function () {
         // set the "Play/Ingame" Screen Object
-        me.state.set(me.state.PLAY, new game.PlayScreen());
+        this.playScreen = new game.PlayScreen();
+        me.state.set(me.state.PLAY, this.playScreen);
 
         // add our player entity in the entity pool
         me.pool.register("player", game.Player);

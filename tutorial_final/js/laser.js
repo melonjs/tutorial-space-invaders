@@ -24,7 +24,7 @@ game.Laser = me.Entity.extend({
     onCollision: function (res, other) {
         if (other.name === "ship") {
             me.game.world.removeChild(this);
-            me.game.world.removeChild(other);
+            game.playScreen.enemyManager.removeChild(other);
             return false;
         }
     },
