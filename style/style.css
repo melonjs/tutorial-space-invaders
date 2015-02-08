@@ -56,15 +56,15 @@ body {
 
 
 /* OVERRIDING BOOTSTRAP ===================================== */
-.container { 
+.container {
   width: 825px;
 }
 .row {
   margin: 0;
 }
 
-/* navbar */ 
-.navbar-default { 
+/* navbar */
+.navbar-default {
   background: #55aa00;
   margin-bottom: 0;
   border: 0;
@@ -83,6 +83,16 @@ body {
 .sidebar {
   display: none;
 }
+
+.subcontent td {
+  border:1px solid black;
+  padding: 5px 10px;
+}
+
+.subcontent table {
+  margin-bottom: 10px;
+}
+
 @media (min-width: 768px) {
   .sidebar {
     position: fixed;

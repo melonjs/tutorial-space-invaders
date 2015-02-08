@@ -79,6 +79,7 @@
             <li><h3>Content</h3></li>
             <li><a href="#intro">Introduction</a></li>
             <li><a href="#part1">Setting up our ships</a></li>
+            <li><a href="#part2">Applying movement</a></li>
           </ul>
         </div>
 
@@ -98,7 +99,7 @@
                   The melonJS <a href="https://github.com/melonjs/boilerplate/archive/master.zip">boilerplate</a>, that we will use as default template project for our tutorial.
                 </li>
                 <li>
-                  The tutorial <a href="tutorial_data.zip">image assets</a>, to be uncompressed into the (here above) template data directory. So when you unzip, you should have:
+                  The tutorial <a href="tutorial_data.zip">image assets</a>, to be uncompressed into the boilerplate data directory. So when you unzip, you should have:
 <pre>
 data/img/player.png
 data/img/ships.png
@@ -115,10 +116,11 @@ etc
 
               <p>
                 <b>Testing/debugging :</b><br/>
-                When using Chrome, and due to the "cross-origin request" security mechanism implemented, you need to use the "--disable-web-security" parameter or better "--allow-file-access-from-files"when launching the browser in order to test any local content, else the browser will complain when trying to load a level map. <br/>
+                Your best bet is to use a local web server, as for example detailed in the melonJS <a href="https://github.com/melonjs/boilerplate">boilerplate</a> README, by using the `grunt connect` tool, and that will allow you to test your game in your browser using the <a href="http://localhost:8000">http://localhost:8000</a> url.
               </p>
-
-              <p> A second and easier option is to use a local web server, as for example detailed in the melonJS <a href="https://github.com/melonjs/boilerplate">boilerplate</a> README, by using the `grunt connect` tool, and that will allow you to test your game in your browser using the <a href="http://localhost:8000">http://localhost:8000</a> url.</p>
+              <p>
+                If you just want to use the filesystem, the problem is you'll run into "cross-origin request" security errors. With Chrome, you need to use the "--disable-web-security" parameter or better "--allow-file-access-from-files" when launching the browser. This must be done in order to test any local content, else the browser will complain when trying to load assets through XHR. <strong>Though this method is not recommended.</strong> As long as you have the option enabled, you're adding security vulnerabilities to your session.<br/>
+              </p>
             </div>
           </div>
 
@@ -146,45 +148,176 @@ index.html
 index.css
 </pre>
 
-          <p>Those are your source files. For this tutorial however, you can delete the file screens/title.js, and remove the entities folder as well. Then update the index.html file to no longer include those. They're defaults from the boilerplate that we won't need.</p>
+            <p>The boilerplate provides us a bunch of default, and for this tutorial there are some we don't need. You can delete the file screens/title.js, and remove the js/entities folder as well. Then update the index.html file to no longer include those. Be sure to remove the references of TitleScreen from the game.js file.</p>
 
-          <p>The first thing to add is images to the resources.js file.</p>
-          <pre class="brush: js">
-            game.resources = [
-              { name: "player", type: "image", src: "data/img/player.png" },
-              { name: "ships", type: "image", src: "data/img/ships.png" }
-            ];
-          </pre>
-          <p>In game.js when the game.resources array is passed to the preload function, it stores a reference to that array of what assets it needs to load. When when you change the state to loading, it loads each asset.</p>
+            <pre class="brush: js">
+              var game = {
 
-          <p>Open <strong>js/screens/play.js</strong> and empty the code from the two methods: <strong>onResetEvent</strong> and <strong>onDestroyEvent</strong>.</p>
+                  // Run on page load.
+                  "onload" : function () {
+                      // Initialize the video.
+                      if (!me.video.init(640, 480, {wrapper : "screen", scale : 'auto'})) {
+                          alert("Your browser does not support HTML5 canvas.");
+                          return;
+                      }
 
-          <p>If you save and refresh the page, it will now load the assets. Though there is not much to see yet. Let's change that.</p>
+                      // add "#debug" to the URL to enable the debug Panel
+                      if (document.location.hash === "#debug") {
+                          window.onReady(function () {
+                              me.plugin.register.defer(this, me.debug.Panel, "debug", me.input.KEY.V);
+                          });
+                      }
 
-          <p>First thing is to create a player entity. Add a new file under the js folder, and call it <strong>player.js</strong>. Be sure to add it in the index.html file.</p>
+                      // Initialize the audio.
+                      me.audio.init("mp3,ogg");
 
-          <p>In the Tiled tutorial, you will have used mostly <strong>me.Entity</strong> to create your objects. The Entity class is great when you need collisions. Since this is space invaders, and with a player we only really need to clip its movement speed, let's not bother with an Entity, but use an instance of <strong>me.Sprite</strong> instead.</p>
+                      // Set a callback to run when loading is complete.
+                      me.loader.onload = this.loaded.bind(this);
 
-          <pre class="brush: js">
-            game.Player = me.Sprite.extend({
-                init: function () {
-                    var image = me.loader.getImage("player");
-                    this._super(me.Sprite, "init", [me.game.viewport.width / 2 - image.width / 2, me.game.viewport.height - image.height - 20, image]);
-                }
-            });
-          </pre>
-          <p>
-            So what we're doing is adding a function to the global game space that extends <strong>me.Sprite</strong>. It sets up an init method that grabs the player image. For the x coordinate, we simply grab the dead center, and subtract half the ship, so it can be positioned in the center. And then set its y property to be 20 pixels above the bottom. Then finally pass the image instance to it. This is the constructor of a sprite. All it expects is an X,Y and an image to be used.
-          </p>
-          <p>
-            Now open up <strong>js/screens/play.js</strong>, and edit the onResetEvent method so it looks like this:
+                      // Load the resources.
+                      me.loader.preload(game.resources);
+
+                      // Initialize melonJS and display a loading screen.
+                      me.state.change(me.state.LOADING);
+                  },
+
+
+
+                  // Run on game resources loaded.
+                  "loaded" : function () {
+                      // set the "Play/Ingame" Screen Object
+                      this.playScreen = new game.PlayScreen();
+                      me.state.set(me.state.PLAY, this.playScreen);
+
+                      // start the game
+                      me.state.change(me.state.PLAY);
+                  }
+              };
+            </pre>
+
+            <p>Game.js is where the game is bootstrapped. index.html calls the game.onload function after loading all the js files, and doing its own initialization. The <strong>me.video.init</strong> bit creates the canvas tag and gets the video setup.</p><p>Lines 12-16 are for using the debug panel.</p><p>Then we intialize the audio engine, telling it what formats we are supporting for this game.</p>
+
+            <p>We set a callback on <strong>me.loader</strong> to our loaded function, and then tell what assets it needs to load, via an array.</p>
+
+            <p>The final step of this process is setting the state of the game to loading. Game states can be used to for things like menu screen, play screen, pause screen, etc. When changing state, it's important to note that everything is removed from the game world, unless you have it set to be <a href="http://melonjs.github.io/docs/me.Renderable.html#isPersistent" target="_blank">persistent</a> across states.</p>
+
+            <p>The above game object would not get removed from the game world, unless you tell it to explicitly.</p>
+
+            <p>The loaded function then sets up the playscreen and tells the game to use that screen object for the play state. When then change state.</p>
+
+            <h4>Back to space invaders</h4>
+
+            <p>The first thing to add is images to the resources.js file.</p>
+            <pre class="brush: js">
+              game.resources = [
+                { name: "player", type: "image", src: "data/img/player.png" },
+                { name: "ships", type: "image", src: "data/img/ships.png" }
+              ];
+            </pre>
+            <p>This variable is the one passed to me.loader.preload in game.js</p>
+
+            <p>The structure for an asset is :</p>
+            <table>
+              <tr>
+                <td>name</td>
+                <td>The name of the asset you wish to use in your game. A string key.</td>
+              </tr>
+              <tr>
+                <td>type</td>
+                <td>The type of the asset. Valid types are: <strong>audio, binary, image, json, tmx, tsx</strong>. Binary is a good solution for loading raw text, or any other format not listed. TMX & TSX are for tiled file formats. Whether it be the xml or json format.</td>
+              </tr>
+              <tr>
+                <td>src</td>
+                <td>The path to the asset, relative from index.html. For audio you need specify the folder instead of direct path.</td>
+              </tr>
+            </table>
+
+            <p>Open <strong>js/screens/play.js</strong> and empty the code from the two methods: <strong>onResetEvent</strong> and <strong>onDestroyEvent</strong>. Then save, and then open the game in your web browser.</p>
+
+            <p>There is not much to see yet. Let's change that.</p>
+
+            <p>First thing is to create a player entity.</p>
+
+            <p>Add a new file under the js folder, and call it <strong>player.js</strong>. Be sure to add it in the index.html file.</p>
+
+            <pre class="brush: js">
+              game.Player = me.Sprite.extend({
+                  init: function () {
+                      var image = me.loader.getImage("player");
+                      this._super(me.Sprite, "init", [me.game.viewport.width / 2 - image.width / 2, me.game.viewport.height - image.height - 20, image]);
+                  }
+              });
+            </pre>
+            <p>
+              So what we're doing is adding a function to the window.game object that extends <strong>me.Sprite</strong>. It sets up an init method that grabs the player image.</p>
+            <p>For the x coordinate, we simply grab the dead center, and subtract half the ship, so it can be positioned in the center. And then set its y property to be 20 pixels above the bottom. Then finally pass the image instance to it. This is the constructor of a sprite. All it expects is an X,Y and an image to be used.
+            </p>
+            <p>
+              Now open up <strong>js/screens/play.js</strong>, and edit the onResetEvent method so it looks like this:
+              <pre class="brush: js">
+                game.PlayScreen = me.ScreenObject.extend({
+                    /**
+                     *  action to perform on state change
+                     */
+                    onResetEvent: function() {
+                        me.game.world.addChild(new game.Player());
+                    },
+
+
+                    /**
+                     *  action to perform when leaving this screen (state change)
+                     */
+                    onDestroyEvent: function() {
+                    }
+                });
+
+              </pre>
+            </p>
+
+            <img src="screens/screenone.png" />
+
+            <p>Yay, the ship is on the bottom of the screen!
+            </p><p>But we can still see the loading bar, that's not cool. The reason for this is that MelonJS does not want to do any operations that it doesn't have to. Sometimes you'll have a background image that gets redrawn, so it covers the original loading bar. However, we don't have a background image for this game, so what we will do is add a color layer.</p>
+
+            <pre class="brush: js">
+              me.game.world.addChild(new me.ColorLayer("background", "#000000", 0));
+            </pre>
+            <p>
+              Add that in the play screen, above the line where we added the player. The first parameter is simply the name for the layer, so it's easy to fetch from the game world later if you need to. The second parameter is simply the color to draw in hex. The last is the z index. We want it to draw first, so we set it at zero. The z-index can also be passed with addChild:
+            </p>
+            <pre class="brush: js">
+              me.game.world.addChild(new me.ColorLayer("background", "#000000"), 0);
+            </pre>
+
+            <p>Now the pesky loading bar should be gone. Now let's add in enemies. Create a new file under the js folder called enemy.js, and add it to the index.html file.</p>
+
+            <p>Since enemies will have to collide with things like the player's laser, it should extend <strong>me.Entity</strong>, so lets get that going:</p>
+            <pre class="brush: js">
+              game.Enemy = me.Entity.extend({
+                  init: function (x, y) {
+                      this._super(me.Entity, "init", [x, y, {
+                          image: "ships",
+                          width: 32,
+                          height: 32
+                      }]);
+                  }
+              });
+            </pre>
+
+            <p>With the enemy, we will need to place them in different spots, so x &amp; y will be added to its constructor, and then passed along to the me.Entity's constructor. We pass an object hash as the settings, specifying the image as "ships", and the dimensions of the entity at 32.</p>
+
+            <p>We used me.Entity for the base class for the enemy, because we want it to have collisions. For the player, we won't really need collisions, so we can just use a sprite.</p>
+
+            <p>Back in play.js, add it on to the game world. Your play.js should now look like:</p>
             <pre class="brush: js">
               game.PlayScreen = me.ScreenObject.extend({
                   /**
                    *  action to perform on state change
                    */
                   onResetEvent: function() {
+                      me.game.world.addChild(new me.ColorLayer("background", "#000000", 0));
                       me.game.world.addChild(new game.Player());
+                      me.game.world.addChild(new game.Enemy(50, 50));
                   },
 
 
@@ -196,83 +329,54 @@ index.css
               });
 
             </pre>
-          </p>
+            <p>You can put the enemy at any x &amp; y to try it out. Save &amp; refresh the page in your browser.</p>
 
-          <img src="screens/screenone.png" />
+            <p>You'll likely notice that the ship is constantly changing how it looks. If you open the ships.png file under data/img, you can see that it is a simple sprite sheet. <strong>me.Entity</strong> for its renderable uses the <strong>me.AnimationSheet</strong> class. Since we didn't add and set any animations on the renderable property, it is just looping through each &amp; every frame. Let's fix that.</p>
 
-          <p>Yay, the ship is on the bottom of the screen!
-          </p><p>But we can still see the loading bar, that's not cool. The reason for this is that MelonJS does not want to do any operations that it doesn't have to. Sometimes you'll have a background image that gets redrawn, so it covers the original loading bar. However, we don't have a background, so what we will do is add a color layer.</p>
+            <p>Add a new method to our enemy:</p>
+            <pre class="brush: js">
+              chooseShipImage: function () {
+                  var frame = ~~(Math.random() * 3);
+                  this.renderable.addAnimation("idle", [frame], 1);
+                  this.renderable.setCurrentAnimation("idle");
+              }
+            </pre>
 
-          <pre class="brush: js">
-            me.game.world.addChild(new me.ColorLayer("background", "#000000", 0));
-          </pre>
-          <p>
-            Add that in the play screen, above the line where we added the player. The first parameter is simply the name, this is often used by Tiled. MelonJS utilizes me.ColorLayer to represent a Tiled map background color. The second parameter is simply the color to draw in hex. The last is the z index. We want it to draw first, so we set it at zero. This can also be passed with addChild:
-          </p>
-          <pre class="brush: js">
-            me.game.world.addChild(new me.ColorLayer("background", "#000000"), 0);
-          </pre>
+            <p>The first line simply randomizes which frame we want. The ship is 32x32, the image is 64x64, so we have 4 frames. ~~ is a shortcut for Math.floor when the number is 0 or positive. On negative numbers, it works like Math.ceil.</p>
+            <p>The second line is accessing the animation sheet instance (this.renderable), and uses the addAnimation function to add a new idle frame. So we simply specify the index that was generated at random.</p>
+            <p>With the final line, we set the current animation to idle.</p>
+            <p>Call the function at the bottom of the constructor, like so:</p>
+            <pre class="brush: js">
+              game.Enemy = me.Entity.extend({
+                  init: function (x, y) {
+                      this._super(me.Entity, "init", [x, y, {
+                          image: "ships",
+                          width: 32,
+                          height: 32
+                      }]);
+                      this.chooseShipImage();
+                  },
 
-          <p>Now the pesky loading bar should be gone. Okay, let's add in enemies. Create a new file under the js folder called enemy.js, and add it to the index.html file.</p>
-
-          <p>Since enemies will have to collide with things like the player's laser, it should extend <strong>me.Entity</strong>, so lets get that going:</p>
-          <pre class="brush: js">
-            game.Enemy = me.Entity.extend({
-                init: function (x, y) {
-                    this._super(me.Entity, "init", [x, y, {
-                        image: "ships",
-                        width: 32,
-                        height: 32
-                    }]);
-                }
-            });
-          </pre>
-
-          <p>With the enemy, we will need to place them in different spots, so x & y will be added to its constructor, and then passed along to the me.Entity's constructor. We pass an object hash as the settings, specifying the image as "ships", and the dimensions of the entity at 32.</p>
-
-          <p>Back in play.js, add it one to the game world:</p>
-          <pre class="brush: js">
-            me.game.world.addChild(new game.Enemy(50, 50));
-          </pre>
-          <p>You can put the enemy at any x & y to try it out. Save & refresh.</p>
-
-          <p>You'll likely notice that the ship is constantly changing how it looks. If you open the ships.png file under data/img, you'll notice how it's more or less a simple sprite sheet. me.Entity for its renderable uses the me.AnimationSheet class. Since we didn't add and set any animations on the renderable property, it is just looping through each & every frame. Let's fix that.</p>
-
-          <p>Add a new method to our enemy:</p>
-          <pre class="brush: js">
-            chooseShipImage: function () {
-                var frame = ~~(Math.random() * 3);
-                this.renderable.addAnimation("idle", [frame], 1);
-                this.renderable.setCurrentAnimation("idle");
-            }
-          </pre>
-
-          <p>The first line simply randomizes which frame we want. The ship is 32x32, the image is 64x64, so we have four frames. ~~ is a shortcut for Math.floor when the number is 0 or positive. On negative numbers, it works like Math.ceil.</p>
-          <p>The second line is accessing the animation sheet instance (this.renderable), and uses the addAnimation function to add a new idle frame. So we simply specify the index that was generated at random.</p>
-          <p>With the final line, we set the current animation to idle.</p>
-          <p>Call the function at the bottom of the constructor, like so:</p>
-          <pre class="brush: js">
-            game.Enemy = me.Entity.extend({
-                init: function (x, y) {
-                    this._super(me.Entity, "init", [x, y, {
-                        image: "ships",
-                        width: 32,
-                        height: 32
-                    }]);
-                    this.chooseShipImage();
-                },
-
-                chooseShipImage: function () {
-                    var frame = ~~(Math.random() * 3);
-                    this.renderable.addAnimation("idle", [frame], 1);
-                    this.renderable.setCurrentAnimation("idle");
-                },
-            });
-          </pre>
-          <p>Now refresh the page, and our ship should only pop up as one of them. Try refreshing it multiple times to see it change.</p>
+                  chooseShipImage: function () {
+                      var frame = ~~(Math.random() * 3);
+                      this.renderable.addAnimation("idle", [frame], 1);
+                      this.renderable.setCurrentAnimation("idle");
+                  },
+              });
+            </pre>
+            <p>Now refresh the page, and our ship should only pop up as one of them. Try refreshing it multiple times to see it change.</p>
           </div>
 
           <!-- Part 2 -->
+          <a id="part2" class="offset-anchor"></a>
+          <div class="subcontent">
+            <h3>Applying Movement</h3>
+            <p>Now that we have ships on screen, let's actually get some interaction going.</p>
+
+            <p>Back in play.js, lets add some keybindings:</p>
+          </div>
+
+
 
         </div> <!-- end content -->
       </div> <!-- end row -->
