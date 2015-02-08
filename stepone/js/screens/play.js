@@ -4,8 +4,8 @@ game.PlayScreen = me.ScreenObject.extend({
      */
     onResetEvent: function() {
         me.game.world.addChild(new me.ColorLayer("background", "#000000", 0));
-        me.game.world.addChild(new game.Player());
-        me.game.world.addChild(new game.Enemy(50, 50));
+        me.game.world.addChild(me.pool.pull("player"));
+        me.game.world.addChild(me.pool.pull("enemy", 50, 50));
     },
 
 

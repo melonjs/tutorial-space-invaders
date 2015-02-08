@@ -9,11 +9,11 @@ game.Player = me.Sprite.extend({
     update: function (time) {
         this._super(me.Sprite, "update", [time]);
         if (me.input.isKeyPressed("left")) {
-          this.pos.x -= this.velx * me.timer.getDelta() / 1000;
+          this.pos.x -= this.velx * time / 1000;
         }
 
         if (me.input.isKeyPressed("right")) {
-          this.pos.x += this.velx * me.timer.getDelta() / 1000;
+          this.pos.x += this.velx * time / 1000;
         }
 
         if (me.input.isKeyPressed("shoot")) {
