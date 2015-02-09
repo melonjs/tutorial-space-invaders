@@ -574,7 +574,7 @@ index.css
               var left = _this.pos.x + bounds.left;
             </pre>
 
-            <p>The first part of the if checks if the container is moving right, and the right edge + velocity is outside the viewport. Move down and reverse velocity.</p>
+            <p>The first part of the if checks if the container is moving right, and the right edge + velocity is outside the viewport.</p>
             <pre class="brush: js">(_this.vel > 0 && (right + _this.vel) >= me.game.viewport.width)</pre>
             <p>The second part checks if the container is moving left, and its left bounds is less than zero.</p>
             <pre class="brush: js">(_this.vel < 0 && (left + _this.vel) <= 0)</pre>
