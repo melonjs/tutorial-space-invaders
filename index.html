@@ -567,8 +567,30 @@ index.css
               }
             </pre>
 
-            <p>We get the bounds of the container, this is a rect dictating its position and calculated width & height.</p>
-            <p>Using that, we figure out the absolute position of its right & left sides. We then check if the left or right side is going outside of the viewport. If so, reverse the velocity by setting it to negative/positive. Then push the whole container down by its y coordinate. Then because we want to make it more difficult, increase the velocity by 5.</p>
+            <p>Here we get the bounds of the container. This is a simple rectangle that dictates the relative pixel positions to its origin (pos).</p>
+            <pre class="brush: js">
+              var bounds = _this.getBounds();
+              var right = _this.pos.x + bounds.right;
+              var left = _this.pos.x + bounds.left;
+            </pre>
+
+            <p>The first part of the if checks if the container is moving right, and the right edge + velocity is outside the viewport. Move down and reverse velocity.</p>
+            <pre class="brush: js">(_this.vel > 0 && (right + _this.vel) >= me.game.viewport.width)</pre>
+            <p>The second part checks if the container is moving left, and its left bounds is less than zero.</p>
+            <pre class="brush: js">(_this.vel < 0 && (left + _this.vel) <= 0)</pre>
+
+            <p>In the block, we reverse the velocity, move down by 16 pixels and then increase the velocity.</p>
+
+            <pre class="brush: js">
+              _this.vel *= -1;
+              _this.pos.y += 16;
+              if (_this.vel > 0) {
+                  _this.vel += 5;
+              }
+              else {
+                  _this.vel -= 5;
+              }
+            </pre>
             <p>Save and refresh this time, it will now move back and forth across the screen, closer to our player.</p>
           </div>
 
