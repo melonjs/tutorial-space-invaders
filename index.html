@@ -439,11 +439,24 @@ index.css
 
             <p>It's typically a good game design practice to offer multiple key bindings. Even a better practice make it configurable. You always need to keep in mind people who are left handed or who have different layouts.</p>
 
-            <p>You might also noticed i added the z index option to the addChild calls. It's a pretty good practice, because that way you ensure your draw order.</p>
+            <p>You might also noticed i added the <strong>z index</strong> option to the addChild calls. It's a pretty good practice, because that way you ensure your draw order.</p>
 
-            <p>The onDestroyEvent removes the events when changing state. Not something we actually need, because we only have the play state after loading. But a good practice to keep in mind.</p>
+            <p>The <strong>onDestroyEvent</strong> removes the events when changing state. Not something we actually need, because we only have the play state after loading. But a good practice to keep in mind.</p>
 
             <p>Now that we have bindings, let's implement player movement. Add the following update function to the player class:</p>
+
+            <p>Then add a velx property to the player in its init method, as well as the furthest x position it can go on screen (maxX):</p>
+
+            <pre class="brush: js">
+              init: function () {
+                  var image = me.loader.getImage("player");
+                  this._super(me.Sprite, "init", [me.game.viewport.width / 2 - image.width / 2, me.game.viewport.height - image.height - 20, image]);
+                  this.velx = 450;
+                  this.maxX = me.game.viewport.width - this.width;
+              },
+            </pre>
+
+            <p>Then modify the update method to check for the key events, and move the player accordingly.</p>
 
             <pre class="brush: js">
               update: function (time) {
@@ -462,31 +475,43 @@ index.css
               }
             </pre>
 
-            <p>Then add a velx property to the player in its init method, as well as the furthest x position it can go on screen:</p>
-
-            <pre class="brush: js">
-              this.velx = 450;
-              this.maxX = me.game.viewport.width - this.width;
-            </pre>
-
             <p>Update functions of our game objects will always receive a delta time (in milliseconds). It's important to pass it along to our parent's class update.</p>
 
-            <p>After that, it's a matter of checking if the key is currently pressed. Using the velocity value set earlier, we simply subtract the velocity value, multiplied by the delta in seconds.</p>
+            <pre class="brush: js">this._super(me.Sprite, "update", [time]);</pre>
+
+            <p>After that, it's a matter of checking if the <strong>left</strong> action is currently pressed. Using the velocity value set earlier, we simply subtract the velocity value, multiplied by the delta in seconds.</p>
+
+            <pre class="brush: js">
+              if (me.input.isKeyPressed("left")) {
+                this.pos.x -= this.velx * time / 1000;
+              }
+            </pre>
+
+            <p>To move right, we check for the <strong>right</strong> action, and add the velocity value to our x position.</p>
+
+            <pre class="brush: js">
+              if (me.input.isKeyPressed("right")) {
+                this.pos.x += this.velx * time / 1000;
+              }
+            </pre>
 
             <aside>
               <h5>Note</h5>
-              <p>The reason for use of delta time, is to have consistent transformations across various frame rates. If you have pos.x += 5; in your update, and run at 1 frame per second, the player will move 5 pixels once a second. If you have 30 fps, the player will move at 150 pixels per second. The delta time is used to level the playing field. The less fps you have, the more jumpy it will look.</p>
+              <p>The reason for use of delta time, is to have consistent transformations across various frame rates. If you have pos.x += 5; in your update, and run at 1 frame per second, the player will move 5 pixels once per second. If you have 30 fps, the player will move at 150 pixels per second. The delta time is used to level the playing field. The less fps you have, the more jumpy it will look.</p>
             </aside>
 
-            <p>We then ensure the x value does not go outside the screen, by limiting it with the clamp function.</p>
+            <p>We then use <strong>clamp</strong> to ensure the x value does not go outside the screen.</p>
 
-            <p>The return value tells melon whether a re-draw is required. This can be useful to dictate for when an animation sheet needs to animate on a given frame. However, this is a single sprite, and it's not really needed in this case.</p>
+            <pre class="brush: js">this.pos.x = this.pos.x.clamp(0, this.maxX);</pre>
+
+            <p>The return value tells melon whether a re-draw is required. This can be useful to dictate for when an animation sheet needs to animate on a given frame. However, this is a single sprite, so we can just tell it to redraw.</p>
+            <pre class="brush: js">return true;</pre>
 
             <p>Save the file &amp; refresh your browser. Try using A/D or the Left &amp; Right arrow keys to move.</p>
 
             <h4>Enemy movement</h4>
 
-            <p>A defining characteristic of space invaders is that all the ships move in one direction, shift down and then go in the other direction. They all move together. We could apply the same velocity logic to the enemy class, but that's not really ideal. We are better off to use our own subclass of <strong>me.Container</strong></p>
+            <p>A defining characteristic of space invaders is that all the ships move in one direction, shift down and then go in the other direction. They all move together. We could take the velocity logic that we used for the player, and apply it to the enemy class. But we can better leverage MelonJS to do this for us. Time to use our own subclass of <strong>me.Container</strong></p>
 
             <p>Objects inside a container are relative to its parent. So when we move the container, all objects inside shift with it. This applies to rotation &amp; scale operations as well. So let's create one.</p>
 
@@ -504,9 +529,14 @@ index.css
 
             <p>Essentially what we're setting up here is the start position and the base width. Starting the container 32 pixels down, and at 0 left (or x).</p>
 
-            <p>We're allotting 64 pixels per ship width &amp; height wise. Then removing 32 pixels because the last row &amp; column does not require the side padding. When you add objects to the container, it will resize anyways, so the width &amp; height values don't need to be managed by your code.</p>
+            <p>We're allotting 64 pixels per ship width &amp; height wise. Then subtracting 32 pixels because the last row &amp; column does not require the side padding.</p>
 
-            <p>For actually adding enemies to it, we need another method on this container:</p>
+            <aside>
+              <h5>Note</h5>
+              <p>A container's bounds are determined by the min &amp; max of its children's bounds. So children will never go outside. The width &amp; height are just starting values, they do not need to be managed.</p>
+            </aside>
+
+            <p>For adding enemies to our container, we need another method:</p>
 
             <pre class="brush: js">
               createEnemies: function () {
@@ -518,8 +548,8 @@ index.css
               }
             </pre>
 
-            <p>Generating 4 rows, and 9 columns, so 36 ships.</p>
-            <p>Now in play.js, remove the addChild enemy, and set a property to an enemy manager. Call createEnemies, and add it to the game world.</p>
+            <p>Generating 9 columns, and 4 rows: 36 ships.</p>
+            <p>Now in play.js, remove the addChild for the enemy, and set a property to an enemy manager. Below that invoke createEnemies, and add it to the game world.</p>
             <pre class="brush: js">
               onResetEvent: function() {
                   me.game.world.addChild(new me.ColorLayer("background", "#000000", 0));
@@ -540,7 +570,7 @@ index.css
 
             <p>Once you save and refresh, you should see a bunch of random ships.</p>
             <img src="screens/screentwo.png" alt="" />
-            <p>For movement, let's keep it simple for now, and have the container move once per second. For this, we can use a melonjs timer. Rather than count seconds in the update method.</p>
+            <p>For movement, let's keep it simple and have the container move once per second. For this, we can use a melonjs timer.</p>
 
             <p>Add these two methods to the enemy_screen.js</p>
             <pre class="brush: js">
@@ -560,9 +590,9 @@ index.css
               this.vel = 16;
             </pre>
 
-            <p>onActivateEvent is called (if it's defined) when added to the game world. This goes for any object you pass to addChild on a container. Likewise, onDeactivateEvent is called when the object is removed from the game world.</p>
+            <p><strong>onActivateEvent</strong> is called (if it's defined) when the object is added to the game world. This goes for any object you pass to addChild on a container. Likewise, <strong>onDeactivateEvent</strong> is called when the object is removed from the game world.</p>
 
-            <p>Using the MelonJS version of setInterval (which is built in to the game loop, not the actual setInterval), we can then increment the x position.</p>
+            <p>Using the MelonJS version of setInterval (which is built into the game loop, it does not use window.setInterval), we can then increment the x position.</p>
 
             <p>Save and refresh the browser. The enemy ships now all move together, however they just kinda drift off screen, and don't move down. So let's add to the setInterval callback to fix that:</p>
 
@@ -588,6 +618,8 @@ index.css
                   }, 1000);
               }
             </pre>
+
+            <p>That's a fair bit of code, so let's break it down.</p>
 
             <p>Here we get the bounds of the container. This is a simple rectangle that dictates the relative pixel positions to its origin (pos).</p>
             <pre class="brush: js">
