@@ -24,6 +24,10 @@ body {
   margin: 12px 0;
 }
 
+.subcontent hr {
+  border-top-color:#ccc;
+}
+
 .offset-anchor {
   display: block;
   position: relative;

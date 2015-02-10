@@ -654,7 +654,7 @@ index.css
           <div class="subcontent">
             <h2>Adding Lasers, pew pew!</h2>
             <p>Time to get some actual &ldquo;game&rdquo; in this game.</p>
-            <p>First thing to do is open up your play.js file, and add a new keybinding & unbind:</p>
+            <p>First thing to do is open up your play.js file, and add a new keybind &amp; unbind:</p>
 
             <pre class="brush: js">
               me.input.bindKey(me.input.KEY.SPACE, "shoot", true);
@@ -664,9 +664,9 @@ index.css
               me.input.unbindKey(me.input.KEY.SPACE);
             </pre>
 
-            <p>The reason for the boolean is to only allow on register per key press. So in order to shoot twice, the player must press the space bar, release it, and then press it again.</p>
+            <p>The reason for the boolean in the <strong>bindKey</strong> call is to only allow on register per key press. So in order to shoot twice, the player must press the space bar, release it, and then press it again.</p>
 
-            <p>Before we wire up the player to shoot, we need a laser. Create a laser.js file, and add the following code it. As always, be sure to add the laser.js script tag in the index.html file.</p>
+            <p>Before we wire up the player to shoot, we need a laser. Create a laser.js file, and add the following code to it. As always, be sure to add the laser.js script tag in the index.html file.</p>
 
             <pre class="brush: js">
               game.Laser = me.Entity.extend({
@@ -712,12 +712,18 @@ index.css
             <p>So lets go through it. At the bottom, we have set two properties of width & height for the laser, so it can easily be re-used.</p>
 
             <pre class="brush: js">
+              game.Laser.width = 5;
+              game.Laser.height = 28;
+            </pre>
+
+
+            <p>Traditional stuff here. Setup the x &amp; y position from its parameters, and a width+height properties. A bit different from our other objects, we have set the z index on the object manually. This is an alternative to passing the z index in the addChild call.</p>
+            <pre class="brush: js">
               this._super(me.Entity, "init", [x, y, { width: game.Laser.width, height: game.Laser.height }]);
               this.z = 5;
             </pre>
 
-            <p>Traditional stuff here. Setup the x &amp; y position from its parameters, and a width+height properties. A bit different from our other objects, we have set the z index on the object manually. This is an alternative to passing the z index in the addChild call.</p>
-
+            <p>These next methods for setting up a collision body.</p>
             <pre class="brush: js">
               this.body.addShape(new me.Rect(0, 0, this.width, this.height));
               this.body.updateBounds();
@@ -725,12 +731,16 @@ index.css
               this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
             </pre>
 
-            <p>These are methods for setting up a collision body.</p>
             <p>The first adds a shape. While me.Entity creates a body for you, it does not assume a default shape. When creating an object in tiled, you are creating a shape, so that is provided as the default. We're not using tiled, so we shall create a rectangle.</p>
-            <p>Update bounds re-calculates the AABB bounds based off the shape we added.</p>
+            <pre class="brush: js">this.body.addShape(new me.Rect(0, 0, this.width, this.height));</pre>
+            <p><strong>updateBounds()</strong> re-calculates the AABB bounds based off the shape we added.</p>
+            <pre class="brush: js">this.body.updateBounds();</pre>
             <p>Now we set a velocity. Velocity is a vector, and we want the laser to move up. So set a velocity of 30. Note that velocity should never be negative to dictate direction.</p>
+            <pre class="brush: js">this.body.setVelocity(0, 300);</pre>
             <p>Then we set a collision type. This is useful in collision callbacks.</p>
+            <pre class="brush: js">this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;</pre>
 
+            <p>This is a fairly meaty bit of the code. <strong>me.Renderable</strong> is the base drawing class in melon. It gives the minimum setup required to be a valid drawing object in the game world.</p>
             <pre class="brush: js">
               this.renderable = new (me.Renderable.extend({
                   init: function () {
@@ -745,27 +755,50 @@ index.css
               }));
             </pre>
 
-            <p>This is a fairly meaty bit of the code. <strong>me.Renderable</strong> is the base drawing class in melon. It gives the minimum setup required to be a valid drawing object in the game world. So init is pretty traditional, we set the x &amp; y to zero, as this is going to be relative to the laser entity. Use the same width &amp; height as the entity itself.</p>
+            <p>The init is pretty traditional, we set the x &amp; y to zero, as this is going to be relative to the laser entity. Use the same width &amp; height as the entity itself.</p>
+
+            <pre class="brush: js">
+              init: function () {
+                  this._super(me.Renderable, "init", [0, 0, game.Laser.width, game.Laser.height]);
+              },
+            </pre>
 
             <p>Then we implement the draw method. The classes we've used so far have provided a working draw method for our purposes, now we're going to use the renderer to draw something by hand.</p>
 
-            <p>The renderer can be either <strong>me.CanvasRenderer</strong> or <strong>me.WebGLRenderer</strong>, depending on your settings in <strong>me.video.init</strong>. The renderer provides basic drawing operations.</p>
-
-            <ol>
-              <li>So we first get a reference of the original color.</li>
-              <li>Set the color to a nice laser green.</li>
-              <li>Then use a fill rect number. Again, 0, 0 is relative. Then use the width & height to dictate the size of the rect we're filling</li>
-              <li>Then set the color back.</li>
-            </ol>
-
-            <p>The final step:</p>
             <pre class="brush: js">
-              this.alwaysUpdate = true;
+              draw: function (renderer) {
+                  var color = renderer.globalColor.toHex();
+                  renderer.setColor('#5EFF7E');
+                  renderer.fillRect(0, 0, this.width, this.height);
+                  renderer.setColor(color);
+              }
             </pre>
 
-            <p>This is a property worth avoiding as much as possible. It will update an object when it is outside the viewport. The reason for this is due to the velocity the laser will have. Sometimes it will jump too far and get stuck off screen. So we ensure will always update, we can remove it.</p>
+            <p>The renderer can be either <strong>me.CanvasRenderer</strong> or <strong>me.WebGLRenderer</strong>, depending on your settings in <strong>me.video.init</strong>. The renderer provides basic drawing operations.</p>
 
-            <p>Speaking of update</p>
+            <pre class="brush: js">draw: function (renderer)</pre>
+
+
+            <p>So we first get a reference of the original color. <strong>globalColor</strong> is an instance of <strong>me.Color</strong>.</p>
+            <pre class="brush: js">var color = renderer.globalColor.toHex();</pre>
+            <p>Set the color to a nice laser green.</p>
+            <pre class="brush: js">renderer.setColor('#5EFF7E');</pre>
+            <p>Then use a fill rect number. Again, 0, 0 is relative. Then use the width &amp; height to dictate the size of the rect we're filling</p>
+            <pre class="brush: js">renderer.fillRect(0, 0, this.width, this.height);</pre>
+            <p>Then set the color back. This is important so our other draw calls will not be effected by the colour change.</p>
+            <pre class="brush: js">renderer.setColor(color);</pre>
+
+            <p>The final step for our Laser's init method:</p>
+            <pre class="brush: js">
+              init: function (x, y) {
+                  // ...
+                  this.alwaysUpdate = true;
+              }
+            </pre>
+
+            <p>The <strong>alwaysUpdate</strong> property is to be avoided as much as possible. It will update an object when it is outside the viewport. The reason to use it in this game is because we don't want to remove the laser until it is offscreen. If we wait until it's offscreen, and alwaysUpdate is false, it will never get removed.</p>
+
+            <p>Speaking of the update method.</p>
 
             <pre class="brush: js">
               update: function (time) {
@@ -781,15 +814,23 @@ index.css
               }
             </pre>
 
-            <p>The delta time gets passed through. We'll just pass that to renderable update.</p>
-            <p>The second bit is how we will move the laser. The ship was just moved by manipulating the position directly. Since this has a collision body, we will manipulate the y velocity, by subtracting the y acceleration.</p>
+            <p>The first bit is how we will move the laser. The ship was just moved by manipulating the position directly. Since this has a collision body, we will manipulate the y velocity, by subtracting the y acceleration.</p>
 
-            <p>If the position of the laser plus the height (so the bottom of the laser) is less than zero, we can remove the laser from the game world.</p>
+            <pre class="brush: js">this.body.vel.y -= this.body.accel.y * time / 1000;</pre>
+
+            <p>If the position of the laser plus the height (so the bottom of the laser) is less than zero, we can remove the laser from the game world. Again, this will function now work because alwaysUpdate is set to true.</p>
+            <pre class="brush: js">
+              if (this.pos.y + this.height <= 0) {
+                  me.game.world.removeChild(this);
+              }
+            </pre>
 
             <p>The body update is very important, this applies the velocity we set for this frame.</p>
+            <pre class="brush: js">this.body.update();</pre>
             <p>Then we tell MelonJS to check collisions against this object with <strong>me.collision.check(this)</strong>.</p>
+            <pre class="brush: js">me.collision.check(this);</pre>
 
-            <p>Last bit is to add the laser to the game. Add it to the entity pool in game.js, same as the Player & Enemy objects.</p>
+            <p>The next step for this feature, is to add the laser to the entity pool. Add the following code to game.js, same as the Player &amp; Enemy objects.</p>
 
             <pre class="brush: js">
               me.pool.register("laser", game.Laser);
@@ -818,7 +859,7 @@ index.css
               this.body.collisionType = me.collision.types.ENEMY_OBJECT;
             </pre>
 
-            <p>Then add the body update as the enemy gets updated:</p>
+            <p>Then add an update method so we can update the body:</p>
 
             <pre class="brush: js">
               update: function (time) {
@@ -829,8 +870,6 @@ index.css
                   return true;
               }
             </pre>
-
-            <p>The body needs to be updated, but we don't need to check collisions as the laser handles that.</p>
 
             <p>Now lets add a collision handler to the laser.js file.</p>
 
@@ -846,12 +885,18 @@ index.css
 
             <p>The res parameter that we are not using, is simply the collision result. So it contains details on how much overlap there was, where the collision was, etc.</p>
 
-            <p>Since we set the collision type on the Enemy to be an <strong>ENEMY_OBJECT</strong>, we can check for that type on the object the laser collided with.</p>
+            <p>Since we set the collision type on the Enemy's body to be an <strong>ENEMY_OBJECT</strong>, we can check for that type on the object the laser collided with.</p>
+            <pre class="brush: js">if (other.body.collisionType === me.collision.types.ENEMY_OBJECT) {</pre>
+
             <p>Then we remove the enemy from the laser, along with the enemy from the enemyManager container.</p>
+            <pre class="brush: js">
+              me.game.world.removeChild(this);
+              game.playScreen.enemyManager.removeChild(other);
+            </pre>
             <p>The return false in this case isn't strictly necessary, but it's important to point out. When you return false from a collision handler in MelonJS, the object will pass through. If you return true, it will do a hard stop.</p>
 
             <p>Save the changes, and reload your browser. You should now be able to take out the enemy ships.</p>
-            <p>Next step, is adding our win &amp; loss conditions</p>
+            <p>Next step, is adding the win &amp; loss conditions.</p>
           </div>
 
         </div> <!-- end content -->
