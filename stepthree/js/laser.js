@@ -12,21 +12,13 @@ game.Laser = me.Entity.extend({
             },
             destroy: function () {},
             draw: function (renderer) {
-                var color = renderer.globalColor;
+                var color = renderer.globalColor.toHex();
                 renderer.setColor('#5EFF7E');
                 renderer.fillRect(0, 0, this.width, this.height);
                 renderer.setColor(color);
             }
         }));
         this.alwaysUpdate = true;
-    },
-
-    onCollision: function (res, other) {
-        if (other.body.collisionType === me.collision.types.ENEMY_OBJECT) {
-            me.game.world.removeChild(this);
-            game.playScreen.enemyManager.removeChild(other);
-            return false;
-        }
     },
 
     update: function (time) {
