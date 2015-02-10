@@ -264,8 +264,9 @@ index.css
             </pre>
             <p>
               So what we're doing is adding a function to the window.game object that extends <strong>me.Sprite</strong>. It sets up an init method that grabs the player image.</p>
-            <p>For the x coordinate, we simply grab the dead center, and subtract half the ship, so it can be positioned in the center. And then set its y property to be 20 pixels above the bottom. Then finally pass the image instance to it. This is the constructor of a sprite. All it expects is an X,Y and an image to be used.
-            </p>
+            <p>For the x coordinate, we simply grab the dead center, and subtract half the ship, so it can be positioned in the center. And then set its y property to be 20 pixels above the bottom. Then finally pass the image instance to it.</p>
+
+            <p>Calling <strong>this._super</strong> is how we reference a parent classes' method. In this case, we're calling the me.Sprite contrusctor.</p>
             <p>Let's setup the player in the entity pool. Open game.js and add the following at the top of the loaded method:</p>
             <pre class="brush: js">
               me.pool.register("player", game.Player);
@@ -309,15 +310,16 @@ index.css
               me.game.world.addChild(new me.ColorLayer("background", "#000000", 0));
             </pre>
             <p>
-              Add that in the play screen, above the line where we added the player. The first parameter is simply the name for the layer, so it's easy to fetch from the game world later if you need to. The second parameter is simply the color to draw in hex. The last is the z index. We want it to draw first, so we set it at zero. The z-index can also be passed with addChild:
+              Add that in the play screen, above the line where we added the player. The first parameter is simply the name for the layer, so it's easy to fetch from the game world later if you need to.</p><p>The second parameter is the color to draw in hex.</p>
+              <p>The last is the z index. We want it to draw first, so we set it at zero. The z-index can also be passed with addChild:
             </p>
             <pre class="brush: js">
               me.game.world.addChild(new me.ColorLayer("background", "#000000"), 0);
             </pre>
 
-            <p>Now the pesky loading bar should be gone. Now let's add in enemies. Create a new file under the js folder called enemy.js, and add it to the index.html file.</p>
+            <p>Now the pesky loading bar should be gone. Time to add in an enemy. Create a new file under the js folder called enemy.js, and add it to the index.html file.</p>
 
-            <p>Since enemies will have to collide with things like the player's laser, it should extend <strong>me.Entity</strong>, so lets get that going:</p>
+            <p>Since enemies will have to collide with things like the player's laser, it should extend <strong>me.Entity</strong> as opposed to <strong>me.Sprite</strong>, so lets get that going:</p>
             <pre class="brush: js">
               game.Enemy = me.Entity.extend({
                   init: function (x, y) {
@@ -330,9 +332,7 @@ index.css
               });
             </pre>
 
-            <p>With the enemy, we will need to place them in different spots, so x &amp; y will be added to its constructor, and then passed along to the me.Entity's constructor. We pass an object hash as the settings, specifying the image as "ships", and the dimensions of the entity at 32.</p>
-
-            <p>We used me.Entity for the base class for the enemy, because we want it to have collisions. For the player, we won't really need collisions, so we can just use a sprite.</p>
+            <p>With the enemy, we will need to place them in different spots, so x &amp; y will be added to its constructor, and then passed along to the me.Entity's constructor. The third parameter in the array is a hash of settings. The settings specifies the image as "ships", referencing our game.resources array. The width and height are set to 32x32.</p>
 
             <p>In game.js, add the enemy to the entity pool:</p>
 
@@ -340,7 +340,7 @@ index.css
               me.pool.register("enemy", game.Enemy);
             </pre>
 
-            <p>Back in play.js, add it on to the game world. Your play.js should now look like:</p>
+            <p>Back in play.js, add an enemy to the game world. Your play.js should now look like:</p>
             <pre class="brush: js">
               game.PlayScreen = me.ScreenObject.extend({
                   /**
@@ -363,7 +363,7 @@ index.css
             </pre>
             <p>You can put the enemy at any x &amp; y to try it out. Save &amp; refresh the page in your browser.</p>
 
-            <p>You'll likely notice that the ship is constantly changing how it looks. If you open the ships.png file under data/img, you can see that it is a simple sprite sheet. <strong>me.Entity</strong> for its renderable uses the <strong>me.AnimationSheet</strong> class. Since we didn't add and set any animations on the renderable property, it is just looping through each &amp; every frame. Let's fix that.</p>
+            <p>You'll likely notice that the ship is constantly changing how it looks. If you open the ships.png file under data/img, you can see that it is a sprite sheet containing 4 different ships. <strong>me.Entity</strong> for its renderable uses the <strong>me.AnimationSheet</strong> class. Since we didn't add and set any animations on the renderable property, it is just looping through each &amp; every frame. Let's fix that.</p>
 
             <p>Add a new method to our enemy:</p>
             <pre class="brush: js">
@@ -377,7 +377,7 @@ index.css
             <p>The first line simply randomizes which frame we want. The ship is 32x32, the image is 64x64, so we have 4 frames. ~~ is a shortcut for Math.floor when the number is 0 or positive. On negative numbers, it works like Math.ceil.</p>
             <p>The second line is accessing the animation sheet instance (this.renderable), and uses the addAnimation function to add a new idle frame. So we simply specify the index that was generated at random.</p>
             <p>With the final line, we set the current animation to idle.</p>
-            <p>Call the function at the bottom of the constructor, like so:</p>
+            <p>Now call the function at the bottom of the constructor, like so:</p>
             <pre class="brush: js">
               game.Enemy = me.Entity.extend({
                   init: function (x, y) {
