@@ -149,7 +149,7 @@ index.html
 index.css
 </pre>
 
-            <p>The boilerplate provides us a bunch of default, and for this tutorial there are some we don't need. You can delete the file screens/title.js, and remove the js/entities folder as well. Then update the index.html file to no longer include those. Be sure to remove the references of TitleScreen from the game.js file.</p>
+            <p>The boilerplate provides a bunch of default code. For this tutorial there are some files that we will not need. You can delete the file screens/title.js, and remove the entire js/entities folder. Then update the index.html file to no longer include those, and remove the references of TitleScreen from the game.js file.</p>
 
             <pre class="brush: js">
               var game = {
@@ -196,15 +196,28 @@ index.css
               };
             </pre>
 
-            <p>Game.js is where the game is bootstrapped. index.html calls the game.onload function after loading all the js files, and doing its own initialization. The <strong>me.video.init</strong> bit creates the canvas tag and gets the video setup.</p><p>Lines 12-16 are for using the debug panel.</p><p>Then we intialize the audio engine, telling it what formats we are supporting for this game.</p>
+            <p>Game.js is where the game is bootstrapped. index.html calls the game.onload function after loading all the js files in the window ready event. The <strong>me.video.init</strong> bit creates the canvas tag and gets the video setup.</p><p>Lines 12-16 are for using the debug panel.</p><p>Then we intialize the audio engine, telling it what formats we are supporting for this game.</p>
 
             <p>We set a callback on <strong>me.loader</strong> to our loaded function, and then tell what assets it needs to load, via an array.</p>
 
-            <p>The final step of this process is setting the state of the game to loading. Game states can be used to for things like menu screen, play screen, pause screen, etc. When changing state, it's important to note that everything is removed from the game world, unless you have it set to be <a href="http://melonjs.github.io/docs/me.Renderable.html#isPersistent" target="_blank">persistent</a> across states.</p>
+            <p>The final step of this process is setting the state of the game to loading.</p>
+            <aside>
+              <h5>Note</h5>
+              <p>Game states can be used to for things like a menu screen, play screen, pause screen, etc. When changing state, it's important to note that everything is removed from the game world, unless you have it set to be <a href="http://melonjs.github.io/docs/me.Renderable.html#isPersistent" target="_blank">persistent</a> across states.</p>
+            </aside>
 
-            <p>The above game object would not get removed from the game world, unless you tell it to explicitly.</p>
+            <pre class="brush: js">
+              "loaded" : function () {
+                  this.playScreen = new game.PlayScreen();
+                  me.state.set(me.state.PLAY, this.playScreen);
 
-            <p>The loaded function then sets up the playscreen and tells the game to use that screen object for the play state. When then change state.</p>
+                  // start the game
+                  me.state.change(me.state.PLAY);
+              }
+            </pre>
+
+            <p>The loaded function then sets up the playscreen and tells the game to use that screen object for the play state.</p>
+            <p>Then the game state is set to PLAY.</p>
 
             <h4>Back to space invaders</h4>
 
@@ -225,7 +238,7 @@ index.css
               </tr>
               <tr>
                 <td>type</td>
-                <td>The type of the asset. Valid types are: <strong>audio, binary, image, json, tmx, tsx</strong>. Binary is a good solution for loading raw text, or any other format not listed. TMX & TSX are for tiled file formats. Whether it be the xml or json format.</td>
+                <td>The type of the asset. Valid types are: <strong>audio, binary, image, json, tmx, tsx</strong>. Binary is a good solution for loading raw text, or any other format not listed. TMX &amp; TSX are for tiled file formats. Whether it be the xml or json format.</td>
               </tr>
               <tr>
                 <td>src</td>
@@ -259,25 +272,33 @@ index.css
             </pre>
             <p>
               Now open up <strong>js/screens/play.js</strong>, and edit the onResetEvent method so it looks like this:
-              <pre class="brush: js">
-                game.PlayScreen = me.ScreenObject.extend({
-                    /**
-                     *  action to perform on state change
-                     */
-                    onResetEvent: function() {
-                        me.game.world.addChild(me.pool.pull("player"));
-                    },
-
-
-                    /**
-                     *  action to perform when leaving this screen (state change)
-                     */
-                    onDestroyEvent: function() {
-                    }
-                });
-
-              </pre>
             </p>
+
+            <pre class="brush: js">
+              game.PlayScreen = me.ScreenObject.extend({
+                  /**
+                   *  action to perform on state change
+                   */
+                  onResetEvent: function() {
+                      me.game.world.addChild(me.pool.pull("player"));
+                  },
+
+
+                  /**
+                   *  action to perform when leaving this screen (state change)
+                   */
+                  onDestroyEvent: function() {
+                  }
+              });
+
+            </pre>
+
+            <p>The <strong>onResetEvent</strong> is called when this state is loaded. So when invoking</p>
+            <pre class="brush: js">
+              me.state.change(me.state.PLAY);
+            </pre>
+
+            <p>In the game.js file, <strong>onResetEvent</strong> is then called.</p>
 
             <img src="screens/screenone.png" />
 
@@ -381,7 +402,7 @@ index.css
           <!-- Part 2 -->
           <a id="part2" class="offset-anchor"></a>
           <div class="subcontent">
-            <h3>Applying Movement</h3>
+            <h2>Applying Movement</h2>
             <p>Now that we have ships on screen, let's actually get some interaction going.</p>
 
             <p>Back in play.js, lets add some keybindings:</p>
@@ -599,7 +620,7 @@ index.css
 
           <a id="part3" class="offset-anchor"></a>
           <div class="subcontent">
-            <h3>Adding Lasers, pew pew!</h3>
+            <h2>Adding Lasers, pew pew!</h2>
             <p>Time to get some actual &ldquo;game&rdquo; in this game.</p>
             <p>First thing to do is open up your play.js file, and add a new keybinding & unbind:</p>
 
@@ -757,7 +778,7 @@ index.css
 
           <a id="part4" class="offset-anchor"></a>
           <div class="subcontent">
-            <h3>Collisions</h3>
+            <h2>Collisions</h2>
             <p>First lets give our Enemy a physics body. Append this to the init method in enemy.js</p>
             <pre class="brush: js">
               this.body.addShape(new me.Rect(0, 0, 32, 32));
