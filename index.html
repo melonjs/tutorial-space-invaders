@@ -81,6 +81,8 @@
             <li><a href="#part2">Applying movement</a></li>
             <li><a href="#part3">Adding Lasers, pew pew!</a></li>
             <li><a href="#part4">Collisions</a></li>
+            <li><a href="#part5">Win &amp; Loss Conditions</a></li>
+            <li><a href="#challenges">Challenges</a></li>
           </ul>
         </div>
 
@@ -897,6 +899,121 @@ index.css
 
             <p>Save the changes, and reload your browser. You should now be able to take out the enemy ships.</p>
             <p>Next step, is adding the win &amp; loss conditions.</p>
+          </div>
+
+          <a id="part5" class="offset-anchor"></a>
+          <div class="subcontent">
+            <h2>Win &amp; Loss Conditions</h2>
+            <p>The final step to this game is to actually add conditions for winning &amp; losing. The conditions themselves will be pretty straight forward. When the ships get within range of the player, the player loses. When the player destroys all the enemy ships, they win.</p>
+
+            <p>So what happens when the game ends? A lot of the time you want to display a screen of some sort that the player lost or won. To keep this simple and show you another little trick, we'll just reset the game. So it starts over.</p>
+
+            <h4>First, we'll do the loss condition</h4>
+
+            <p>The pseudo code for this will be:</p>
+
+            <pre class="brush: js">
+              if enemy manager overlaps player
+                then end game
+              else
+                continue
+              end
+            </pre>
+            <p>The PlayScreen is our current game state. It holds the reference to the player, and it has the ability to reset the state. So let's add the logic for checking a lose condition there.</p>
+
+            <pre class="brush: js">
+              checkIfLoss: function (y) {
+                  if (y >= this.player.pos.y) {
+                      this.reset();
+                  }
+              },
+            </pre>
+
+            <p>Add that above the <strong>onResetEvent</strong> method. It accepts a Y value, and checks if it has surpassed the player. Then calls its reset method. The reset will wipe out every object from the game world, and reload the state. So it re-invokes <strong>onResetEvent</strong>, re-populating the enemies and player.</p>
+
+            <p>To call it, simply add it to our interval in the enemy manager:</p>
+
+            <pre class="brush: js">
+              this.timer = me.timer.setInterval(function () {
+                  _this.pos.x += _this.vel;
+                  var bounds = _this.getBounds();
+                  var right = _this.pos.x + bounds.right;
+                  var left = _this.pos.x + bounds.left;
+
+                  if ((_this.vel > 0 && (right + _this.vel) >= me.game.viewport.width) || (_this.vel < 0 && (left + _this.vel) <= 0)) {
+                      _this.vel *= -1;
+                      _this.pos.y += 16;
+                      if (_this.vel > 0) {
+                          _this.vel += 5;
+                      }
+                      else {
+                          _this.vel -= 5;
+                      }
+                  }
+
+                  game.playScreen.checkIfLoss(_this.pos.y + bounds.bottom);
+              }, 1000);
+            </pre>
+
+            <p>Since we're checking in the <strong>checkIfLoss</strong> method if the passed number is greater than the Y position of the player, we need to pass the bottom edge of the container. So we use the bounds.bottom and add the y position to it.</p>
+
+            <p>Save and refresh the browser. Let the enemies move around for a minute, and watch the game reset.</p>
+
+            <h4>The Win Condition</h4>
+
+            <p>Likewise, we'll just have the game reset once the player wins. Since we want to cause the win once all the ships are gone, we can check the length of the children on enemy manager.</p>
+
+            <p>First add this boolean to the bottom of the <strong>createEnemies</strong> method:</p>
+            <pre class="brush: js">
+              this.createdEnemies = true;
+            </pre>
+
+            <p>Add the following update method to the enemy manager:</p>
+            <pre class="brush: js">
+              update: function (time) {
+                  if (this.children.length === 0 && this.createdEnemies) {
+                    game.playScreen.reset();
+                  }
+                  this._super(me.Container, "update", [time]);
+              }
+            </pre>
+
+            <p>This is pretty simple. Children is an array, so we check its length to be zero, and ensure it has created enemies first. Without the boolean check, the game could keep resetting itself because it has no children yet.</p>
+
+            <p>Save and refresh the browser. Try to take out all the ships in time, and see the game reset.</p>
+          </div>
+
+          <a id="challenges" class="offset-anchor"></a>
+          <div class="subcontent">
+            <h2>Challenges</h2>
+
+            <p>We left some parts out of this tutorial, so you could explore them yourself. This is an important part of programming and game development.</p>
+            <p>If you get stuck on any of the challenges or parts of the tutorial, please search for the problem, or ask us the question on our forum: <a href="https://groups.google.com/forum/#!forum/melonjs">https://groups.google.com/forum/#!forum/melonjs</a></p>
+
+            <h3>Challenge #1</h3>
+            <h4>Add a proper win &amp; loss screen</h4>
+            <ol>
+              <li>These screens can be made by adding additional ScreenObjects to the game, register them in game.js, and then changing state. For what states to use for the win &amp; screen, look at the states available: <a href="http://melonjs.github.io/docs/me.state.html">http://melonjs.github.io/docs/me.state.html</a></li>
+              <li>The win and loss screen can contain a sprite, or text, or both. Whatever you wish really. Be sure to look at <a href="http://melonjs.github.io/docs/me.Font.html">me.Font</a> and <a href="http://melonjs.github.io/docs/me.Sprite.html">me.Sprite</a>. To display a <strong>me.Font</strong> object, use an instance of <strong>me.Renderable</strong> that contains an instance of me.Font, and implement the draw function to invoke me.Font#draw.</li>
+              <li>Adjust the checkIfLoss method to show your new loss screen instead.</li>
+              <li>Adjust the if block in the update method on EnemyManager, to change state to your win screneobject.</li>
+              <li>Even more bonus, add a menu screen that tells the player how to play.</li>
+            </ol>
+
+            <h3>Challenge #2</h3>
+            <h4>Add a UI</h4>
+            <ol>
+              <li>Add an enemy counter, and enemy velocity to the top right/left corner of the screen. These properties can be retrieved via: <strong>game.playScreen.enemyManager.children.length</strong> <strong>game.playScreen.enemyManager.vel</strong></li>
+              <li>Again look at <a href="http://melonjs.github.io/docs/me.Font.html">me.Font</a>, and implement a renderable for drawing text. Try to only use one class that extends renderable that can be used for both UI pieces.</li>
+              <li>Add a score element. Keep track of the score on the play screen. Update it each time an enemy is killed. Remember that enemies are removed from the collision handler on the laser.</li>
+            </ol>
+
+            <h3>Challenge #3</h3>
+            <h4>Add the concept of levels</h4>
+            <ol>
+              <li>After you defeat a wave, instead of refreshing the same wave, do a new wave the starts faster. The main logic here will be keeping wave count on the game.js, and increase it after each win. Then use that count in the enemy manager to configure the velocity.</li>
+              <li>Have each wave progress faster too (+ 8 each Y increment over + 5 for example). Play with the numbers a bit until it feels right.</li>
+            </ol>
           </div>
 
         </div> <!-- end content -->

@@ -47,5 +47,5 @@ game.EnemyManager = me.Container.extend({
           game.playScreen.reset();
         }
         this._super(me.Container, "update", [time]);
-      }
+    }
 });
