@@ -260,7 +260,7 @@ index.css
               game.Player = me.Sprite.extend({
                   init: function () {
                       var image = me.loader.getImage("player");
-                      this._super(me.Sprite, "init", [me.game.viewport.width / 2 - image.width / 2, me.game.viewport.height - image.height - 20, image]);
+                      this._super(me.Sprite, "init", [me.game.viewport.width / 2 - image.width / 2, me.game.viewport.height - image.height - 20, { image: image }]);
                   }
               });
             </pre>
@@ -533,11 +533,6 @@ index.css
 
             <p>We're allotting 64 pixels per ship width &amp; height wise. Then subtracting 32 pixels because the last row &amp; column does not require the side padding.</p>
 
-            <aside>
-              <h5>Note</h5>
-              <p>A container's bounds are determined by the min &amp; max of its children's bounds. So children will never go outside. The width &amp; height are just starting values, they do not need to be managed.</p>
-            </aside>
-
             <p>For adding enemies to our container, we need another method:</p>
 
             <pre class="brush: js">
@@ -594,16 +589,44 @@ index.css
 
             <p><strong>onActivateEvent</strong> is called (if it's defined) when the object is added to the game world. This goes for any object you pass to addChild on a container. Likewise, <strong>onDeactivateEvent</strong> is called when the object is removed from the game world.</p>
 
-            <p>Using the MelonJS version of setInterval (which is built into the game loop, it does not use window.setInterval), we can then increment the x position.</p>
+            <p>Using the MelonJS version of <strong>setInterval</strong> (which is built into the game loop, it does not use window.setInterval), we can then increment the x position.</p>
 
-            <p>Save and refresh the browser. The enemy ships now all move together, however they just kinda drift off screen, and don't move down. So let's add to the setInterval callback to fix that:</p>
+            <p>Save and refresh the browser. The enemy ships now all move together, however they just kinda drift off screen, and don't move down. So let's improve the code adjusting the container position.</p>
+
+            <p>First we need to add a rectangle property to track the size of the container:</p>
+
+            <pre class="brush: js">
+              this.childBounds = this.getBounds().clone();
+            </pre>
+
+            <p>This takes the current defaults bounds and clones it to a new instance of <strong>me.Rect</strong></p>
+
+            <p>Then lets re-implement the <strong>addChild</strong> method to update this new rectangle:</p>
+
+            <pre class="brush: js">
+              addChild: function (child, z) {
+                  this._super(me.Container, "addChild", [child, z]);
+                  this.childBounds = this.getChildBounds(this.childBounds);
+              }
+            </pre>
+
+            <p>Then add the <strong>removeChildNow</strong> counterpart:</p>
+
+            <pre class="brush: js">
+              removeChildNow: function (child) {
+                  this._super(me.Container, "removeChildNow", [child]);
+                  this.childBounds = this.getChildBounds(this.childBounds);
+              }
+            </pre>
+
+            <p>The reason for using <strong>removeChildNow</strong> instead of <strong>removeChild</strong>, is removeChild is called after the current frame finishes. removeChildNow actually removes the object, so we want to resize after the object has been removed.</p>
 
             <pre class="brush: js">
               onActivateEvent: function () {
                   var _this = this;
                   this.timer = me.timer.setInterval(function () {
                       _this.pos.x += _this.vel;
-                      var bounds = _this.getBounds();
+                      var bounds = _this.childBounds;
                       var right = _this.pos.x + bounds.right;
                       var left = _this.pos.x + bounds.left;
 
@@ -623,9 +646,9 @@ index.css
 
             <p>That's a fair bit of code, so let's break it down.</p>
 
-            <p>Here we get the bounds of the container. This is a simple rectangle that dictates the relative pixel positions to its origin (pos).</p>
+            <p>Using the child bounds, we setup the left &amp; right values to world coordinates.</p>
             <pre class="brush: js">
-              var bounds = _this.getBounds();
+              var bounds = _this.childBounds;
               var right = _this.pos.x + bounds.right;
               var left = _this.pos.x + bounds.left;
             </pre>
