@@ -1,9 +1,4 @@
 game.PlayScreen = me.ScreenObject.extend({
-    checkIfLoss: function (y) {
-        if (y >= this.player.pos.y) {
-            this.reset();
-        }
-    },
     /**
      *  action to perform on state change
      */

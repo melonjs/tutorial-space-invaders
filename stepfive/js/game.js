@@ -24,6 +24,8 @@ var game = {
             });
         }
 
+        me.debug.renderHitBox = true;
+
         // Initialize the audio.
         me.audio.init("mp3,ogg");
 
