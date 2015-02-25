@@ -606,7 +606,7 @@ index.css
             <pre class="brush: js">
               addChild: function (child, z) {
                   this._super(me.Container, "addChild", [child, z]);
-                  this.childBounds = this.getChildBounds(this.childBounds);
+                  this.resizeChildBounds();
               }
             </pre>
 
@@ -615,11 +615,38 @@ index.css
             <pre class="brush: js">
               removeChildNow: function (child) {
                   this._super(me.Container, "removeChildNow", [child]);
-                  this.childBounds = this.getChildBounds(this.childBounds);
+                  this.resizeChildBounds();
               }
             </pre>
 
-            <p>The reason for using <strong>removeChildNow</strong> instead of <strong>removeChild</strong>, is removeChild is called after the current frame finishes. removeChildNow actually removes the object, so we want to resize after the object has been removed.</p>
+            <p>The reason for extending <strong>removeChildNow</strong> instead of <strong>removeChild</strong>, is removeChild is called after the current frame finishes. removeChildNow is the method that actually removes the object, and we want to resize the bounds after the object has been removed.</p>
+
+            <p>Now add the <strong>resizeChildBounds</strong> method to the enemy_manager:</p>
+
+            <pre class="brush: js">
+              resizeChildBounds: function () {
+                  this.childBounds.pos.set(Infinity, Infinity);
+                  this.childBounds.resize(-Infinity, -Infinity);
+                  var childBounds;
+                  for (var i = this.children.length, child; i--, (child = this.children[i]);) {
+                      if (child.isRenderable) {
+                          if (child instanceof me.Container) {
+                              childBounds = child.childBounds;
+                          }
+                          else {
+                              childBounds = child.getBounds();
+                          }
+                          // TODO : returns an "empty" rect instead of null (e.g. EntityObject)
+                          // TODO : getBounds should always return something anyway
+                          if (childBounds !== null) {
+                              this.childBounds.union(childBounds);
+                          }
+                      }
+                  }
+              }
+            </pre>
+
+            <p>What this does is uses the <strong>union</strong> method of <strong>me.Rect</strong> to determine the minimum bounds that contains all the children. This will determine the width &amp; height values of our container.</p>
 
             <pre class="brush: js">
               onActivateEvent: function () {

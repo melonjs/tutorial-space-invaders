@@ -10,7 +10,7 @@ game.EnemyManager = me.Container.extend({
 
     addChild: function (child, z) {
         this._super(me.Container, "addChild", [child, z]);
-        this.childBounds = this.getChildBounds(this.childBounds);
+        this.resizeChildBounds();
     },
 
     createEnemies: function () {
@@ -48,6 +48,27 @@ game.EnemyManager = me.Container.extend({
 
     removeChildNow: function (child) {
         this._super(me.Container, "removeChildNow", [child]);
-        this.childBounds = this.getChildBounds(this.childBounds);
+        this.resizeChildBounds();
+    },
+
+    resizeChildBounds: function () {
+        this.childBounds.pos.set(Infinity, Infinity);
+        this.childBounds.resize(-Infinity, -Infinity);
+        var childBounds;
+        for (var i = this.children.length, child; i--, (child = this.children[i]);) {
+            if (child.isRenderable) {
+                if (child instanceof me.Container) {
+                    childBounds = child.childBounds;
+                }
+                else {
+                    childBounds = child.getBounds();
+                }
+                // TODO : returns an "empty" rect instead of null (e.g. EntityObject)
+                // TODO : getBounds should always return something anyway
+                if (childBounds !== null) {
+                    this.childBounds.union(childBounds);
+                }
+            }
+        }
     }
 });
