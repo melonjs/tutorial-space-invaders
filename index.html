@@ -627,20 +627,9 @@ index.css
               resizeChildBounds: function () {
                   this.childBounds.pos.set(Infinity, Infinity);
                   this.childBounds.resize(-Infinity, -Infinity);
-                  var childBounds;
                   for (var i = this.children.length, child; i--, (child = this.children[i]);) {
                       if (child.isRenderable) {
-                          if (child instanceof me.Container) {
-                              childBounds = child.childBounds;
-                          }
-                          else {
-                              childBounds = child.getBounds();
-                          }
-                          // TODO : returns an "empty" rect instead of null (e.g. EntityObject)
-                          // TODO : getBounds should always return something anyway
-                          if (childBounds !== null) {
-                              this.childBounds.union(childBounds);
-                          }
+                          this.childBounds.union(child);
                       }
                   }
               }
@@ -652,10 +641,9 @@ index.css
               onActivateEvent: function () {
                   var _this = this;
                   this.timer = me.timer.setInterval(function () {
-                      _this.pos.x += _this.vel;
                       var bounds = _this.childBounds;
                       var right = _this.pos.x + bounds.right;
-                      var left = _this.pos.x + bounds.left;
+                      var left = _this.pos.x;
 
                       if ((_this.vel > 0 && (right + _this.vel) >= me.game.viewport.width) || (_this.vel < 0 && (left + _this.vel) <= 0)) {
                           _this.vel *= -1;
@@ -667,6 +655,9 @@ index.css
                               _this.vel -= 5;
                           }
                       }
+                      else {
+                          _this.pos.x += _this.vel;
+                      }
                   }, 1000);
               }
             </pre>
@@ -677,7 +668,7 @@ index.css
             <pre class="brush: js">
               var bounds = _this.childBounds;
               var right = _this.pos.x + bounds.right;
-              var left = _this.pos.x + bounds.left;
+              var left = _this.pos.x;
             </pre>
 
             <p>The first part of the if checks if the container is moving right, and the right edge + velocity is outside the viewport.</p>
@@ -695,6 +686,12 @@ index.css
               }
               else {
                   _this.vel -= 5;
+              }
+            </pre>
+            <p>Then the last bit, we increment the velocity if the container hasn't moved left or right</p>
+            <pre class="brush: js">
+              else {
+                  _this.pos.x += _this.vel;
               }
             </pre>
             <p>Save and refresh this time, it will now move back and forth across the screen, closer to our player.</p>
@@ -985,10 +982,9 @@ index.css
 
             <pre class="brush: js">
               this.timer = me.timer.setInterval(function () {
-                  _this.pos.x += _this.vel;
-                  var bounds = _this.getBounds();
+                  var bounds = _this.childBounds;
                   var right = _this.pos.x + bounds.right;
-                  var left = _this.pos.x + bounds.left;
+                  var left = _this.pos.x;
 
                   if ((_this.vel > 0 && (right + _this.vel) >= me.game.viewport.width) || (_this.vel < 0 && (left + _this.vel) <= 0)) {
                       _this.vel *= -1;
@@ -1000,8 +996,10 @@ index.css
                           _this.vel -= 5;
                       }
                   }
-
-                  game.playScreen.checkIfLoss(_this.pos.y + bounds.bottom);
+                  else {
+                      _this.pos.x += _this.vel;
+                  }
+                  game.playScreen.checkIfLoss(_this.pos.y + _this.childBounds.bottom);
               }, 1000);
             </pre>
 

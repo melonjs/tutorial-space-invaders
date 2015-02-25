@@ -25,10 +25,9 @@ game.EnemyManager = me.Container.extend({
     onActivateEvent: function () {
         var _this = this;
         this.timer = me.timer.setInterval(function () {
-            _this.pos.x += _this.vel;
             var bounds = _this.childBounds;
             var right = _this.pos.x + bounds.right;
-            var left = _this.pos.x + bounds.left;
+            var left = _this.pos.x;
 
             if ((_this.vel > 0 && (right + _this.vel) >= me.game.viewport.width) || (_this.vel < 0 && (left + _this.vel) <= 0)) {
                 _this.vel *= -1;
@@ -40,7 +39,9 @@ game.EnemyManager = me.Container.extend({
                     _this.vel -= 5;
                 }
             }
-
+            else {
+                _this.pos.x += _this.vel;
+            }
             game.playScreen.checkIfLoss(_this.pos.y + _this.childBounds.bottom);
         }, 1000);
     },
@@ -57,20 +58,9 @@ game.EnemyManager = me.Container.extend({
     resizeChildBounds: function () {
         this.childBounds.pos.set(Infinity, Infinity);
         this.childBounds.resize(-Infinity, -Infinity);
-        var childBounds;
         for (var i = this.children.length, child; i--, (child = this.children[i]);) {
             if (child.isRenderable) {
-                if (child instanceof me.Container) {
-                    childBounds = child.childBounds;
-                }
-                else {
-                    childBounds = child.getBounds();
-                }
-                // TODO : returns an "empty" rect instead of null (e.g. EntityObject)
-                // TODO : getBounds should always return something anyway
-                if (childBounds !== null) {
-                    this.childBounds.union(childBounds);
-                }
+                this.childBounds.union(child);
             }
         }
     },
