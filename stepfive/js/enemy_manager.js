@@ -9,7 +9,7 @@ game.EnemyManager = me.Container.extend({
 
     addChild: function (child, z) {
         this._super(me.Container, "addChild", [child, z]);
-        this.resizeChildBounds();
+        this.updateChildBounds();
     },
 
     createEnemies: function () {
@@ -23,27 +23,27 @@ game.EnemyManager = me.Container.extend({
 
     removeChildNow: function (child) {
         this._super(me.Container, "removeChildNow", [child]);
-        this.resizeChildBounds();
+        this.updateChildBounds();
     },
 
     update: function (time) {
         this.pos.x += this.vel;
-        var bounds = this.childBounds;
-        var right = this.pos.x + bounds.right;
-        var left = this.pos.x + bounds.left;
-
-        if ((this.vel > 0 && (right + this.vel) >= me.game.viewport.width) || (this.vel < 0 && (left + this.vel) <= 0)) {
+        var bounds = this.getBounds();
+        if ((this.vel > 0 && (bounds.right + this.vel) >= me.game.viewport.width) ||
+            (this.vel < 0 && (bounds.left + this.vel) <= 0)) {
             this.vel *= -1;
             this.pos.y += 16;
+
             if (this.vel > 0) {
-                this.vel += 0.2;
+                this.vel += 0.5;
             }
             else {
-                this.vel -= 0.2;
+                this.vel -= 0.5;
             }
         }
+        this.updateChildBounds();
 
-        if ((this.pos.y + this.childBounds.bottom >= game.playScreen.player.pos.y) ||
+        if ((this.childBounds.bottom >= game.playScreen.player.pos.y) ||
             (this.children.length === 0 && this.createdEnemies)) {
             game.playScreen.reset.defer(game.playScreen);
             return false;
