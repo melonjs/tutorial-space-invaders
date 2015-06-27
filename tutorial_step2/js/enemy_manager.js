@@ -1,11 +1,10 @@
 game.EnemyManager = me.Container.extend({
     init: function () {
+        this._super(me.Container, "init", [0, 32, this.COLS * 64 - 32, this.ROWS * 64 - 32]);
         this.COLS = 9;
         this.ROWS = 4;
-        this._super(me.Container, "init", [0, 32, this.COLS * 64 - 32, this.ROWS * 64 - 32]);
-        this.childBounds = this.getBounds().clone();
-        this.timer = me.timer.getTime();
         this.vel = 16;
+        this.childBounds = this.getBounds().clone();
     },
 
     addChild: function (child, z) {
@@ -25,10 +24,9 @@ game.EnemyManager = me.Container.extend({
         var _this = this;
         this.timer = me.timer.setInterval(function () {
             var bounds = _this.childBounds;
-            var right = _this.pos.x + bounds.right;
-            var left = _this.pos.x;
 
-            if ((_this.vel > 0 && (right + _this.vel) >= me.game.viewport.width) || (_this.vel < 0 && (left + _this.vel) <= 0)) {
+            if ((_this.vel > 0 && (bounds.right + _this.vel) >= me.game.viewport.width) ||
+                (_this.vel < 0 && (bounds.left + _this.vel) <= 0)) {
                 _this.vel *= -1;
                 _this.pos.y += 16;
                 if (_this.vel > 0) {
@@ -61,5 +59,10 @@ game.EnemyManager = me.Container.extend({
                 this.childBounds.union(child);
             }
         }
+    },
+
+    update: function (time) {
+        this._super(me.Container, "update", [time]);
+        this.updateChildBounds();
     }
 });

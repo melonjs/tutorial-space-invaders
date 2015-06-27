@@ -522,9 +522,10 @@ index.css
             <pre class="brush: js">
               game.EnemyManager = me.Container.extend({
                 init: function () {
+                  this._super(me.Container, "init", [0, 32, this.COLS * 64 - 32, this.ROWS * 64 - 32]);
                   this.COLS = 9;
                   this.ROWS = 4;
-                  this._super(me.Container, "init", [0, 32, this.COLS * 64 - 32, this.ROWS * 64 - 32]);
+                  this.vel = 16;
                 }
               });
             </pre>
@@ -593,7 +594,7 @@ index.css
 
             <p>Save and refresh the browser. The enemy ships now all move together, however they just kinda drift off screen, and don't move down. So let's improve the code adjusting the container position.</p>
 
-            <p>First we need to add a rectangle property to track the size of the container:</p>
+            <p>First we need to add a rectangle property to track the size of the container. Add this to the EnemyManager constructor:</p>
 
             <pre class="brush: js">
               this.childBounds = this.getBounds().clone();
@@ -642,10 +643,9 @@ index.css
                   var _this = this;
                   this.timer = me.timer.setInterval(function () {
                       var bounds = _this.childBounds;
-                      var right = _this.pos.x + bounds.right;
-                      var left = _this.pos.x;
 
-                      if ((_this.vel > 0 && (right + _this.vel) >= me.game.viewport.width) || (_this.vel < 0 && (left + _this.vel) <= 0)) {
+                      if ((_this.vel > 0 && (bounds.right + _this.vel) >= me.game.viewport.width) ||
+                          (_this.vel < 0 && (bounds.left + _this.vel) <= 0)) {
                           _this.vel *= -1;
                           _this.pos.y += 16;
                           if (_this.vel > 0) {
@@ -664,17 +664,15 @@ index.css
 
             <p>That's a fair bit of code, so let's break it down.</p>
 
-            <p>Using the child bounds, we setup the left &amp; right values to world coordinates.</p>
+            <p>Using the child bounds, we can retrieve the left &amp; right values to world coordinates.</p>
             <pre class="brush: js">
               var bounds = _this.childBounds;
-              var right = _this.pos.x + bounds.right;
-              var left = _this.pos.x;
             </pre>
 
             <p>The first part of the if checks if the container is moving right, and the right edge + velocity is outside the viewport.</p>
-            <pre class="brush: js">(_this.vel > 0 && (right + _this.vel) >= me.game.viewport.width)</pre>
+            <pre class="brush: js">(_this.vel > 0 && (bounds.right + _this.vel) >= me.game.viewport.width)</pre>
             <p>The second part checks if the container is moving left, and its left bounds is less than zero.</p>
-            <pre class="brush: js">(_this.vel < 0 && (left + _this.vel) <= 0)</pre>
+            <pre class="brush: js">(_this.vel < 0 && (bounds.left + _this.vel) <= 0)</pre>
 
             <p>In the block, we reverse the velocity, move down by 16 pixels and then increase the velocity.</p>
 
@@ -694,7 +692,19 @@ index.css
                   _this.pos.x += _this.vel;
               }
             </pre>
-            <p>Save and refresh this time, it will now move back and forth across the screen, closer to our player.</p>
+            <p>Save and refresh this time, it should now move back and forth across the screen, closer to our player. But there's a problem! It isn't turning around when it gets to the edge! What's going on here?</p>
+
+            <p>At this point, you should add #debug to the URL: <a href="http://localhost:8000/#debug">http://localhost:8000/#debug</a> and tap on the checkbox next to "hitbox" in the debug panel. This will enable hitbox rendering, so you can visualize the internal structure of your objects.</p>
+
+            <p>The hitboxes show that the child bounds (the large purple rectangle occupying the EnemyManager's original position) is not moving with the container. This is because child bounds updates are not automatically computed. You can easily recompute the child bounds by overloading the update method:</p>
+
+            <pre class="brush: js">
+              update: function (time) {
+                  this._super(me.Container, "update", [time]);
+                  this.updateChildBounds();
+              }
+            </pre>
+            <p>Save and refresh, and you'll find that it now works as expected!</p>
           </div>
 
           <!-- Part 3 -->
@@ -983,10 +993,9 @@ index.css
             <pre class="brush: js">
               this.timer = me.timer.setInterval(function () {
                   var bounds = _this.childBounds;
-                  var right = _this.pos.x + bounds.right;
-                  var left = _this.pos.x;
 
-                  if ((_this.vel > 0 && (right + _this.vel) >= me.game.viewport.width) || (_this.vel < 0 && (left + _this.vel) <= 0)) {
+                  if ((_this.vel > 0 && (bounds.right + _this.vel) >= me.game.viewport.width) ||
+                      (_this.vel < 0 && (bounds.left + _this.vel) <= 0)) {
                       _this.vel *= -1;
                       _this.pos.y += 16;
                       if (_this.vel > 0) {
@@ -995,15 +1004,15 @@ index.css
                       else {
                           _this.vel -= 5;
                       }
+                      game.playScreen.checkIfLoss(bounds.bottom); // <<<
                   }
                   else {
                       _this.pos.x += _this.vel;
                   }
-                  game.playScreen.checkIfLoss(_this.pos.y + _this.childBounds.bottom);
               }, 1000);
             </pre>
 
-            <p>Since we're checking in the <strong>checkIfLoss</strong> method if the passed number is greater than the Y position of the player, we need to pass the bottom edge of the container. So we use the bounds.bottom and add the y position to it.</p>
+            <p>Since we're checking in the <strong>checkIfLoss</strong> method if the passed number is greater than the Y position of the player, we need to pass the bottom edge of the container, which is just bounds.bottom.</p>
 
             <p>Save and refresh the browser. Let the enemies move around for a minute, and watch the game reset.</p>
 
