@@ -4,12 +4,6 @@ game.EnemyManager = me.Container.extend({
         this.COLS = 9;
         this.ROWS = 4;
         this.vel = 16;
-        this.childBounds = this.getBounds().clone();
-    },
-
-    addChild: function (child, z) {
-        this._super(me.Container, "addChild", [child, z]);
-        this.resizeChildBounds();
     },
 
     createEnemies: function () {
@@ -19,6 +13,7 @@ game.EnemyManager = me.Container.extend({
             }
         }
         this.createdEnemies = true;
+        this.updateChildBounds();
     },
 
     onActivateEvent: function () {
@@ -50,17 +45,7 @@ game.EnemyManager = me.Container.extend({
 
     removeChildNow: function (child) {
         this._super(me.Container, "removeChildNow", [child]);
-        this.resizeChildBounds();
-    },
-
-    resizeChildBounds: function () {
-        this.childBounds.pos.set(Infinity, Infinity);
-        this.childBounds.resize(-Infinity, -Infinity);
-        for (var i = this.children.length, child; i--, (child = this.children[i]);) {
-            if (child.isRenderable) {
-                this.childBounds.union(child);
-            }
-        }
+        this.updateChildBounds();
     },
 
     update: function (time) {

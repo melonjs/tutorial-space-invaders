@@ -17,7 +17,7 @@ game.Player = me.Sprite.extend({
         }
 
         if (me.input.isKeyPressed("shoot")) {
-            me.game.world.addChild(me.pool.pull("laser", this.pos.x + (this.width / 2 - game.Laser.width / 2), this.pos.y - game.Laser.height))
+            me.game.world.addChild(me.pool.pull("laser", this.pos.x - game.Laser.width, this.pos.y - game.Laser.height))
         }
 
         this.pos.x = this.pos.x.clamp(0, this.maxX);
