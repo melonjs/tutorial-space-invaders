@@ -205,7 +205,7 @@ index.css
             <p>The final step of this process is setting the state of the game to loading.</p>
             <aside>
               <h5>Note</h5>
-              <p>Game states can be used to for things like a menu screen, play screen, pause screen, etc. When changing state, it's important to note that everything is removed from the game world, unless you have it set to be <a href="http://melonjs.github.io/docs/me.Renderable.html#isPersistent" target="_blank">persistent</a> across states.</p>
+              <p>Game states can be used to for things like a menu screen, play screen, pause screen, etc. When changing state, it's important to note that everything is removed from the game world, unless you have it set to be <a href="http://melonjs.github.io/melonJS/docs/me.Renderable.html#isPersistent" target="_blank">persistent</a> across states.</p>
             </aside>
 
             <pre class="brush: js">
@@ -1017,8 +1017,8 @@ index.css
             <h3>Challenge #1</h3>
             <h4>Add a proper win &amp; loss screen</h4>
             <ol>
-              <li>These screens can be made by adding additional ScreenObjects to the game, register them in game.js, and then changing state. For what states to use for the win &amp; screen, look at the states available: <a href="http://melonjs.github.io/docs/me.state.html">http://melonjs.github.io/docs/me.state.html</a></li>
-              <li>The win and loss screen can contain a sprite, or text, or both. Whatever you wish really. Be sure to look at <a href="http://melonjs.github.io/docs/me.Font.html">me.Font</a> and <a href="http://melonjs.github.io/docs/me.Sprite.html">me.Sprite</a>. To display a <strong>me.Font</strong> object, use an instance of <strong>me.Renderable</strong> that contains an instance of me.Font, and implement the draw function to invoke me.Font#draw.</li>
+              <li>These screens can be made by adding additional ScreenObjects to the game, register them in game.js, and then changing state. For what states to use for the win &amp; screen, look at the states available: <a href="http://melonjs.github.io/melonJS/docs/me.state.html">http://melonjs.github.io/melonJS/docs/me.state.html</a></li>
+              <li>The win and loss screen can contain a sprite, or text, or both. Whatever you wish really. Be sure to look at <a href="http://melonjs.github.io/melonJS/docs/me.Font.html">me.Font</a> and <a href="http://melonjs.github.io/melonJS/docs/me.Sprite.html">me.Sprite</a>. To display a <strong>me.Font</strong> object, use an instance of <strong>me.Renderable</strong> that contains an instance of me.Font, and implement the draw function to invoke me.Font#draw.</li>
               <li>Adjust the checkIfLoss method to show your new loss screen instead.</li>
               <li>Adjust the if block in the update method on EnemyManager, to change state to your win screneobject.</li>
               <li>Even more bonus, add a menu screen that tells the player how to play.</li>
@@ -1028,7 +1028,7 @@ index.css
             <h4>Add a UI</h4>
             <ol>
               <li>Add an enemy counter, and enemy velocity to the top right/left corner of the screen. These properties can be retrieved via: <strong>game.playScreen.enemyManager.children.length</strong> <strong>game.playScreen.enemyManager.vel</strong></li>
-              <li>Again look at <a href="http://melonjs.github.io/docs/me.Font.html">me.Font</a>, and implement a renderable for drawing text. Try to only use one class that extends renderable that can be used for both UI pieces.</li>
+              <li>Again look at <a href="http://melonjs.github.io/melonJS/docs/me.Font.html">me.Font</a>, and implement a renderable for drawing text. Try to only use one class that extends renderable that can be used for both UI pieces.</li>
               <li>Add a score element. Keep track of the score on the play screen. Update it each time an enemy is killed. Remember that enemies are removed from the collision handler on the laser.</li>
             </ol>
 
