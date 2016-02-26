@@ -912,15 +912,6 @@ end
 
             <p>Add that above the <strong>onResetEvent</strong> method. It accepts a Y value, and checks if it has surpassed the player. Then calls its reset method. The reset will wipe out every object from the game world, and reload the state. So it re-invokes <strong>onResetEvent</strong>, re-populating the enemies and player.</p>
 
-            <p>Then setup the reference for <strong>this.player</strong>. Replace the line in <strong>onResetEvent</strong>:</p>
-
-<pre><code>me.game.world.addChild(me.pool.pull("player"), 1);</code></pre>
-
-            <p>With:</p>
-
-<pre><code>this.player = me.pool.pull("player");
-me.game.world.addChild(this.player, 1);</code></pre>
-
             <p>Now to call this condition check, simply add the method call to our interval in the enemy manager:</p>
 
 <pre><code>this.timer = me.timer.setInterval(function () {
@@ -946,7 +937,20 @@ me.game.world.addChild(this.player, 1);</code></pre>
 
             <p>Since we're checking in the <strong>checkIfLoss</strong> method if the passed number is greater than the Y position of the player, we need to pass the bottom edge of the container, which is just bounds.bottom.</p>
 
-            <p>Save and refresh the browser. Let the enemies move around for a minute, and watch the game reset.</p>
+            <p>The problem now though, is if you run it, <strong>this.player</strong> will be undefined. That's because we haven't yet
+              setup this property on the playScreen. You can setup the property by doing the following:</p>
+
+            <p>Replace the line in <strong>onResetEvent</strong>:</p>
+
+<pre><code>me.game.world.addChild(me.pool.pull("player"), 1);</code></pre>
+
+            <p>With:</p>
+
+<pre><code>this.player = me.pool.pull("player");
+me.game.world.addChild(this.player, 1);</code></pre>
+
+            <p>Save and refresh the browser. <strong>this.player</strong> will not be set properly, so calling our new method will work.
+              Let the enemies move around for a minute, and watch the game reset.</p>
 
             <h4>The Win Condition</h4>
 
