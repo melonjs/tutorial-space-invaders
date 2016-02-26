@@ -2,10 +2,12 @@
 <html>
   <head>
     <title>melonJS - Space invaders tutorial</title>
-    <meta name="description" content="melonJS space invaders tutorial"/>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-    <link rel="stylesheet" type="text/css" href="style/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="style/style.css"/>
+    <meta name="description" content="melonJS space invaders tutorial">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="vendor/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="vendor/prism.css">
+    <link rel="stylesheet" type="text/css" href="style/style.css">
+    <link rel="icon" type="image/png" href="style/favicon.png">
     <script type="text/javascript">
       //<![CDATA[
 
@@ -13,7 +15,7 @@
       _gaq.push(['_setAccount', 'UA-13050059-3']);
       _gaq.push(['_trackPageview']);
 
-      (function() {
+      (function () {
         var ga = document.createElement('script');
         ga.type = 'text/javascript';
         ga.async = true;
@@ -24,56 +26,15 @@
 
       //]]>
     </script>
-    <script type="text/javascript" src="SyntaxHighlighter/shCore.js"></script>
-    <script type="text/javascript" src="SyntaxHighlighter/shBrushJScript.js"></script>
-    <link href="SyntaxHighlighter/shCore.css" rel="stylesheet" type="text/css" />
-    <link href="SyntaxHighlighter/shThemeDefault.css" rel="stylesheet" type="text/css" />
-    <style type="text/css">
-      /*<![CDATA[*/
-      pre.c2 {
-        font-family: Andale Mono, Lucida Console, Monaco, fixed, monospace;
-        color: #000000;
-        background-color: #eee;
-        font-size: 12px;
-        border: 1px dashed #999999;
-        line-height: 14px;
-        padding: 5px;
-        overflow: auto;
-        width: 100%
-      }
-
-      p.c1 {
-        font-weight: bold;
-        padding: 0;
-      }
-
-      /*]]>*/
-    </style>
   </head>
 
-  <body>
-    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-      <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-          <a class="navbar-brand" href="#">
-            <img src="https://raw.githubusercontent.com/melonjs/melonJS/master/tasks/jsdoc-template/template/static/images/melon.png" alt="melonJS" height='30'>
-          </a>
-        </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav">
-            <li><a href="http://melonjs.org">Home</a></li>
-          </ul>
-        </div><!-- /.navbar-collapse -->
-      </div><!-- /.container-fluid -->
-    </nav>
-    <!-- the "Fork me!" sticker -->
+  <body class="language-javascript">
+    <a href="https://github.com/melonjs/tutorial-space-invaders"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 1000;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a>
 
     <div id="main">
       <div class="row">
         <div id="sidebar" class="col-md-2 col-md-offset-1 sidebar">
+          <a class="logo" href="http://www.melonjs.org/"><img src="style/melon.png" alt="melonJS"></a>
           <ul class="nav nav-sidebar">
             <li><h3>Content</h3></li>
             <li><a href="#intro">Introduction</a></li>
@@ -153,50 +114,46 @@ index.css
 
             <p>The boilerplate provides a bunch of default code. For this tutorial there are some files that we will not need. You can delete the file screens/title.js, and remove the entire js/entities folder. Then update the index.html file to no longer include those, and remove the references of TitleScreen from the game.js file.</p>
 
-            <pre class="brush: js">
-              var game = {
+<pre><code>var game = {
+  // Run on page load.
+  onload : function () {
+    // Initialize the video.
+    if (!me.video.init(640, 480, {wrapper : "screen", scale : 'auto'})) {
+      alert("Your browser does not support HTML5 canvas.");
+      return;
+    }
 
-                  // Run on page load.
-                  "onload" : function () {
-                      // Initialize the video.
-                      if (!me.video.init(640, 480, {wrapper : "screen", scale : 'auto'})) {
-                          alert("Your browser does not support HTML5 canvas.");
-                          return;
-                      }
+    // add "#debug" to the URL to enable the debug Panel
+    if (me.game.HASH.debug === true) {
+      window.onReady(function () {
+        me.plugin.register.defer(this, me.debug.Panel, "debug", me.input.KEY.V);
+      });
+    }
 
-                      // add "#debug" to the URL to enable the debug Panel
-                      if (me.game.HASH.debug === true) {
-                          window.onReady(function () {
-                              me.plugin.register.defer(this, me.debug.Panel, "debug", me.input.KEY.V);
-                          });
-                      }
+    // Initialize the audio.
+    me.audio.init("mp3,ogg");
 
-                      // Initialize the audio.
-                      me.audio.init("mp3,ogg");
+    // Set a callback to run when loading is complete.
+    me.loader.onload = this.loaded.bind(this);
 
-                      // Set a callback to run when loading is complete.
-                      me.loader.onload = this.loaded.bind(this);
+    // Load the resources.
+    me.loader.preload(game.resources);
 
-                      // Load the resources.
-                      me.loader.preload(game.resources);
+    // Initialize melonJS and display a loading screen.
+    me.state.change(me.state.LOADING);
+  },
 
-                      // Initialize melonJS and display a loading screen.
-                      me.state.change(me.state.LOADING);
-                  },
+  // Run on game resources loaded.
+  loaded : function () {
+    // set the "Play/Ingame" Screen Object
+    this.playScreen = new game.PlayScreen();
+    me.state.set(me.state.PLAY, this.playScreen);
 
-
-
-                  // Run on game resources loaded.
-                  "loaded" : function () {
-                      // set the "Play/Ingame" Screen Object
-                      this.playScreen = new game.PlayScreen();
-                      me.state.set(me.state.PLAY, this.playScreen);
-
-                      // start the game
-                      me.state.change(me.state.PLAY);
-                  }
-              };
-            </pre>
+    // start the game
+    me.state.change(me.state.PLAY);
+  }
+};
+</code></pre>
 
             <p>Game.js is where the game is bootstrapped. index.html calls the game.onload function after loading all the js files in the window ready event. The <strong>me.video.init</strong> bit creates the canvas tag and gets the video setup.</p><p>Lines 12-16 are for using the debug panel.</p><p>Then we intialize the audio engine, telling it what formats we are supporting for this game.</p>
 
@@ -208,15 +165,14 @@ index.css
               <p>Game states can be used to for things like a menu screen, play screen, pause screen, etc. When changing state, it's important to note that everything is removed from the game world, unless you have it set to be <a href="http://melonjs.github.io/melonJS/docs/me.Renderable.html#isPersistent" target="_blank">persistent</a> across states.</p>
             </aside>
 
-            <pre class="brush: js">
-              "loaded" : function () {
-                  this.playScreen = new game.PlayScreen();
-                  me.state.set(me.state.PLAY, this.playScreen);
+<pre><code>loaded : function () {
+  this.playScreen = new game.PlayScreen();
+  me.state.set(me.state.PLAY, this.playScreen);
 
-                  // start the game
-                  me.state.change(me.state.PLAY);
-              }
-            </pre>
+  // start the game
+  me.state.change(me.state.PLAY);
+}
+</code></pre>
 
             <p>The loaded function then sets up the playscreen and tells the game to use that screen object for the play state.</p>
             <p>Then the game state is set to PLAY.</p>
@@ -224,12 +180,13 @@ index.css
             <h4>Back to space invaders</h4>
 
             <p>The first thing to add is images to the resources.js file.</p>
-            <pre class="brush: js">
-              game.resources = [
-                { name: "player", type: "image", src: "data/img/player.png" },
-                { name: "ships", type: "image", src: "data/img/ships.png" }
-              ];
-            </pre>
+
+<pre><code>game.resources = [
+  { name: "player", type: "image", src: "data/img/player.png" },
+  { name: "ships", type: "image", src: "data/img/ships.png" }
+];
+</code></pre>
+
             <p>This variable is the one passed to me.loader.preload in game.js</p>
 
             <p>The structure for an asset is :</p>
@@ -256,50 +213,50 @@ index.css
 
             <p>Add a new file under the js folder, and call it <strong>player.js</strong>. Be sure to add it in the index.html file.</p>
 
-            <pre class="brush: js">
-              game.Player = me.Sprite.extend({
-                  init: function () {
-                      var image = me.loader.getImage("player");
-                      this._super(me.Sprite, "init", [me.game.viewport.width / 2 - image.width / 2, me.game.viewport.height - image.height - 20, { image: image }]);
-                  }
-              });
-            </pre>
+<pre><code>game.Player = me.Sprite.extend({
+  init : function () {
+    var image = me.loader.getImage("player");
+    this._super(me.Sprite, "init", [
+      me.game.viewport.width / 2 - image.width / 2,
+      me.game.viewport.height - image.height - 20,
+      { image : image }
+    ]);
+  }
+});
+</code></pre>
+
             <p>
               So what we're doing is adding a function to the window.game object that extends <strong>me.Sprite</strong>. It sets up an init method that grabs the player image.</p>
             <p>For the x coordinate, we simply grab the dead center, and subtract half the ship, so it can be positioned in the center. And then set its y property to be 20 pixels above the bottom. Then finally pass the image instance to it.</p>
 
             <p>Calling <strong>this._super</strong> is how we reference a parent classes' method. In this case, we're calling the me.Sprite contrusctor.</p>
             <p>Let's setup the player in the entity pool. Open game.js and add the following at the top of the loaded method:</p>
-            <pre class="brush: js">
-              me.pool.register("player", game.Player);
-            </pre>
+
+            <pre><code>me.pool.register("player", game.Player);</code></pre>
+
             <p>
               Now open up <strong>js/screens/play.js</strong>, and edit the onResetEvent method so it looks like this:
             </p>
 
-            <pre class="brush: js">
-              game.PlayScreen = me.ScreenObject.extend({
-                  /**
-                   *  action to perform on state change
-                   */
-                  onResetEvent: function() {
-                      me.game.world.addChild(me.pool.pull("player"));
-                  },
+<pre><code>game.PlayScreen = me.ScreenObject.extend({
+  /**
+   * action to perform on state change
+   */
+  onResetEvent : function () {
+    me.game.world.addChild(me.pool.pull("player"));
+  },
 
-
-                  /**
-                   *  action to perform when leaving this screen (state change)
-                   */
-                  onDestroyEvent: function() {
-                  }
-              });
-
-            </pre>
+  /**
+   * action to perform when leaving this screen (state change)
+   */
+  onDestroyEvent : function () {
+  }
+});
+</code></pre>
 
             <p>The <strong>onResetEvent</strong> is called when this state is loaded. So when invoking</p>
-            <pre class="brush: js">
-              me.state.change(me.state.PLAY);
-            </pre>
+
+            <pre><code>me.state.change(me.state.PLAY);</code></pre>
 
             <p>In the game.js file, <strong>onResetEvent</strong> is then called.</p>
 
@@ -308,9 +265,8 @@ index.css
             <p>Yay, the ship is on the bottom of the screen!
             </p><p>But we can still see the loading bar, that's not cool. The reason for this is that MelonJS does not want to do any operations that it doesn't have to. Sometimes you'll have a background image that gets redrawn, so it covers the original loading bar. However, we don't have a background image for this game, so what we will do is add a color layer.</p>
 
-            <pre class="brush: js">
-              me.game.world.addChild(new me.ColorLayer("background", "#000000"), 0);
-            </pre>
+            <pre><code>me.game.world.addChild(new me.ColorLayer("background", "#000000"), 0);</code></pre>
+
             <p>
               Add that in the play screen, above the line where we added the player. The first parameter is simply the name for the layer, so it's easy to fetch from the game world later if you need to.</p><p>The second parameter is the color to draw in hex.</p>
               <p>The second parameter passed to the addChild function is the z index. We want it to draw first, so we set it at zero.
@@ -319,82 +275,80 @@ index.css
             <p>Now the pesky loading bar should be gone. Time to add in an enemy. Create a new file under the js folder called enemy.js, and add it to the index.html file.</p>
 
             <p>Since enemies will have to collide with things like the player's laser, it should extend <strong>me.Entity</strong> as opposed to <strong>me.Sprite</strong>, so lets get that going:</p>
-            <pre class="brush: js">
-              game.Enemy = me.Entity.extend({
-                  init: function (x, y) {
-                      this._super(me.Entity, "init", [x, y, {
-                          image: "ships",
-                          width: 32,
-                          height: 32
-                      }]);
-                  }
-              });
-            </pre>
+
+<pre><code>game.Enemy = me.Entity.extend({
+  init: function (x, y) {
+    this._super(me.Entity, "init", [x, y, {
+      image : "ships",
+      width : 32,
+      height : 32
+    }]);
+  }
+});
+</code></pre>
 
             <p>With the enemy, we will need to place them in different spots, so x &amp; y will be added to its constructor, and then passed along to the me.Entity's constructor. The third parameter in the array is a hash of settings. The settings specifies the image as "ships", referencing our game.resources array. The width and height are set to 32x32.</p>
 
             <p>In game.js, add the enemy to the entity pool:</p>
 
-            <pre class="brush: js">
-              me.pool.register("enemy", game.Enemy);
-            </pre>
+            <pre><code>me.pool.register("enemy", game.Enemy);</code></pre>
 
             <p>Back in play.js, add an enemy to the game world. Your play.js should now look like:</p>
-            <pre class="brush: js">
-              game.PlayScreen = me.ScreenObject.extend({
-                  /**
-                   *  action to perform on state change
-                   */
-                  onResetEvent: function() {
-                      me.game.world.addChild(new me.ColorLayer("background", "#000000"), 0);
-                      me.game.world.addChild(me.pool.pull("player"), 1);
-                      me.game.world.addChild(me.pool.pull("enemy"), 2);
-                  },
 
+<pre><code>game.PlayScreen = me.ScreenObject.extend({
+  /**
+   * action to perform on state change
+   */
+  onResetEvent : function () {
+    me.game.world.addChild(new me.ColorLayer("background", "#000000"), 0);
+    me.game.world.addChild(me.pool.pull("player"), 1);
+    me.game.world.addChild(me.pool.pull("enemy"), 2);
+  },
 
-                  /**
-                   *  action to perform when leaving this screen (state change)
-                   */
-                  onDestroyEvent: function() {
-                  }
-              });
+  /**
+   * action to perform when leaving this screen (state change)
+   */
+  onDestroyEvent : function () {
+  }
+});
+</code></pre>
 
-            </pre>
             <p>You can put the enemy at any x &amp; y to try it out. Save &amp; refresh the page in your browser.</p>
 
             <p>You'll likely notice that the ship is constantly changing how it looks. If you open the ships.png file under data/img, you can see that it is a sprite sheet containing 4 different ships. <strong>me.Entity</strong> for its renderable uses the <strong>me.AnimationSheet</strong> class. Since we didn't add and set any animations on the renderable property, it is just looping through each &amp; every frame. Let's fix that.</p>
 
             <p>Add a new method to our enemy:</p>
-            <pre class="brush: js">
-              chooseShipImage: function () {
-                  var frame = ~~(Math.random() * 3);
-                  this.renderable.addAnimation("idle", [frame], 1);
-                  this.renderable.setCurrentAnimation("idle");
-              }
-            </pre>
+
+<pre><code>chooseShipImage: function () {
+  var frame = ~~(Math.random() * 3);
+  this.renderable.addAnimation("idle", [frame], 1);
+  this.renderable.setCurrentAnimation("idle");
+}
+</code></pre>
 
             <p>The first line simply randomizes which frame we want. The ship is 32x32, the image is 64x64, so we have 4 frames. ~~ is a shortcut for Math.floor when the number is 0 or positive. On negative numbers, it works like Math.ceil.</p>
             <p>The second line is accessing the animation sheet instance (this.renderable), and uses the addAnimation function to add a new idle frame. So we simply specify the index that was generated at random.</p>
             <p>With the final line, we set the current animation to idle.</p>
             <p>Now call the function at the bottom of the constructor, like so:</p>
-            <pre class="brush: js">
-              game.Enemy = me.Entity.extend({
-                  init: function (x, y) {
-                      this._super(me.Entity, "init", [x, y, {
-                          image: "ships",
-                          width: 32,
-                          height: 32
-                      }]);
-                      this.chooseShipImage();
-                  },
 
-                  chooseShipImage: function () {
-                      var frame = ~~(Math.random() * 3);
-                      this.renderable.addAnimation("idle", [frame], 1);
-                      this.renderable.setCurrentAnimation("idle");
-                  },
-              });
-            </pre>
+<pre><code>game.Enemy = me.Entity.extend({
+    init: function (x, y) {
+        this._super(me.Entity, "init", [x, y, {
+            image: "ships",
+            width: 32,
+            height: 32
+        }]);
+        this.chooseShipImage();
+    },
+
+    chooseShipImage: function () {
+        var frame = ~~(Math.random() * 3);
+        this.renderable.addAnimation("idle", [frame], 1);
+        this.renderable.setCurrentAnimation("idle");
+    },
+});
+</code></pre>
+
             <p>Now refresh the page, and our ship should only pop up as one of them. Try refreshing it multiple times to see it change.</p>
           </div>
 
@@ -405,34 +359,33 @@ index.css
             <p>Now that we have ships on screen, let's actually get some interaction going.</p>
 
             <p>Back in play.js, lets add some keybindings:</p>
-            <pre class="brush: js">
-              game.PlayScreen = me.ScreenObject.extend({
-                  /**
-                   *  action to perform on state change
-                   */
-                  onResetEvent: function() {
-                      me.game.world.addChild(new me.ColorLayer("background", "#000000"), 0);
-                      me.game.world.addChild(new game.Player(), 1);
-                      me.game.world.addChild(new game.Enemy(50, 50), 2);
 
-                      me.input.bindKey(me.input.KEY.LEFT, "left");
-                      me.input.bindKey(me.input.KEY.RIGHT, "right");
-                      me.input.bindKey(me.input.KEY.A, "left");
-                      me.input.bindKey(me.input.KEY.D, "right");
-                  },
+<pre><code>game.PlayScreen = me.ScreenObject.extend({
+  /**
+   * action to perform on state change
+   */
+  onResetEvent : function () {
+    me.game.world.addChild(new me.ColorLayer("background", "#000000"), 0);
+    me.game.world.addChild(new game.Player(), 1);
+    me.game.world.addChild(new game.Enemy(50, 50), 2);
 
+    me.input.bindKey(me.input.KEY.LEFT, "left");
+    me.input.bindKey(me.input.KEY.RIGHT, "right");
+    me.input.bindKey(me.input.KEY.A, "left");
+    me.input.bindKey(me.input.KEY.D, "right");
+  },
 
-                  /**
-                   *  action to perform when leaving this screen (state change)
-                   */
-                  onDestroyEvent: function() {
-                      me.input.unbindKey(me.input.KEY.LEFT);
-                      me.input.unbindKey(me.input.KEY.RIGHT);
-                      me.input.unbindKey(me.input.KEY.A);
-                      me.input.unbindKey(me.input.KEY.D);
-                  }
-              });
-            </pre>
+  /**
+   * action to perform when leaving this screen (state change)
+   */
+  onDestroyEvent : function () {
+    me.input.unbindKey(me.input.KEY.LEFT);
+    me.input.unbindKey(me.input.KEY.RIGHT);
+    me.input.unbindKey(me.input.KEY.A);
+    me.input.unbindKey(me.input.KEY.D);
+  }
+});
+</code></pre>
 
             <p>The method calls here are pretty straight forward. We bind a keypress to an action name. Multiple keys can be assigned to a single action name.</p>
 
@@ -446,53 +399,53 @@ index.css
 
             <p>Then add a velx property to the player in its init method, as well as the furthest x position it can go on screen (maxX):</p>
 
-            <pre class="brush: js">
-              init: function () {
-                  var image = me.loader.getImage("player");
-                  this._super(me.Sprite, "init", [me.game.viewport.width / 2 - image.width / 2, me.game.viewport.height - image.height - 20, image]);
-                  this.velx = 450;
-                  this.maxX = me.game.viewport.width - this.width;
-              },
-            </pre>
+<pre><code>init : function () {
+  var image = me.loader.getImage("player");
+  this._super(me.Sprite, "init", [
+    me.game.viewport.width / 2 - image.width / 2,
+    me.game.viewport.height - image.height - 20,
+    image
+  ]);
+  this.velx = 450;
+  this.maxX = me.game.viewport.width - this.width;
+},
+</code></pre>
 
             <p>Then modify the update method to check for the key events, and move the player accordingly.</p>
 
-            <pre class="brush: js">
-              update: function (time) {
-                  this._super(me.Sprite, "update", [time]);
-                  if (me.input.isKeyPressed("left")) {
-                    this.pos.x -= this.velx * time / 1000;
-                  }
+<pre><code>update : function (time) {
+  this._super(me.Sprite, "update", [time]);
+  if (me.input.isKeyPressed("left")) {
+    this.pos.x -= this.velx * time / 1000;
+  }
 
-                  if (me.input.isKeyPressed("right")) {
-                    this.pos.x += this.velx * time / 1000;
-                  }
+  if (me.input.isKeyPressed("right")) {
+    this.pos.x += this.velx * time / 1000;
+  }
 
-                  this.pos.x = this.pos.x.clamp(0, this.maxX);
+  this.pos.x = this.pos.x.clamp(0, this.maxX);
 
-                  return true;
-              }
-            </pre>
+  return true;
+}
+</code></pre>
 
             <p>Update functions of our game objects will always receive a delta time (in milliseconds). It's important to pass it along to our parent's class update.</p>
 
-            <pre class="brush: js">this._super(me.Sprite, "update", [time]);</pre>
+            <pre><code>this._super(me.Sprite, "update", [time]);</code></pre>
 
             <p>After that, it's a matter of checking if the <strong>left</strong> action is currently pressed. Using the velocity value set earlier, we simply subtract the velocity value, multiplied by the delta in seconds.</p>
 
-            <pre class="brush: js">
-              if (me.input.isKeyPressed("left")) {
-                this.pos.x -= this.velx * time / 1000;
-              }
-            </pre>
+<pre><code>if (me.input.isKeyPressed("left")) {
+  this.pos.x -= this.velx * time / 1000;
+}
+</code></pre>
 
             <p>To move right, we check for the <strong>right</strong> action, and add the velocity value to our x position.</p>
 
-            <pre class="brush: js">
-              if (me.input.isKeyPressed("right")) {
-                this.pos.x += this.velx * time / 1000;
-              }
-            </pre>
+<pre><code>if (me.input.isKeyPressed("right")) {
+  this.pos.x += this.velx * time / 1000;
+}
+</code></pre>
 
             <aside>
               <h5>Note</h5>
@@ -501,10 +454,11 @@ index.css
 
             <p>We then use <strong>clamp</strong> to ensure the x value does not go outside the screen.</p>
 
-            <pre class="brush: js">this.pos.x = this.pos.x.clamp(0, this.maxX);</pre>
+            <pre><code>this.pos.x = this.pos.x.clamp(0, this.maxX);</code></pre>
 
             <p>The return value tells melon whether a re-draw is required. This can be useful to dictate for when an animation sheet needs to animate on a given frame. However, this is a single sprite, so we can just tell it to redraw.</p>
-            <pre class="brush: js">return true;</pre>
+
+            <pre><code>return true;</code></pre>
 
             <p>Save the file &amp; refresh your browser. Try using A/D or the Left &amp; Right arrow keys to move.</p>
 
@@ -516,16 +470,18 @@ index.css
 
             <p>Create a new file: js/enemy_manager.js, and add it to the index.html.</p>
 
-            <pre class="brush: js">
-              game.EnemyManager = me.Container.extend({
-                init: function () {
-                  this._super(me.Container, "init", [0, 32, this.COLS * 64 - 32, this.ROWS * 64 - 32]);
-                  this.COLS = 9;
-                  this.ROWS = 4;
-                  this.vel = 16;
-                }
-              });
-            </pre>
+<pre><code>game.EnemyManager = me.Container.extend({
+  init : function () {
+    this._super(me.Container, "init", [0, 32,
+      this.COLS * 64 - 32,
+      this.ROWS * 64 - 32
+    ]);
+    this.COLS = 9;
+    this.ROWS = 4;
+    this.vel = 16;
+  }
+});
+</code></pre>
 
             <p>Essentially what we're setting up here is the start position and the base width. Starting the container 32 pixels down, and at 0 left (or x).</p>
 
@@ -533,59 +489,57 @@ index.css
 
             <p>For adding enemies to our container, we need another method:</p>
 
-            <pre class="brush: js">
-              createEnemies: function () {
-                  for (var i = 0; i < this.COLS; i++) {
-                      for (var j = 0; j < this.ROWS; j++) {
-                          this.addChild(me.pool.pull("enemy", i * 64, j * 64));
-                      }
-                  }
-                  this.updateChildBounds();
-              }
-            </pre>
+<pre><code>createEnemies : function () {
+  for (var i = 0; i &lt; this.COLS; i++) {
+    for (var j = 0; j &lt; this.ROWS; j++) {
+      this.addChild(me.pool.pull("enemy", i * 64, j * 64));
+    }
+  }
+  this.updateChildBounds();
+}
+</code></pre>
 
             <p>Generating 9 columns, and 4 rows: 36 ships. Notice as well the call to the "updateChildBounds" function that will ensure that our object container is resized properly
                 to take in account all added childs. Correspondly we will later to the same when removing a child</p>
             <p>Now in play.js, remove the addChild for the enemy, and set a property to an enemy manager. Below that invoke createEnemies, and add it to the game world.</p>
-            <pre class="brush: js">
-              onResetEvent: function() {
-                  me.game.world.addChild(new me.ColorLayer("background", "#000000"), 0);
-                  me.game.world.addChild(me.pool.pull("player"), 1);
 
-                  this.enemyManager = new game.EnemyManager();
-                  this.enemyManager.createEnemies();
-                  me.game.world.addChild(this.enemyManager, 2);
+<pre><code>onResetEvent : function () {
+  me.game.world.addChild(new me.ColorLayer("background", "#000000"), 0);
+  me.game.world.addChild(me.pool.pull("player"), 1);
 
+  this.enemyManager = new game.EnemyManager();
+  this.enemyManager.createEnemies();
+  me.game.world.addChild(this.enemyManager, 2);
 
-                  me.input.bindKey(me.input.KEY.LEFT, "left");
-                  me.input.bindKey(me.input.KEY.RIGHT, "right");
-                  me.input.bindKey(me.input.KEY.A, "left");
-                  me.input.bindKey(me.input.KEY.D, "right");
-                  me.input.bindKey(me.input.KEY.SPACE, "shoot", true);
-              }
-            </pre>
+  me.input.bindKey(me.input.KEY.LEFT, "left");
+  me.input.bindKey(me.input.KEY.RIGHT, "right");
+  me.input.bindKey(me.input.KEY.A, "left");
+  me.input.bindKey(me.input.KEY.D, "right");
+  me.input.bindKey(me.input.KEY.SPACE, "shoot", true);
+}
+</code></pre>
 
             <p>Once you save and refresh, you should see a bunch of random ships.</p>
             <img src="screens/screentwo.png" alt="" />
             <p>For movement, let's keep it simple and have the container move once per second. For this, we can use a melonjs timer.</p>
 
             <p>Add these two methods to the enemy_manager.js</p>
-            <pre class="brush: js">
-              onActivateEvent: function () {
-                  var _this = this;
-                  this.timer = me.timer.setInterval(function () {
-                      _this.pos.x += _this.vel;
-                  }, 1000);
-              },
 
-              onDeactivateEvent: function () {
-                  me.timer.clearInterval(this.timer);
-              }
-            </pre>
+<pre><code>onActivateEvent : function () {
+  var _this = this;
+  this.timer = me.timer.setInterval(function () {
+    _this.pos.x += _this.vel;
+  }, 1000);
+},
+
+onDeactivateEvent : function () {
+  me.timer.clearInterval(this.timer);
+}
+</code></pre>
+
             <p>And then set the vel property in the init method to 16:</p>
-            <pre class="brush: js">
-              this.vel = 16;
-            </pre>
+
+            <pre><code>this.vel = 16;</code></pre>
 
             <p><strong>onActivateEvent</strong> is called (if it's defined) when the object is added to the game world. This goes for any object you pass to addChild on a container. Likewise, <strong>onDeactivateEvent</strong> is called when the object is removed from the game world.</p>
 
@@ -595,81 +549,82 @@ index.css
 
             <p>Then add the <strong>removeChildNow</strong> counterpart:</p>
 
-            <pre class="brush: js">
-              removeChildNow: function (child) {
-                  this._super(me.Container, "removeChildNow", [child]);
-                  this.updateChildBounds();
-              }
-            </pre>
+<pre><code>removeChildNow : function (child) {
+  this._super(me.Container, "removeChildNow", [child]);
+  this.updateChildBounds();
+}
+</code></pre>
 
             <p>The reason for extending <strong>removeChildNow</strong> instead of <strong>removeChild</strong>, is removeChild is called after the current frame finishes. removeChildNow is the method that actually removes the object, and we want to resize the bounds after the object has been removed.</p>
 
-            <pre class="brush: js">
-              onActivateEvent: function () {
-                  var _this = this;
-                  this.timer = me.timer.setInterval(function () {
-                      var bounds = _this.childBounds;
+<pre><code>onActivateEvent : function () {
+  var _this = this;
+  this.timer = me.timer.setInterval(function () {
+    var bounds = _this.childBounds;
 
-                      if ((_this.vel > 0 && (bounds.right + _this.vel) >= me.game.viewport.width) ||
-                          (_this.vel < 0 && (bounds.left + _this.vel) <= 0)) {
-                          _this.vel *= -1;
-                          _this.pos.y += 16;
-                          if (_this.vel > 0) {
-                              _this.vel += 5;
-                          }
-                          else {
-                              _this.vel -= 5;
-                          }
-                      }
-                      else {
-                          _this.pos.x += _this.vel;
-                      }
-                  }, 1000);
-              }
-            </pre>
+    if ((_this.vel &gt; 0 &amp;&amp; (bounds.right + _this.vel) &gt;= me.game.viewport.width) ||
+      (_this.vel &lt; 0 &amp;&amp; (bounds.left + _this.vel) &lt;= 0)) {
+      _this.vel *= -1;
+      _this.pos.y += 16;
+      if (_this.vel &gt; 0) {
+        _this.vel += 5;
+      }
+      else {
+        _this.vel -= 5;
+      }
+    }
+    else {
+      _this.pos.x += _this.vel;
+    }
+  }, 1000);
+}
+</code></pre>
 
             <p>That's a fair bit of code, so let's break it down.</p>
 
             <p>Using the child bounds, we can retrieve the left &amp; right values to world coordinates.</p>
-            <pre class="brush: js">
-              var bounds = _this.childBounds;
-            </pre>
+
+            <pre><code>var bounds = _this.childBounds;</code></pre>
 
             <p>The first part of the if checks if the container is moving right, and the right edge + velocity is outside the viewport.</p>
-            <pre class="brush: js">(_this.vel > 0 && (bounds.right + _this.vel) >= me.game.viewport.width)</pre>
+
+            <pre><code>(_this.vel &gt; 0 &amp;&amp; (bounds.right + _this.vel) &gt;= me.game.viewport.width)</code></pre>
+
             <p>The second part checks if the container is moving left, and its left bounds is less than zero.</p>
-            <pre class="brush: js">(_this.vel < 0 && (bounds.left + _this.vel) <= 0)</pre>
+
+            <pre><code>(_this.vel &lt; 0 &amp;&amp; (bounds.left + _this.vel) &lt;= 0)</code></pre>
 
             <p>In the block, we reverse the velocity, move down by 16 pixels and then increase the velocity.</p>
 
-            <pre class="brush: js">
-              _this.vel *= -1;
-              _this.pos.y += 16;
-              if (_this.vel > 0) {
-                  _this.vel += 5;
-              }
-              else {
-                  _this.vel -= 5;
-              }
-            </pre>
+<pre><code>_this.vel *= -1;
+_this.pos.y += 16;
+if (_this.vel &gt; 0) {
+  _this.vel += 5;
+}
+else {
+  _this.vel -= 5;
+}
+</code></pre>
+
             <p>Then the last bit, we increment the velocity if the container hasn't moved left or right</p>
-            <pre class="brush: js">
-              else {
-                  _this.pos.x += _this.vel;
-              }
-            </pre>
+
+<pre><code>else {
+  _this.pos.x += _this.vel;
+}
+</code></pre>
+
             <p>Save and refresh this time, it should now move back and forth across the screen, closer to our player. But there's a problem! It isn't turning around when it gets to the edge! What's going on here?</p>
 
             <p>At this point, you should add #debug to the URL: <a href="http://localhost:8000/#debug">http://localhost:8000/#debug</a> and tap on the checkbox next to "hitbox" in the debug panel. This will enable hitbox rendering, so you can visualize the internal structure of your objects.</p>
 
             <p>The hitboxes show that the child bounds (the large purple rectangle occupying the EnemyManager's original position) is not moving with the container. This is because child bounds updates are not automatically computed. You can easily recompute the child bounds by overloading the update method:</p>
 
-            <pre class="brush: js">
-              update: function (time) {
-                  this._super(me.Container, "update", [time]);
-                  this.updateChildBounds();
-              }
-            </pre>
+<pre><code>update : function (time) {
+  this._super(me.Container, "update", [time]);
+  this.updateChildBounds();
+}
+</code></pre>
+
             <p>Save and refresh, and you'll find that it now works as expected!</p>
           </div>
 
@@ -681,193 +636,196 @@ index.css
             <p>Time to get some actual &ldquo;game&rdquo; in this game.</p>
             <p>First thing to do is open up your play.js file, and add a new keybind &amp; unbind:</p>
 
-            <pre class="brush: js">
-              me.input.bindKey(me.input.KEY.SPACE, "shoot", true);
-            </pre>
+            <pre><code>me.input.bindKey(me.input.KEY.SPACE, "shoot", true);</code></pre>
 
-            <pre class="brush: js">
-              me.input.unbindKey(me.input.KEY.SPACE);
-            </pre>
+            <pre><code>me.input.unbindKey(me.input.KEY.SPACE);</code></pre>
 
             <p>The reason for the boolean in the <strong>bindKey</strong> call is to only allow on register per key press. So in order to shoot twice, the player must press the space bar, release it, and then press it again.</p>
 
             <p>Before we wire up the player to shoot, we need a laser. Create a laser.js file, and add the following code to it. As always, be sure to add the laser.js script tag in the index.html file.</p>
 
-            <pre class="brush: js">
-              game.Laser = me.Entity.extend({
-                  init: function (x, y) {
-                      this._super(me.Entity, "init", [x, y, { width: game.Laser.width, height: game.Laser.height }]);
-                      this.z = 5;
-                      this.body.addShape(new me.Rect(0, 0, this.width, this.height));
-                      this.body.updateBounds();
-                      this.body.setVelocity(0, 300);
-                      this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
-                      this.renderable = new (me.Renderable.extend({
-                          init: function () {
-                              this._super(me.Renderable, "init", [0, 0, game.Laser.width, game.Laser.height]);
-                          },
-                          destroy: function () {},
-                          draw: function (renderer) {
-                              var color = renderer.globalColor.toHex();
-                              renderer.setColor('#5EFF7E');
-                              renderer.fillRect(0, 0, this.width, this.height);
-                              renderer.setColor(color);
-                          }
-                      }));
-                      this.alwaysUpdate = true;
-                  },
+<pre><code>game.Laser = me.Entity.extend({
+  init : function (x, y) {
+    this._super(me.Entity, "init", [x, y, { width: game.Laser.width, height: game.Laser.height }]);
+    this.z = 5;
+    this.body.addShape(new me.Rect(0, 0, this.width, this.height));
+    this.body.updateBounds();
+    this.body.setVelocity(0, 300);
+    this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
+    this.renderable = new (me.Renderable.extend({
+      init : function () {
+        this._super(me.Renderable, "init", [0, 0, game.Laser.width, game.Laser.height]);
+      },
+      destroy : function () {},
+      draw : function (renderer) {
+        var color = renderer.globalColor.toHex();
+        renderer.setColor('#5EFF7E');
+        renderer.fillRect(0, 0, this.width, this.height);
+        renderer.setColor(color);
+      }
+    }));
+    this.alwaysUpdate = true;
+  },
 
-                  update: function (time) {
-                      this.body.vel.y -= this.body.accel.y * time / 1000;
-                      if (this.pos.y + this.height <= 0) {
-                          me.game.world.removeChild(this);
-                      }
+  update : function (time) {
+    this.body.vel.y -= this.body.accel.y * time / 1000;
+    if (this.pos.y + this.height &lt;= 0) {
+      me.game.world.removeChild(this);
+    }
 
-                      this.body.update();
-                      me.collision.check(this);
+    this.body.update();
+    me.collision.check(this);
 
-                      return true;
-                  }
-              });
+    return true;
+  }
+});
 
-              game.Laser.width = 5;
-              game.Laser.height = 28;
-            </pre>
+game.Laser.width = 5;
+game.Laser.height = 28;
+</code></pre>
 
             <p>So lets go through it. At the bottom, we have set two properties of width & height for the laser, so it can easily be re-used.</p>
 
-            <pre class="brush: js">
-              game.Laser.width = 5;
-              game.Laser.height = 28;
-            </pre>
-
+<pre><code>game.Laser.width = 5;
+game.Laser.height = 28;
+</code></pre>
 
             <p>Traditional stuff here. Setup the x &amp; y position from its parameters, and a width+height properties. A bit different from our other objects, we have set the z index on the object manually. This is an alternative to passing the z index in the addChild call.</p>
-            <pre class="brush: js">
-              this._super(me.Entity, "init", [x, y, { width: game.Laser.width, height: game.Laser.height }]);
-              this.z = 5;
-            </pre>
+
+<pre><code>this._super(me.Entity, "init", [x, y, { width: game.Laser.width, height: game.Laser.height }]);
+this.z = 5;
+</code></pre>
 
             <p>These next methods for setting up a collision body.</p>
-            <pre class="brush: js">
-              this.body.addShape(new me.Rect(0, 0, this.width, this.height));
-              this.body.updateBounds();
-              this.body.setVelocity(0, 300);
-              this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
-            </pre>
+
+<pre><code>this.body.addShape(new me.Rect(0, 0, this.width, this.height));
+this.body.updateBounds();
+this.body.setVelocity(0, 300);
+this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
+</code></pre>
 
             <p>The first adds a shape. While me.Entity creates a body for you, it does not assume a default shape. When creating an object in tiled, you are creating a shape, so that is provided as the default. We're not using tiled, so we shall create a rectangle.</p>
-            <pre class="brush: js">this.body.addShape(new me.Rect(0, 0, this.width, this.height));</pre>
+
+            <pre><code>this.body.addShape(new me.Rect(0, 0, this.width, this.height));</code></pre>
+
             <p><strong>updateBounds()</strong> re-calculates the AABB bounds based off the shape we added.</p>
-            <pre class="brush: js">this.body.updateBounds();</pre>
+
+            <pre><code>this.body.updateBounds();</code></pre>
+
             <p>Now we set a velocity. Velocity is a vector, and we want the laser to move up. So set a velocity of 30. Note that velocity should never be negative to dictate direction.</p>
-            <pre class="brush: js">this.body.setVelocity(0, 300);</pre>
+
+            <pre><code>this.body.setVelocity(0, 300);</code></pre>
+
             <p>Then we set a collision type. This is useful in collision callbacks.</p>
-            <pre class="brush: js">this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;</pre>
+
+            <pre><code>this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;</code></pre>
 
             <p>This is a fairly meaty bit of the code. <strong>me.Renderable</strong> is the base drawing class in melon. It gives the minimum setup required to be a valid drawing object in the game world.</p>
-            <pre class="brush: js">
-              this.renderable = new (me.Renderable.extend({
-                  init: function () {
-                      this._super(me.Renderable, "init", [0, 0, game.Laser.width, game.Laser.height]);
-                  },
-                  draw: function (renderer) {
-                      var color = renderer.globalColor.toHex();
-                      renderer.setColor('#5EFF7E');
-                      renderer.fillRect(0, 0, this.width, this.height);
-                      renderer.setColor(color);
-                  }
-              }));
-            </pre>
+
+<pre><code>this.renderable = new (me.Renderable.extend({
+  init : function () {
+    this._super(me.Renderable, "init", [0, 0, game.Laser.width, game.Laser.height]);
+  },
+  draw : function (renderer) {
+    var color = renderer.globalColor.toHex();
+    renderer.setColor('#5EFF7E');
+    renderer.fillRect(0, 0, this.width, this.height);
+    renderer.setColor(color);
+  }
+}));
+</code></pre>
 
             <p>The init is pretty traditional, we set the x &amp; y to zero, as this is going to be relative to the laser entity. Use the same width &amp; height as the entity itself.</p>
 
-            <pre class="brush: js">
-              init: function () {
-                  this._super(me.Renderable, "init", [0, 0, game.Laser.width, game.Laser.height]);
-              },
-            </pre>
+<pre><code>init: function () {
+  this._super(me.Renderable, "init", [0, 0, game.Laser.width, game.Laser.height]);
+},
+</code></pre>
 
             <p>Then we implement the draw method. The classes we've used so far have provided a working draw method for our purposes, now we're going to use the renderer to draw something by hand.</p>
 
-            <pre class="brush: js">
-              draw: function (renderer) {
-                  var color = renderer.globalColor.toHex();
-                  renderer.setColor('#5EFF7E');
-                  renderer.fillRect(0, 0, this.width, this.height);
-                  renderer.setColor(color);
-              }
-            </pre>
+<pre><code>draw : function (renderer) {
+  var color = renderer.globalColor.toHex();
+  renderer.setColor('#5EFF7E');
+  renderer.fillRect(0, 0, this.width, this.height);
+  renderer.setColor(color);
+}
+</code></pre>
 
             <p>The renderer can be either <strong>me.CanvasRenderer</strong> or <strong>me.WebGLRenderer</strong>, depending on your settings in <strong>me.video.init</strong>. The renderer provides basic drawing operations.</p>
 
-            <pre class="brush: js">draw: function (renderer)</pre>
-
+            <pre><code>draw: function (renderer)</code></pre>
 
             <p>So we first get a reference of the original color. <strong>globalColor</strong> is an instance of <strong>me.Color</strong>.</p>
-            <pre class="brush: js">var color = renderer.globalColor.toHex();</pre>
+
+            <pre><code>var color = renderer.globalColor.toHex();</code></pre>
+
             <p>Set the color to a nice laser green.</p>
-            <pre class="brush: js">renderer.setColor('#5EFF7E');</pre>
+
+            <pre><code>renderer.setColor('#5EFF7E');</code></pre>
+
             <p>Then use a fill rect number. Again, 0, 0 is relative. Then use the width &amp; height to dictate the size of the rect we're filling</p>
-            <pre class="brush: js">renderer.fillRect(0, 0, this.width, this.height);</pre>
+
+            <pre><code>renderer.fillRect(0, 0, this.width, this.height);</code></pre>
+
             <p>Then set the color back. This is important so our other draw calls will not be effected by the colour change.</p>
-            <pre class="brush: js">renderer.setColor(color);</pre>
+
+            <pre><code>renderer.setColor(color);</code></pre>
 
             <p>The final step for our Laser's init method:</p>
-            <pre class="brush: js">
-              init: function (x, y) {
-                  // ...
-                  this.alwaysUpdate = true;
-              }
-            </pre>
+
+<pre><code>init : function (x, y) {
+  // ...
+  this.alwaysUpdate = true;
+}
+</code></pre>
 
             <p>The <strong>alwaysUpdate</strong> property is to be avoided as much as possible. It will update an object when it is outside the viewport. The reason to use it in this game is because we don't want to remove the laser until it is offscreen. If we wait until it's offscreen, and alwaysUpdate is false, it will never get removed.</p>
 
             <p>Speaking of the update method.</p>
 
-            <pre class="brush: js">
-              update: function (time) {
-                  this.body.vel.y -= this.body.accel.y * time / 1000;
-                  if (this.pos.y + this.height <= 0) {
-                      me.game.world.removeChild(this);
-                  }
+<pre><code>update : function (time) {
+  this.body.vel.y -= this.body.accel.y * time / 1000;
+  if (this.pos.y + this.height &lt;= 0) {
+    me.game.world.removeChild(this);
+  }
 
-                  this.body.update();
-                  me.collision.check(this);
+  this.body.update();
+  me.collision.check(this);
 
-                  return true;
-              }
-            </pre>
+  return true;
+}
+</code></pre>
 
             <p>The first bit is how we will move the laser. The ship was just moved by manipulating the position directly. Since this has a collision body, we will manipulate the y velocity, by subtracting the y acceleration.</p>
 
-            <pre class="brush: js">this.body.vel.y -= this.body.accel.y * time / 1000;</pre>
+            <pre><code>this.body.vel.y -= this.body.accel.y * time / 1000;</code></pre>
 
             <p>If the position of the laser plus the height (so the bottom of the laser) is less than zero, we can remove the laser from the game world. Again, this will function now work because alwaysUpdate is set to true.</p>
-            <pre class="brush: js">
-              if (this.pos.y + this.height <= 0) {
-                  me.game.world.removeChild(this);
-              }
-            </pre>
+
+<pre><code>if (this.pos.y + this.height &lt;= 0) {
+  me.game.world.removeChild(this);
+}
+</code></pre>
 
             <p>The body update is very important, this applies the velocity we set for this frame.</p>
-            <pre class="brush: js">this.body.update();</pre>
+
+            <pre><code>this.body.update();</code></pre>
+
             <p>Then we tell MelonJS to check collisions against this object with <strong>me.collision.check(this)</strong>.</p>
-            <pre class="brush: js">me.collision.check(this);</pre>
+
+            <pre><code>me.collision.check(this);</code></pre>
 
             <p>The next step for this feature, is to add the laser to the entity pool. Add the following code to game.js, same as the Player &amp; Enemy objects.</p>
 
-            <pre class="brush: js">
-              me.pool.register("laser", game.Laser);
-            </pre>
+            <pre><code>me.pool.register("laser", game.Laser);</code></pre>
 
             <p>Then back in the player.js file, add the laser shooting in the update method:</p>
 
-            <pre class="brush: js">
-              if (me.input.isKeyPressed("shoot")) {
-                  me.game.world.addChild(me.pool.pull("laser", this.pos.x - game.Laser.width, this.pos.y - game.Laser.height))
-              }
-            </pre>
+<pre><code>if (me.input.isKeyPressed("shoot")) {
+  me.game.world.addChild(me.pool.pull("laser", this.pos.x - game.Laser.width, this.pos.y - game.Laser.height))
+}
+</code></pre>
 
             <p>Reload the game, and try shooting. You should see the lasers fire. However they don't collide with anything.</p>
 
@@ -878,46 +836,46 @@ index.css
           <div class="subcontent">
             <h2>Collisions</h2>
             <p>First lets give our Enemy a physics body. Append this to the init method in enemy.js</p>
-            <pre class="brush: js">
-              this.body.addShape(new me.Rect(0, 0, 32, 32));
-              this.body.setVelocity(0, 0);
-              this.body.collisionType = me.collision.types.ENEMY_OBJECT;
-            </pre>
+
+<pre><code>this.body.addShape(new me.Rect(0, 0, 32, 32));
+this.body.setVelocity(0, 0);
+this.body.collisionType = me.collision.types.ENEMY_OBJECT;
+</code></pre>
 
             <p>Then add an update method so we can update the body:</p>
 
-            <pre class="brush: js">
-              update: function (time) {
-                  this._super(me.Entity, "update", [time]);
+<pre><code>update : function (time) {
+  this._super(me.Entity, "update", [time]);
 
-                  this.body.update();
+  this.body.update();
 
-                  return true;
-              }
-            </pre>
+  return true;
+}
+</code></pre>
 
             <p>Now lets add a collision handler to the laser.js file.</p>
 
-            <pre class="brush: js">
-              onCollision: function (res, other) {
-                  if (other.body.collisionType === me.collision.types.ENEMY_OBJECT) {
-                      me.game.world.removeChild(this);
-                      game.playScreen.enemyManager.removeChild(other);
-                      return false;
-                  }
-              }
-            </pre>
+<pre><code>onCollision : function (res, other) {
+  if (other.body.collisionType === me.collision.types.ENEMY_OBJECT) {
+    me.game.world.removeChild(this);
+    game.playScreen.enemyManager.removeChild(other);
+    return false;
+  }
+}
+</code></pre>
 
             <p>The res parameter that we are not using, is simply the collision result. So it contains details on how much overlap there was, where the collision was, etc.</p>
 
             <p>Since we set the collision type on the Enemy's body to be an <strong>ENEMY_OBJECT</strong>, we can check for that type on the object the laser collided with.</p>
-            <pre class="brush: js">if (other.body.collisionType === me.collision.types.ENEMY_OBJECT) {</pre>
+
+            <pre><code>if (other.body.collisionType === me.collision.types.ENEMY_OBJECT) {</code></pre>
 
             <p>Then we remove the enemy from the laser, along with the enemy from the enemyManager container.</p>
-            <pre class="brush: js">
-              me.game.world.removeChild(this);
-              game.playScreen.enemyManager.removeChild(other);
-            </pre>
+
+<pre><code>me.game.world.removeChild(this);
+game.playScreen.enemyManager.removeChild(other);
+</code></pre>
+
             <p>The return false in this case isn't strictly necessary, but it's important to point out. When you return false from a collision handler in MelonJS, the object will pass through. If you return true, it will do a hard stop.</p>
 
             <p>Save the changes, and reload your browser. You should now be able to take out the enemy ships.</p>
@@ -935,48 +893,47 @@ index.css
 
             <p>The pseudo code for this will be:</p>
 
-            <pre class="brush: js">
-              if enemy manager overlaps player
-                then end game
-              else
-                continue
-              end
-            </pre>
+<pre>
+if enemy manager overlaps player
+  then end game
+else
+  continue
+end
+</pre>
+
             <p>The PlayScreen is our current game state. It holds the reference to the player, and it has the ability to reset the state. So let's add the logic for checking a lose condition there.</p>
 
-            <pre class="brush: js">
-              checkIfLoss: function (y) {
-                  if (y >= this.player.pos.y) {
-                      this.reset();
-                  }
-              },
-            </pre>
+<pre><code>checkIfLoss : function (y) {
+  if (y &gt;= this.player.pos.y) {
+    this.reset();
+  }
+},
+</code></pre>
 
             <p>Add that above the <strong>onResetEvent</strong> method. It accepts a Y value, and checks if it has surpassed the player. Then calls its reset method. The reset will wipe out every object from the game world, and reload the state. So it re-invokes <strong>onResetEvent</strong>, re-populating the enemies and player.</p>
 
             <p>To call it, simply add it to our interval in the enemy manager:</p>
 
-            <pre class="brush: js">
-              this.timer = me.timer.setInterval(function () {
-                  var bounds = _this.childBounds;
+<pre><code>this.timer = me.timer.setInterval(function () {
+  var bounds = _this.childBounds;
 
-                  if ((_this.vel > 0 && (bounds.right + _this.vel) >= me.game.viewport.width) ||
-                      (_this.vel < 0 && (bounds.left + _this.vel) <= 0)) {
-                      _this.vel *= -1;
-                      _this.pos.y += 16;
-                      if (_this.vel > 0) {
-                          _this.vel += 5;
-                      }
-                      else {
-                          _this.vel -= 5;
-                      }
-                      game.playScreen.checkIfLoss(bounds.bottom); // <<<
-                  }
-                  else {
-                      _this.pos.x += _this.vel;
-                  }
-              }, 1000);
-            </pre>
+  if ((_this.vel &gt; 0 &amp;&amp; (bounds.right + _this.vel) &gt;= me.game.viewport.width) ||
+    (_this.vel &lt; 0 &amp;&amp; (bounds.left + _this.vel) &lt;= 0)) {
+    _this.vel *= -1;
+    _this.pos.y += 16;
+    if (_this.vel &gt; 0) {
+      _this.vel += 5;
+    }
+    else {
+      _this.vel -= 5;
+    }
+    game.playScreen.checkIfLoss(bounds.bottom); // <<<
+  }
+  else {
+    _this.pos.x += _this.vel;
+  }
+}, 1000);
+</code></pre>
 
             <p>Since we're checking in the <strong>checkIfLoss</strong> method if the passed number is greater than the Y position of the player, we need to pass the bottom edge of the container, which is just bounds.bottom.</p>
 
@@ -987,20 +944,19 @@ index.css
             <p>Likewise, we'll just have the game reset once the player wins. Since we want to cause the win once all the ships are gone, we can check the length of the children on enemy manager.</p>
 
             <p>First add this boolean to the bottom of the <strong>createEnemies</strong> method:</p>
-            <pre class="brush: js">
-              this.createdEnemies = true;
-            </pre>
+
+            <pre><code>this.createdEnemies = true;</code></pre>
 
             <p>Add the following update method to the enemy manager:</p>
-            <pre class="brush: js">
-              update: function (time) {
-                  if (this.children.length === 0 && this.createdEnemies) {
-                      game.playScreen.reset();
-                  }
-                  this._super(me.Container, "update", [time]);
-                  this.updateChildBounds();
-              }
-            </pre>
+
+<pre><code>update : function (time) {
+  if (this.children.length === 0 &amp;&amp; this.createdEnemies) {
+    game.playScreen.reset();
+  }
+  this._super(me.Container, "update", [time]);
+  this.updateChildBounds();
+}
+</code></pre>
 
             <p>This is pretty simple. Children is an array, so we check its length to be zero, and ensure it has created enemies first. Without the boolean check, the game could keep resetting itself because it has no children yet.</p>
 
@@ -1042,10 +998,8 @@ index.css
 
         </div> <!-- end content -->
       </div> <!-- end row -->
-    </div> <!-- end container -->
+    </div> <!-- end main -->
 
-    <script type="text/javascript">
-      SyntaxHighlighter.all();
-    </script>
+    <script src="vendor/prism.js"></script>
   </body>
 </html>
