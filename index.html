@@ -912,7 +912,16 @@ end
 
             <p>Add that above the <strong>onResetEvent</strong> method. It accepts a Y value, and checks if it has surpassed the player. Then calls its reset method. The reset will wipe out every object from the game world, and reload the state. So it re-invokes <strong>onResetEvent</strong>, re-populating the enemies and player.</p>
 
-            <p>To call it, simply add it to our interval in the enemy manager:</p>
+            <p>Then setup the reference for <strong>this.player</strong>. Replace the line in <strong>onResetEvent</strong>:</p>
+
+<pre><code>me.game.world.addChild(me.pool.pull("player"), 1);</code></pre>
+
+            <p>With:</p>
+
+<pre><code>this.player = me.pool.pull("player");
+me.game.world.addChild(this.player, 1);</code></pre>
+
+            <p>Now to call this condition check, simply add the method call to our interval in the enemy manager:</p>
 
 <pre><code>this.timer = me.timer.setInterval(function () {
   var bounds = _this.childBounds;
