@@ -648,8 +648,6 @@ else {
   init : function (x, y) {
     this._super(me.Entity, "init", [x, y, { width: game.Laser.width, height: game.Laser.height }]);
     this.z = 5;
-    this.body.addShape(new me.Rect(0, 0, this.width, this.height));
-    this.body.updateBounds();
     this.body.setVelocity(0, 300);
     this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
     this.renderable = new (me.Renderable.extend({
@@ -696,23 +694,15 @@ game.Laser.height = 28;
 this.z = 5;
 </code></pre>
 
-            <p>These next methods for setting up a collision body.</p>
+            <p>These next methods for setting up a physics body. Which we will use to move the laser across the screen.</p>
 
-<pre><code>this.body.addShape(new me.Rect(0, 0, this.width, this.height));
-this.body.updateBounds();
-this.body.setVelocity(0, 300);
+<pre><code>this.body.setVelocity(0, 300);
 this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
 </code></pre>
 
-            <p>The first adds a shape. While me.Entity creates a body for you, it does not assume a default shape. When creating an object in tiled, you are creating a shape, so that is provided as the default. We're not using tiled, so we shall create a rectangle.</p>
+            <p>By default, me.Body will not setup shapes for you. me.Entity however creates a shape based on the position, width, and height.</p>
 
-            <pre><code>this.body.addShape(new me.Rect(0, 0, this.width, this.height));</code></pre>
-
-            <p><strong>updateBounds()</strong> re-calculates the AABB bounds based off the shape we added.</p>
-
-            <pre><code>this.body.updateBounds();</code></pre>
-
-            <p>Now we set a velocity. Velocity is a vector, and we want the laser to move up. So set a velocity of 30. Note that velocity should never be negative to dictate direction.</p>
+            <p>First we set a velocity. Velocity is a vector, and we want the laser to move up. So set a velocity of 300. Note that velocity should never be negative to dictate direction.</p>
 
             <pre><code>this.body.setVelocity(0, 300);</code></pre>
 
@@ -726,6 +716,7 @@ this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
   init : function () {
     this._super(me.Renderable, "init", [0, 0, game.Laser.width, game.Laser.height]);
   },
+  destroy : function () {},
   draw : function (renderer) {
     var color = renderer.globalColor.toHex();
     renderer.setColor('#5EFF7E');
@@ -742,6 +733,9 @@ this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
 },
 </code></pre>
 
+            <p>The empty destroy method is a callback for when the renderable is removed. We don't need to define callback logic, but the function still needs to be defined.</p>
+<pre><code>destroy : function () {},</code></pre>
+
             <p>Then we implement the draw method. The classes we've used so far have provided a working draw method for our purposes, now we're going to use the renderer to draw something by hand.</p>
 
 <pre><code>draw : function (renderer) {
@@ -753,8 +747,6 @@ this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
 </code></pre>
 
             <p>The renderer can be either <strong>me.CanvasRenderer</strong> or <strong>me.WebGLRenderer</strong>, depending on your settings in <strong>me.video.init</strong>. The renderer provides basic drawing operations.</p>
-
-            <pre><code>draw: function (renderer)</code></pre>
 
             <p>So we first get a reference of the original color. <strong>globalColor</strong> is an instance of <strong>me.Color</strong>.</p>
 
@@ -771,6 +763,8 @@ this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
             <p>Then set the color back. This is important so our other draw calls will not be effected by the colour change.</p>
 
             <pre><code>renderer.setColor(color);</code></pre>
+
+            <p>Generally speaking you should create your game using images over using pure canvas draw calls, but knowing how and when to use the canvas can be rather useful.</p>
 
             <p>The final step for our Laser's init method:</p>
 
@@ -837,8 +831,7 @@ this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
             <h2>Collisions</h2>
             <p>First lets give our Enemy a physics body. Append this to the init method in enemy.js</p>
 
-<pre><code>this.body.addShape(new me.Rect(0, 0, 32, 32));
-this.body.setVelocity(0, 0);
+<pre><code>this.body.setVelocity(0, 0);
 this.body.collisionType = me.collision.types.ENEMY_OBJECT;
 </code></pre>
 
