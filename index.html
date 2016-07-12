@@ -294,7 +294,7 @@ index.css
 
             <p>With the enemy, we will need to place them in different spots, so x &amp; y will be added to its constructor, and then passed along to the me.Entity's constructor. The third parameter in the array is a hash of settings. The settings specifies the image as "ships", referencing our game.resources array. The width and height are set to 32x32.</p>
 
-            <p>We're creating a custom update method, to tell the game engine to redraw. When melon goes through the game loop, it does an <pre>or</pre> on the result.
+            <p>We're creating a custom update method, to tell the game engine to redraw. When melon goes through the game loop, it does an <strong>or</strong> on the result.
             If there are no changes in a given frame, it won't repaint. Returning true, and calling the super method will ensure the enemies do indeed render.</p>
 
             <p>In game.js, add the enemy to the entity pool:</p>
