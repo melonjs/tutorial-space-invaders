@@ -15,4 +15,9 @@ game.Enemy = me.Entity.extend({
         this.renderable.addAnimation("idle", [frame], 1);
         this.renderable.setCurrentAnimation("idle");
     },
+
+    update: function (dt) {
+        this._super(me.Entity, "update", [dt]);
+        return true;
+    }
 });
