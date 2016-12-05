@@ -10,7 +10,7 @@ game.Laser = me.Entity.extend({
             },
             destroy: function () {},
             draw: function (renderer) {
-                var color = renderer.globalColor.toHex();
+                var color = renderer.getColor();
                 renderer.setColor('#5EFF7E');
                 renderer.fillRect(0, 0, this.width, this.height);
                 renderer.setColor(color);

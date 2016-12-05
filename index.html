@@ -664,7 +664,7 @@ else {
             },
             destroy : function () {},
             draw : function (renderer) {
-                var color = renderer.globalColor.toHex();
+                var color = renderer.getColor();
                 renderer.setColor('#5EFF7E');
                 renderer.fillRect(0, 0, this.width, this.height);
                 renderer.setColor(color);
@@ -726,7 +726,7 @@ this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
     },
     destroy : function () {},
     draw : function (renderer) {
-        var color = renderer.globalColor.toHex();
+        var color = renderer.getColor();
         renderer.setColor('#5EFF7E');
         renderer.fillRect(0, 0, this.width, this.height);
         renderer.setColor(color);
@@ -747,7 +747,7 @@ this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
             <p>Then we implement the draw method. The classes we've used so far have provided a working draw method for our purposes, now we're going to use the renderer to draw something by hand.</p>
 
 <pre><code>draw : function (renderer) {
-    var color = renderer.globalColor.toHex();
+    var color = renderer.getColor();
     renderer.setColor('#5EFF7E');
     renderer.fillRect(0, 0, this.width, this.height);
     renderer.setColor(color);
@@ -756,9 +756,9 @@ this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
 
             <p>The renderer can be either <strong>me.CanvasRenderer</strong> or <strong>me.WebGLRenderer</strong>, depending on your settings in <strong>me.video.init</strong>. The renderer provides basic drawing operations.</p>
 
-            <p>So we first get a reference of the original color. <strong>globalColor</strong> is an instance of <strong>me.Color</strong>.</p>
+            <p>So we first get a reference of the original color. the return value of <strong>getColor()</strong> is an instance of <strong>me.Color</strong>.</p>
 
-            <pre><code>var color = renderer.globalColor.toHex();</code></pre>
+            <pre><code>var color = renderer.getColor();</code></pre>
 
             <p>Set the color to a nice laser green.</p>
 
