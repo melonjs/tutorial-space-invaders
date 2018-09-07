@@ -72,10 +72,10 @@ etc
 </pre>
                 </li>
 
-                <li>The melonJS <a href="http://www.melonjs.org/download.html"> library</a>. If you downloaded the boilerplate, you will already have this. It should be copied under the /lib directory. You can copy the development version, as the boilerplate provides a minification task.
+                <li>The melonJS <a href="https://github.com/melonjs/melonJS/releases"> library</a>. If you downloaded the boilerplate, you will already have this. It should be copied under the /lib directory. You can copy the development version, as the boilerplate provides a minification task.
                 </li>
 
-                <li>The melonJS <a href="http://www.melonjs.org/docs/index.html">documentation</a> for more details </li>
+                <li>The melonJS <a href="http://melonjs.github.io/melonJS/docs/">documentation</a> for more details </li>
               </ul>
 
               <p>
@@ -123,24 +123,12 @@ index.css
             return;
         }
 
-        // add "#debug" to the URL to enable the debug Panel
-        if (me.game.HASH.debug === true) {
-            window.onReady(function () {
-                me.plugin.register.defer(this, me.debug.Panel, "debug", me.input.KEY.V);
-            });
-        }
-
         // Initialize the audio.
         me.audio.init("mp3,ogg");
 
-        // Set a callback to run when loading is complete.
-        me.loader.onload = this.loaded.bind(this);
-
-        // Load the resources.
-        me.loader.preload(game.resources);
-
-        // Initialize melonJS and display a loading screen.
-        me.state.change(me.state.LOADING);
+        // set and load all resources.
+        // (this will also automatically switch to the loading screen)
+        me.loader.preload(game.resources, this.loaded.bind(this));
     },
 
     // Run on game resources loaded.
@@ -157,7 +145,7 @@ index.css
 
             <p>Game.js is where the game is bootstrapped. index.html calls the game.onload function after loading all the js files in the window ready event. The <strong>me.video.init</strong> bit creates the canvas tag and gets the video setup.</p><p>Lines 12-16 are for using the debug panel.</p><p>Then we intialize the audio engine, telling it what formats we are supporting for this game.</p>
 
-            <p>We set a callback on <strong>me.loader</strong> to our loaded function, and then tell what assets it needs to load, via an array.</p>
+            <p>We also tell, using <strong>me.loader</strong>, what assets needs to be loaded via an array, and set a callback to our loaded function.</p>
 
             <p>The final step of this process is setting the state of the game to loading.</p>
             <aside>
@@ -431,7 +419,7 @@ index.css
         this.pos.x += this.velx * time / 1000;
     }
 
-    this.pos.x = this.pos.x.clamp(0, this.maxX);
+    this.pos.x = me.Math.clamp(this.pos.x, 0, this.maxX);
 
     return true;
 }
@@ -462,7 +450,7 @@ index.css
 
             <p>We then use <strong>clamp</strong> to ensure the x value does not go outside the screen.</p>
 
-            <pre><code>this.pos.x = this.pos.x.clamp(0, this.maxX);</code></pre>
+            <pre><code>this.pos.x = me.Math.clamp(this.pos.x, 0, this.maxX);</code></pre>
 
             <p>The return value tells melon whether a re-draw is required. This can be useful to dictate for when an animation sheet needs to animate on a given frame. However, this is a single sprite, so we can just tell it to redraw.</p>
 

@@ -16,7 +16,7 @@ game.Player = me.Sprite.extend({
           this.pos.x += this.velx * time / 1000;
         }
 
-        this.pos.x = this.pos.x.clamp(0, this.maxX);
+        this.pos.x = me.Math.clamp(this.pos.x, 0, this.maxX);
 
         return true;
     }
