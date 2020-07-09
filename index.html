@@ -80,7 +80,7 @@ etc
 
               <p>
                 <b>Testing/debugging :</b><br/>
-                Your best bet is to use a local web server, as for example detailed in the melonJS <a href="https://github.com/melonjs/boilerplate">boilerplate</a> README, by using the `grunt connect` tool, and that will allow you to test your game in your browser using the <a href="http://localhost:8000">http://localhost:8000</a> url.
+                Your best bet is to use a local web server, as for example detailed in the melonJS <a href="https://github.com/melonjs/boilerplate">boilerplate</a> README, by running `npm run serve` in the command prompt, that will allow you to test your game in your browser using the <a href="http://localhost:8000">http://localhost:8000</a> url.
               </p>
               <p>
                 If you just want to use the filesystem, the problem is you'll run into "cross-origin request" security errors. With Chrome, you need to use the "--disable-web-security" parameter or better "--allow-file-access-from-files" when launching the browser. This must be done in order to test any local content, else the browser will complain when trying to load assets through XHR. <strong>Though this method is not recommended.</strong> As long as you have the option enabled, you're adding security vulnerabilities to your session.<br/>
