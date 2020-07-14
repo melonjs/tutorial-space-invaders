@@ -460,7 +460,7 @@ index.css
 
             <h4>Enemy movement</h4>
 
-            <p>A defining characteristic of space invaders is that all the ships move in one direction, shift down and then go in the other direction. They all move together. We could take the velocity logic that we used for the player, and apply it to the enemy class. But we can better leverage MelonJS to do this for us. Time to use our own subclass of <strong>me.Container</strong></p>
+            <p>A defining characteristic of space invaders is that all the ships move in one direction, shift down and then go in the other direction. They all move together. We could take the velocity logic that we used for the player, and apply it to the enemy class. But we can better leverage MelonJS to do this for us. Time to use our own subclass of <strong><a href="http://melonjs.github.io/melonJS/docs/me.Container.html">me.Container</a></strong></p>
 
             <p>Objects inside a container are relative to its parent. So when we move the container, all objects inside shift with it. This applies to rotation &amp; scale operations as well. So let's create one.</p>
 
@@ -475,11 +475,18 @@ index.css
       this.COLS = 9;
       this.ROWS = 4;
       this.vel = 16;
+
+      this.onChildChange = function () {
+          this.updateChildBounds();
+      };
   }
 });
 </code></pre>
 
             <p>Essentially what we're setting up here is the start position and the base width. Starting the container 32 pixels down, and at 0 left (or x).</p>
+
+            <p>Notice as well the <a href="http://melonjs.github.io/melonJS/docs/me.Container.html#onChildChange">"onChildChange"</a> callback function that we use to automatically call <a href="http://melonjs.github.io/melonJS/docs/me.Container.html#updateChildBounds">""updateChildBounds""</a> to ensure that our object container is resized properly
+                to take in account all added and removing childs.</p>
 
             <p>We're allotting 64 pixels per ship width &amp; height wise. Then subtracting 32 pixels because the last row &amp; column does not require the side padding.</p>
 
@@ -491,12 +498,10 @@ index.css
           this.addChild(me.pool.pull("enemy", i * 64, j * 64));
       }
   }
-  this.updateChildBounds();
 }
 </code></pre>
 
-            <p>Generating 9 columns, and 4 rows: 36 ships. Notice as well the call to the "updateChildBounds" function that will ensure that our object container is resized properly
-                to take in account all added childs. Correspondly we will later to the same when removing a child</p>
+            <p>Generating 9 columns, and 4 rows: 36 ships. </p>
             <p>Now in play.js, remove the addChild for the enemy, and set a property to an enemy manager. Below that invoke createEnemies, and add it to the game world.</p>
 
 <pre><code>onResetEvent : function () {
@@ -545,13 +550,6 @@ onDeactivateEvent : function () {
 
             <p>Then add the <strong>removeChildNow</strong> counterpart:</p>
 
-<pre><code>removeChildNow : function (child) {
-    this._super(me.Container, "removeChildNow", [child]);
-    this.updateChildBounds();
-}
-</code></pre>
-
-            <p>The reason for extending <strong>removeChildNow</strong> instead of <strong>removeChild</strong>, is removeChild is called after the current frame finishes. removeChildNow is the method that actually removes the object, and we want to resize the bounds after the object has been removed.</p>
 
 <pre><code>onActivateEvent : function () {
     var _this = this;
@@ -949,18 +947,18 @@ me.game.world.addChild(this.player, 1);</code></pre>
 
             <pre><code>this.createdEnemies = true;</code></pre>
 
-            <p>Add the following update method to the enemy manager:</p>
+            <p>Add the following change to the onChildChange callback previously defined in the enemy manager:</p>
 
-<pre><code>update : function (time) {
-    if (this.children.length === 0 &amp;&amp; this.createdEnemies) {
+<pre><code>this.onChildChange = function () {
+    this.updateChildBounds();
+
+    if (this.children.length === 0) {
         game.playScreen.reset();
     }
-    this._super(me.Container, "update", [time]);
-    this.updateChildBounds();
-}
+};
 </code></pre>
 
-            <p>This is pretty simple. Children is an array, so we check its length to be zero, and ensure it has created enemies first. Without the boolean check, the game could keep resetting itself because it has no children yet.</p>
+            <p>This is pretty simple. Children is an array, so we check its length to be zero, and then reset the game if the condition is met</p>
 
             <p>Save and refresh the browser. Try to take out all the ships in time, and see the game reset.</p>
           </div>
