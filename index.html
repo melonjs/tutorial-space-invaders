@@ -118,7 +118,7 @@ index.css
     // Run on page load.
     onload : function () {
         // Initialize the video.
-        if (!me.video.init(640, 480, {wrapper : "screen", scale : 'auto'})) {
+        if (!me.video.init(640, 480, {parent : "screen", scale : 'auto'})) {
             alert("Your browser does not support HTML5 canvas.");
             return;
         }
@@ -974,7 +974,7 @@ me.game.world.addChild(this.player, 1);</code></pre>
             <h4>Add a proper win &amp; loss screen</h4>
             <ol>
               <li>These screens can be made by adding additional ScreenObjects to the game, register them in game.js, and then changing state. For what states to use for the win &amp; screen, look at the states available: <a href="http://melonjs.github.io/melonJS/docs/me.state.html">http://melonjs.github.io/melonJS/docs/me.state.html</a></li>
-              <li>The win and loss screen can contain a sprite, or text, or both. Whatever you wish really. Be sure to look at <a href="http://melonjs.github.io/melonJS/docs/me.Font.html">me.Font</a> and <a href="http://melonjs.github.io/melonJS/docs/me.Sprite.html">me.Sprite</a>. To display a <strong>me.Font</strong> object, use an instance of <strong>me.Renderable</strong> that contains an instance of me.Font, and implement the draw function to invoke me.Font#draw.</li>
+              <li>The win and loss screen can contain a sprite, or text, or both. Whatever you wish really. Be sure to look at <a href="http://melonjs.github.io/melonJS/docs/me.Text.html">me.Text</a> and <a href="http://melonjs.github.io/melonJS/docs/me.Sprite.html">me.Sprite</a>. To display a <strong>me.Text</strong> object, use an instance of <strong>me.Renderable</strong> that contains an instance of me.Text, and implement the draw function to invoke me.Text#draw.</li>
               <li>Adjust the checkIfLoss method to show your new loss screen instead.</li>
               <li>Adjust the if block in the update method on EnemyManager, to change state to your win screneobject.</li>
               <li>Even more bonus, add a menu screen that tells the player how to play.</li>
@@ -984,7 +984,7 @@ me.game.world.addChild(this.player, 1);</code></pre>
             <h4>Add a UI</h4>
             <ol>
               <li>Add an enemy counter, and enemy velocity to the top right/left corner of the screen. These properties can be retrieved via: <strong>game.playScreen.enemyManager.children.length</strong> <strong>game.playScreen.enemyManager.vel</strong></li>
-              <li>Again look at <a href="http://melonjs.github.io/melonJS/docs/me.Font.html">me.Font</a>, and implement a renderable for drawing text. Try to only use one class that extends renderable that can be used for both UI pieces.</li>
+              <li>Again look at <a href="http://melonjs.github.io/melonJS/docs/me.Text.html">me.Text</a>, and implement a renderable for drawing text. Try to only use one class that extends renderable that can be used for both UI pieces.</li>
               <li>Add a score element. Keep track of the score on the play screen. Update it each time an enemy is killed. Remember that enemies are removed from the collision handler on the laser.</li>
             </ol>
 
