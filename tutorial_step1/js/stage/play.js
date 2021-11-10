@@ -11,6 +11,7 @@ class PlayScreen extends me.Stage {
 
         me.game.world.addChild(me.pool.pull("player"), 1);
         me.game.world.addChild(me.pool.pull("enemy", 50, 50), 2);
+
     }
 };
 

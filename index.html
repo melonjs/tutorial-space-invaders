@@ -495,31 +495,35 @@ export default PlayScreen;
 
                 <p>Back in play.js, lets add some keybindings:</p>
 
-                <pre><code>game.PlayScreen = me.ScreenObject.extend({
-  /**
-   * action to perform on state change
-   */
-  onResetEvent : function () {
-      me.game.world.addChild(new me.ColorLayer("background", "#000000"), 0);
-      me.game.world.addChild(me.pool.pull("player"), 1);
-      me.game.world.addChild(me.pool.pull("enemy", 50, 50), 2);
+                <pre><code>class PlayScreen extends me.Stage {
+    /**
+     *  action to perform on state change
+     */
+    onResetEvent() {
 
-      me.input.bindKey(me.input.KEY.LEFT, "left");
-      me.input.bindKey(me.input.KEY.RIGHT, "right");
-      me.input.bindKey(me.input.KEY.A, "left");
-      me.input.bindKey(me.input.KEY.D, "right");
-  },
+        me.game.world.addChild(new me.ColorLayer("background", "#000000"), 0);
 
-  /**
-   * action to perform when leaving this screen (state change)
-   */
-  onDestroyEvent : function () {
-      me.input.unbindKey(me.input.KEY.LEFT);
-      me.input.unbindKey(me.input.KEY.RIGHT);
-      me.input.unbindKey(me.input.KEY.A);
-      me.input.unbindKey(me.input.KEY.D);
-  }
-});
+        me.game.world.addChild(me.pool.pull("player"), 1);
+        me.game.world.addChild(me.pool.pull("enemy", 50, 50), 2);
+
+
+
+        me.input.bindKey(me.input.KEY.LEFT, "left");
+        me.input.bindKey(me.input.KEY.RIGHT, "right");
+        me.input.bindKey(me.input.KEY.A, "left");
+        me.input.bindKey(me.input.KEY.D, "right");
+    }
+
+    /**
+     *
+     */
+    onDestroyEvent() {
+        me.input.unbindKey(me.input.KEY.LEFT);
+        me.input.unbindKey(me.input.KEY.RIGHT);
+        me.input.unbindKey(me.input.KEY.A);
+        me.input.unbindKey(me.input.KEY.D);
+    }
+};
 </code></pre>
 
                 <p>The method calls here are pretty straight forward. We bind a keypress to an action name. Multiple
@@ -529,7 +533,7 @@ export default PlayScreen;
                     make it configurable. You always need to keep in mind people who are left handed or who have
                     different layouts.</p>
 
-                <p>You might also noticed i added the <strong>z index</strong> option to the addChild calls. It's a
+                <p>You might also noticed I added the <strong>z index</strong> option to the addChild calls. It's a
                     pretty good practice, because that way you ensure your draw order.</p>
 
                 <p>The <strong>onDestroyEvent</strong> removes the events when changing state. Not something we actually
@@ -538,25 +542,32 @@ export default PlayScreen;
                 <p>Now that we have bindings, let's implement player movement. Add the following update function to the
                     player class:</p>
 
-                <p>Then add a velx property to the player in its init method, as well as the furthest x position it can
+                <pre><code>update(dt) {
+    return super.update(dt);
+}</code></pre>
+
+                <p>Then add a velx property to the player in its constructor method, as well as the furthest x position it can
                     go on screen (maxX):</p>
 
-                <pre><code>init : function () {
-    var image = me.loader.getImage("player");
-    this._super(me.Sprite, "init", [
+                <pre><code>constructor() {
+    let image = me.loader.getImage("player");
+
+    super(
         me.game.viewport.width / 2 - image.width / 2,
         me.game.viewport.height - image.height - 20,
-        { image: image }
-    ]);
+        { image : image, width: 32, height: 32 }
+    );
+
     this.velx = 450;
     this.maxX = me.game.viewport.width - this.width;
-},
+}
 </code></pre>
 
                 <p>Then modify the update method to check for the key events, and move the player accordingly.</p>
 
-                <pre><code>update : function (time) {
-    this._super(me.Sprite, "update", [time]);
+                <pre><code>update(dt) {
+    super.update(dt);
+
     if (me.input.isKeyPressed("left")) {
         this.pos.x -= this.velx * time / 1000;
     }
@@ -565,7 +576,7 @@ export default PlayScreen;
         this.pos.x += this.velx * time / 1000;
     }
 
-    this.pos.x = me.Math.clamp(this.pos.x, 0, this.maxX);
+    this.pos.x = me.Math.clamp(this.pos.x, 32, this.maxX);
 
     return true;
 }
@@ -574,14 +585,14 @@ export default PlayScreen;
                 <p>Update functions of our game objects will always receive a delta time (in milliseconds). It's
                     important to pass it along to our parent's class update.</p>
 
-                <pre><code>this._super(me.Sprite, "update", [time]);</code></pre>
+                <pre><code>super.update(dt);</code></pre>
 
                 <p>After that, it's a matter of checking if the <strong>left</strong> action is currently pressed. Using
                     the velocity value set earlier, we simply subtract the velocity value, multiplied by the delta in
                     seconds.</p>
 
                 <pre><code>if (me.input.isKeyPressed("left")) {
-    this.pos.x -= this.velx * time / 1000;
+    this.pos.x -= this.velx * dt / 1000;
 }
 </code></pre>
 
@@ -589,7 +600,7 @@ export default PlayScreen;
                     position.</p>
 
                 <pre><code>if (me.input.isKeyPressed("right")) {
-    this.pos.x += this.velx * time / 1000;
+    this.pos.x += this.velx * dt / 1000;
 }
 </code></pre>
 
@@ -604,7 +615,7 @@ export default PlayScreen;
 
                 <p>We then use <strong>clamp</strong> to ensure the x value does not go outside the screen.</p>
 
-                <pre><code>this.pos.x = me.Math.clamp(this.pos.x, 0, this.maxX);</code></pre>
+                <pre><code>this.pos.x = me.Math.clamp(this.pos.x, 32, this.maxX);</code></pre>
 
                 <p>The return value tells melon whether a re-draw is required. This can be useful to dictate for when an
                     animation sheet needs to animate on a given frame. However, this is a single sprite, so we can just
@@ -627,23 +638,31 @@ export default PlayScreen;
                     inside shift with it. This applies to rotation &amp; scale operations as well. So let's create
                     one.</p>
 
-                <p>Create a new file: js/enemy_manager.js, and add it to the index.html.</p>
+                <p>Create a new file: js/managers/enemy-manager.js, and add it to the index.html.</p>
 
-                <pre><code>game.EnemyManager = me.Container.extend({
-  init : function () {
-      this._super(me.Container, "init", [0, 32,
-          this.COLS * 64 - 32,
-          this.ROWS * 64 - 32
-      ]);
-      this.COLS = 9;
-      this.ROWS = 4;
-      this.vel = 16;
+                <pre><code>import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js';
 
-      this.onChildChange = function () {
-          this.updateChildBounds();
-      };
-  }
-});
+
+class EnemyManager extends me.Container {
+    static COLS = 9;
+    static ROWS = 4;
+
+    constructor() {
+        super(0, 32, EnemyManager.COLS * 64 - 32, EnemyManager.ROWS * 64 - 32);
+
+
+        this.vel = 16;
+
+
+        //
+        this.onChildChange = () => {
+            // force update on all child bounds
+            this.updateBounds(true);
+        };
+    }
+}
+
+export default EnemyManager;
 </code></pre>
 
                 <p>Essentially what we're setting up here is the start position and the base width. Starting the
@@ -660,32 +679,36 @@ export default PlayScreen;
 
                 <p>For adding enemies to our container, we need another method:</p>
 
-                <pre><code>createEnemies : function () {
-  for (var i = 0; i &lt; this.COLS; i++) {
-      for (var j = 0; j &lt; this.ROWS; j++) {
-          this.addChild(me.pool.pull("enemy", i * 64, j * 64));
-      }
-  }
+                <pre><code>createEnemies() {
+    for (let i = 0; i < EnemyManager.COLS; i++) {
+        for (let j = 0; j < EnemyManager.ROWS; j++) {
+            this.addChild(me.pool.pull("enemy", i * 64, j * 64));
+        }
+    }
 }
 </code></pre>
 
                 <p>Generating 9 columns, and 4 rows: 36 ships. </p>
-                <p>Now in play.js, remove the addChild for the enemy, and set a property to an enemy manager. Below that
+                <p>Now in play.js, import EnemyManager, remove the addChild for the enemy, and set a property to an enemy manager. Below that
                     invoke createEnemies, and add it to the game world.</p>
 
-                <pre><code>onResetEvent : function () {
+                <pre><code>import EnemyManager from "../managers/enemy-manager.js";</code></pre>
+
+                <pre><code>onResetEvent() {
+
     me.game.world.addChild(new me.ColorLayer("background", "#000000"), 0);
+
     me.game.world.addChild(me.pool.pull("player"), 1);
 
-    this.enemyManager = new game.EnemyManager();
+    this.enemyManager = new EnemyManager();
     this.enemyManager.createEnemies();
     me.game.world.addChild(this.enemyManager, 2);
+
 
     me.input.bindKey(me.input.KEY.LEFT, "left");
     me.input.bindKey(me.input.KEY.RIGHT, "right");
     me.input.bindKey(me.input.KEY.A, "left");
     me.input.bindKey(me.input.KEY.D, "right");
-    me.input.bindKey(me.input.KEY.SPACE, "shoot", true);
 }
 </code></pre>
 
@@ -694,16 +717,16 @@ export default PlayScreen;
                 <p>For movement, let's keep it simple and have the container move once per second. For this, we can use
                     a melonjs timer.</p>
 
-                <p>Add these two methods to the enemy_manager.js</p>
+                <p>Add these two methods to the enemy-manager.js</p>
 
-                <pre><code>onActivateEvent : function () {
-    var _this = this;
-    this.timer = me.timer.setInterval(function () {
-        _this.pos.x += _this.vel;
+                <pre><code>onActivateEvent() {
+    this.timer = me.timer.setInterval(() => {
+        this.pos.x += this.vel;
     }, 1000);
-},
+}
 
-onDeactivateEvent : function () {
+
+onDeactivateEvent() {
     me.timer.clearInterval(this.timer);
 }
 </code></pre>
@@ -724,25 +747,27 @@ onDeactivateEvent : function () {
                 <p>Then add the <strong>removeChildNow</strong> counterpart:</p>
 
 
-                <pre><code>onActivateEvent : function () {
-    var _this = this;
-    this.timer = me.timer.setInterval(function () {
-        var bounds = _this.childBounds;
+                <pre><code>onActivateEvent() {
+    this.timer = me.timer.setInterval(() => {
 
-        if ((_this.vel &gt; 0 &amp;&amp; (bounds.right + _this.vel) &gt;= me.game.viewport.width) ||
-            (_this.vel &lt; 0 &amp;&amp; (bounds.left + _this.vel) &lt;= 0)) {
-            _this.vel *= -1;
-            _this.pos.y += 16;
-            if (_this.vel &gt; 0) {
-              _this.vel += 5;
+        let bounds = this.getBounds();
+
+        if ((this.vel > 0 && (bounds.right + this.vel) >= me.game.viewport.width) ||
+            (this.vel < 0 && (bounds.left + this.vel) <= 0)) {
+            this.vel *= -1;
+            this.pos.y += 16;
+            if (this.vel > 0) {
+                this.vel += 5;
             }
             else {
-              _this.vel -= 5;
+                this.vel -= 5;
             }
         }
         else {
-            _this.pos.x += _this.vel;
+            this.pos.x += this.vel;
         }
+
+
     }, 1000);
 }
 </code></pre>
@@ -751,56 +776,40 @@ onDeactivateEvent : function () {
 
                 <p>Using the child bounds, we can retrieve the left &amp; right values to world coordinates.</p>
 
-                <pre><code>var bounds = _this.childBounds;</code></pre>
+                <pre><code>var bounds = this.getBounds();</code></pre>
 
                 <p>The first part of the if checks if the container is moving right, and the right edge + velocity is
                     outside the viewport.</p>
 
-                <pre><code>(_this.vel &gt; 0 &amp;&amp; (bounds.right + _this.vel) &gt;= me.game.viewport.width)</code></pre>
+                <pre><code>(this.vel &gt; 0 &amp;&amp; (bounds.right + this.vel) &gt;= me.game.viewport.width)</code></pre>
 
                 <p>The second part checks if the container is moving left, and its left bounds is less than zero.</p>
 
-                <pre><code>(_this.vel &lt; 0 &amp;&amp; (bounds.left + _this.vel) &lt;= 0)</code></pre>
+                <pre><code>(this.vel &lt; 0 &amp;&amp; (bounds.left + this.vel) &lt;= 0)</code></pre>
 
                 <p>In the block, we reverse the velocity, move down by 16 pixels and then increase the velocity.</p>
 
-                <pre><code>_this.vel *= -1;
-_this.pos.y += 16;
-if (_this.vel &gt; 0) {
-    _this.vel += 5;
+                <pre><code>this.vel *= -1;
+this.pos.y += 16;
+if (this.vel &gt; 0) {
+    this.vel += 5;
 }
 else {
-    _this.vel -= 5;
+    this.vel -= 5;
 }
 </code></pre>
 
                 <p>Then the last bit, we increment the velocity if the container hasn't moved left or right</p>
 
                 <pre><code>else {
-    _this.pos.x += _this.vel;
+    this.pos.x += this.vel;
 }
 </code></pre>
 
-                <p>Save and refresh this time, it should now move back and forth across the screen, closer to our
-                    player. But there's a problem! It isn't turning around when it gets to the edge! What's going on
-                    here?</p>
+                <p>Save and refresh; this time, it should now move back and forth across the screen, closer to our
+                    player. </p>
 
-                <p>At this point, you should add #debug to the URL: <a href="http://localhost:8000/#debug">http://localhost:8000/#debug</a>
-                    and tap on the checkbox next to "hitbox" in the debug panel. This will enable hitbox rendering, so
-                    you can visualize the internal structure of your objects.</p>
-
-                <p>The hitboxes show that the child bounds (the large purple rectangle occupying the EnemyManager's
-                    original position) is not moving with the container. This is because child bounds updates are not
-                    automatically computed. You can easily recompute the child bounds by overloading the update
-                    method:</p>
-
-                <pre><code>update : function (time) {
-    this._super(me.Container, "update", [time]);
-    this.updateChildBounds();
-}
-</code></pre>
-
-                <p>Save and refresh, and you'll find that it now works as expected!</p>
+                <p><a href="tutorial_step2/index.html"><img src="media/tutorial_step2.png" alt="Live Example"></a></p>
             </div>
 
             <!-- Part 3 -->

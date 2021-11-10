@@ -2,48 +2,33 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="67846138-a850-45c9-9b79-ee31d3bde0ac" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/tutorial_step1/js/renderables/enemy.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tutorial_step2/data/bgm/.placeholder" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tutorial_step2/data/fnt/LICENSE.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tutorial_step2/data/img/.placeholder" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tutorial_step2/data/map/.placeholder" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tutorial_step2/data/sfx/.placeholder" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tutorial_step2/favicon/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tutorial_step2/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tutorial_step2/js/managers/enemy-manager.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tutorial_step2/js/plugin/debug/debugPanel.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tutorial_step2/js/plugin/debug/font/PressStart2P.fnt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tutorial_step2/js/plugin/debug/font/PressStart2P.ltr" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tutorial_step2/js/plugin/debug/font/PressStart2P.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tutorial_step2/js/renderables/enemy.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tutorial_step2/js/renderables/player.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tutorial_step2/js/stage/play.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tutorial_step2/manifest.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/HTML5_Badge_128.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/area01_bkg0.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/area01_bkg1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/coin_properties.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/gripe_run_right.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/spinning_coin_gold.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/step1_background_color.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/step1_newmap.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/step1_newtileset.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/step1_tiled_level_design.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/step3_addEntity.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/step3_collision_draw.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/step3_debugpanel.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/step3_metatileset.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/step3_object_position.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/step3_tile_platform.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/step3_tile_solid.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/step4_Imagelayer_property.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/step4_layer.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/step4_layer_property.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/step8_next_level.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/tiled_settings.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/title_screen.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/tutorial_final.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/tutorial_step2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/tutorial_step3.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/tutorial_step4.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/tutorial_step5.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/tutorial_step6.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/tutorial_tiled_step5.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/wheelie_right.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step1/data/img/player.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step1/data/img/ships.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step1/index.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step1/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step1/js/enemy.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step1/js/game.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step1/js/player.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step1/js/resources.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step1/js/screens/play.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step1/js/stage/play.js" beforeDir="false" afterPath="$PROJECT_DIR$/tutorial_step1/js/stage/play.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step2/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/tutorial_step2/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step2/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/tutorial_step2/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step2/js/enemy.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step2/js/enemy_manager.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step2/js/game.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step2/js/player.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step2/js/resources.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step2/js/screens/play.js" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,9 +57,14 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/tutorial_step2" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\kkeiper1103\PhpstormProjects\tutorial-space-invaders\tutorial_step2" />
+    </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -84,7 +74,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1636550124276</updated>
-      <workItem from="1636550126507" duration="9755000" />
+      <workItem from="1636550126507" duration="12943000" />
     </task>
     <servers />
   </component>

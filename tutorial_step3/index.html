@@ -1,36 +1,14 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Space Invaders!</title>
 
-<head>
-  <title>melonJS - Space Invaders Tutorial</title>
-  <meta name="description" content="melonJS homepage" />
-  <meta name="keywords" content="melonJS, HTML5, javascript, game, engine, framework" />
-  <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
-  <link rel="stylesheet" type="text/css" href="index.css" title="style" />
-</head>
-
-<body>
+    <link rel="stylesheet" href="index.css">
+  </head>
+  <body>
     <div id="screen"></div>
-    <!-- melonJS Library -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/melonjs/dist/melonjs.js"></script>
 
-    <!-- Plugin(s) -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/melonjs/plugins/debug/debugPanel.js"></script>
-    
-    <!-- Game Scripts -->
-    <script type="text/javascript" src="js/game.js"></script>
-    <script type="text/javascript" src="js/resources.js"></script>
-    <script type="text/javascript" src="js/screens/play.js"></script>
-    <script type="text/javascript" src="js/enemy.js"></script>
-    <script type="text/javascript" src="js/player.js"></script>
-    <script type="text/javascript" src="js/laser.js"></script>
-    <script type="text/javascript" src="js/enemy_manager.js"></script>
-
-    <!-- Bootstrap -->
-    <script type="text/javascript">
-        me.device.onReady(function onReady() {
-            game.onload();
-        });
-    </script>
-</body>
+    <script src="index.js" type="module"></script>
+  </body>
 </html>
