@@ -22,6 +22,8 @@ class PlayScreen extends me.Stage {
         me.input.bindKey(me.input.KEY.RIGHT, "right");
         me.input.bindKey(me.input.KEY.A, "left");
         me.input.bindKey(me.input.KEY.D, "right");
+
+        me.input.bindKey(me.input.KEY.SPACE, "shoot", true);
     }
 
 
@@ -30,6 +32,8 @@ class PlayScreen extends me.Stage {
         me.input.unbindKey(me.input.KEY.RIGHT);
         me.input.unbindKey(me.input.KEY.A);
         me.input.unbindKey(me.input.KEY.D);
+
+        me.input.unbindKey(me.input.KEY.SPACE);
     }
 };
 

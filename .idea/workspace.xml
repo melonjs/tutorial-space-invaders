@@ -2,33 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="67846138-a850-45c9-9b79-ee31d3bde0ac" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/tutorial_step2/data/bgm/.placeholder" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step2/data/fnt/LICENSE.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step2/data/img/.placeholder" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step2/data/map/.placeholder" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step2/data/sfx/.placeholder" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step2/favicon/logo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step2/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step2/js/managers/enemy-manager.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step2/js/plugin/debug/debugPanel.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step2/js/plugin/debug/font/PressStart2P.fnt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step2/js/plugin/debug/font/PressStart2P.ltr" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step2/js/plugin/debug/font/PressStart2P.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step2/js/renderables/enemy.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step2/js/renderables/player.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step2/js/stage/play.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step2/manifest.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tutorial_step3/js/constants.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tutorial_step3/js/renderables/laser.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step1/js/stage/play.js" beforeDir="false" afterPath="$PROJECT_DIR$/tutorial_step1/js/stage/play.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step2/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/tutorial_step2/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step2/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/tutorial_step2/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step2/js/enemy.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step2/js/enemy_manager.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step2/js/game.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step2/js/player.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step2/js/resources.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step2/js/screens/play.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step3/js/stage/play.js" beforeDir="false" afterPath="$PROJECT_DIR$/tutorial_step3/js/stage/play.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,12 +35,13 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/tutorial_step2" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../legendofgibb-online-master" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\kkeiper1103\PhpstormProjects\tutorial-space-invaders\tutorial_step3" />
       <recent name="C:\Users\kkeiper1103\PhpstormProjects\tutorial-space-invaders\tutorial_step2" />
     </key>
   </component>
@@ -74,7 +53,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1636550124276</updated>
-      <workItem from="1636550126507" duration="12943000" />
+      <workItem from="1636550126507" duration="15391000" />
     </task>
     <servers />
   </component>
