@@ -9,6 +9,8 @@ import CONSTANTS from '../constants.js';
 export class LaserRenderable extends me.Renderable {
     constructor() {
         super(0, 0, CONSTANTS.LASER.WIDTH, CONSTANTS.LASER.HEIGHT);
+
+        this.z = 5;
     }
 
     destroy() {
@@ -25,14 +27,17 @@ export class LaserRenderable extends me.Renderable {
 
 
 // Note : Jay Inheritance to be replaced with standard ES6 inheritance in melonjs 10+
-class Laser extends me.Sprite {
+class Laser extends me.Entity {
     constructor(x, y) {
         super(x, y, { width: CONSTANTS.LASER.WIDTH, height: CONSTANTS.LASER.HEIGHT });
 
 
         this.z = 5;
-        this.body.setVelocity(0, 300);
+        this.body.vel.set(0, 300);
+        this.body.force.set(0, 300);
         this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
+
+        this.body.ignoresGravity = true;
 
         this.renderable = new LaserRenderable();
         this.alwaysUpdate = true;
@@ -46,7 +51,8 @@ class Laser extends me.Sprite {
     update(dt) {
         super.update(dt);
 
-        this.body.vel.y -= this.body.accel.y * time / 1000;
+        this.body.vel.y -= this.body.force.y * dt / 1000;
+
         if (this.pos.y + this.height <= 0) {
             me.game.world.removeChild(this);
         }

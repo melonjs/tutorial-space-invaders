@@ -1040,19 +1040,15 @@ this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
 }
 </code></pre>
 
-                <p>The body update is very important, this applies the velocity we set for this frame.</p>
-
-                <pre><code>this.body.update();</code></pre>
-
-                <p>Then we tell MelonJS to check collisions against this object with
-                    <strong>me.collision.check(this)</strong>.</p>
-
-                <pre><code>me.collision.check(this);</code></pre>
+                <p>One of the new features in MelonJS 10 is that you no longer need to manually tell the entity to
+                    check collisions or update the body!</p>
 
                 <p>The next step for this feature, is to add the laser to the entity pool. Add the following code to
-                    game.js, same as the Player &amp; Enemy objects.</p>
+                    index.js, same as the Player &amp; Enemy objects.</p>
 
-                <pre><code>me.pool.register("laser", game.Laser);</code></pre>
+                <pre><code>import Laser from './js/renderables/laser.js';</code></pre>
+
+                <pre><code>me.pool.register("laser", Laser);</code></pre>
 
                 <p>Then back in the player.js file, add the laser shooting in the update method:</p>
 
@@ -1064,7 +1060,7 @@ this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
                 <p>Reload the game, and try shooting. You should see the lasers fire. However they don't collide with
                     anything.</p>
 
-                <img src="screens/screenthree.png"/>
+                <img src="screens/screenthree.png" alt="PEW PEW PEW"/>
             </div>
 
             <a id="part4" class="offset-anchor"></a>

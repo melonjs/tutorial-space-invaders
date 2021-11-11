@@ -1,5 +1,6 @@
 import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js';
 
+import CONSTANTS from '../constants.js';
 
  // Note : Jay Inheritance to be replaced with standard ES6 inheritance in melonjs 10+
 class PlayerEntity extends me.Sprite {
@@ -32,6 +33,10 @@ class PlayerEntity extends me.Sprite {
 
         if (me.input.isKeyPressed("right")) {
             this.pos.x += this.velx * dt / 1000;
+        }
+
+        if (me.input.isKeyPressed("shoot")) {
+            me.game.world.addChild(me.pool.pull("laser", this.pos.x - CONSTANTS.LASER.WIDTH, this.pos.y - CONSTANTS.LASER.HEIGHT));
         }
 
         this.pos.x = me.Math.clamp(this.pos.x, 32, this.maxX);

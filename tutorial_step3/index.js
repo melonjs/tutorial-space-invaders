@@ -3,6 +3,7 @@ import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.mo
 import PlayScreen from './js/stage/play.js';
 import PlayerEntity from './js/renderables/player.js';
 import EnemyEntity from './js/renderables/enemy.js';
+import Laser from './js/renderables/laser.js';
 
 import DataManifest from './manifest.js';
 
@@ -29,6 +30,7 @@ me.device.onReady(function () {
         // add our player entity in the entity pool
         me.pool.register("player", PlayerEntity);
         me.pool.register("enemy", EnemyEntity);
+        me.pool.register("laser", Laser);
 
         // Start the game.
         me.state.change(me.state.PLAY);
