@@ -4,10 +4,23 @@
     <list default="true" id="67846138-a850-45c9-9b79-ee31d3bde0ac" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step3/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/tutorial_step3/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step2/js/managers/enemy-manager.js" beforeDir="false" afterPath="$PROJECT_DIR$/tutorial_step2/js/managers/enemy-manager.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step2/js/renderables/enemy.js" beforeDir="false" afterPath="$PROJECT_DIR$/tutorial_step2/js/renderables/enemy.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step3/js/managers/enemy-manager.js" beforeDir="false" afterPath="$PROJECT_DIR$/tutorial_step3/js/managers/enemy-manager.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step3/js/renderables/enemy.js" beforeDir="false" afterPath="$PROJECT_DIR$/tutorial_step3/js/renderables/enemy.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tutorial_step3/js/renderables/laser.js" beforeDir="false" afterPath="$PROJECT_DIR$/tutorial_step3/js/renderables/laser.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tutorial_step3/js/renderables/player.js" beforeDir="false" afterPath="$PROJECT_DIR$/tutorial_step3/js/renderables/player.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step4/data/img/player.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step4/data/img/ships.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step4/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step4/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step4/js/enemy.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step4/js/enemy_manager.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step4/js/game.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step4/js/laser.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step4/js/player.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step4/js/resources.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step4/js/screens/play.js" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -74,6 +87,7 @@
       <updated>1636550124276</updated>
       <workItem from="1636550126507" duration="15391000" />
       <workItem from="1636578271839" duration="1865000" />
+      <workItem from="1636625226408" duration="4643000" />
     </task>
     <servers />
   </component>
@@ -85,7 +99,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>

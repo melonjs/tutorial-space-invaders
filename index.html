@@ -652,13 +652,6 @@ class EnemyManager extends me.Container {
 
 
         this.vel = 16;
-
-
-        //
-        this.onChildChange = () => {
-            // force update on all child bounds
-            this.updateBounds(true);
-        };
     }
 }
 
@@ -842,6 +835,8 @@ import CONSTANTS from '../constants.js';
 export class LaserRenderable extends me.Renderable {
     constructor() {
         super(0, 0, CONSTANTS.LASER.WIDTH, CONSTANTS.LASER.HEIGHT);
+
+        this.z = 5;
     }
 
     destroy() {
@@ -854,21 +849,53 @@ export class LaserRenderable extends me.Renderable {
         renderer.fillRect(0, 0, this.width, this.height);
         renderer.setColor(color);
     }
-};
+}
 
 
 // Note : Jay Inheritance to be replaced with standard ES6 inheritance in melonjs 10+
-class Laser extends me.Sprite {
+class Laser extends me.Entity {
     constructor(x, y) {
         super(x, y, { width: CONSTANTS.LASER.WIDTH, height: CONSTANTS.LASER.HEIGHT });
 
 
         this.z = 5;
-        this.body.setVelocity(0, 300);
+
+        // this body has a velocity of 0 units horizontal and 16 units vertically
+        this.body.vel.set(0, 16);
+
+        // the force to be applied at each update is -8 units vertically (in html, this means towards top of window)
+        this.body.force.set(0, -8);
+
+        // cap the velocity of the laser beam to the initial velocity
+        this.body.setMaxVelocity(3, 16);
+
+        // this object is officially a projectile
         this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
+
+        // don't let gravity affect the object
+        this.body.ignoreGravity = true;
+
 
         this.renderable = new LaserRenderable();
         this.alwaysUpdate = true;
+    }
+
+    /**
+     *
+     * @param dt
+     * @returns {boolean}
+     */
+    update(dt) {
+        // because we're using melonjs' physics system, all we need to do is update the object.
+        // this call will move the object
+        super.update(dt);
+
+        // if the laser is above the screen, remove it from the game world
+        if (this.pos.y + this.height <= 0) {
+            me.game.world.removeChild(this);
+        }
+
+        return true;
     }
 }
 
@@ -912,17 +939,31 @@ this.z = 5;
                 <p>These next methods for setting up a physics body. Which we will use to move the laser across the
                     screen.</p>
 
-                <pre><code>this.body.setVelocity(0, 300);
+                <pre><code>this.body.vel.set(0, 16);
+this.body.force.set(0, -8);
+this.body.setMaxVelocity(3, 16);
 this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
 </code></pre>
 
                 <p>By default, me.Body will not setup shapes for you. me.Entity however creates a shape based on the
                     position, width, and height.</p>
 
-                <p>First we set a velocity. Velocity is a vector, and we want the laser to move up. So set a velocity of
-                    300. Note that velocity should never be negative to dictate direction.</p>
+                <p>First we set a velocity. Velocity is a vector, and we want the laser to move up.
+                    Now, note that velocity should never be negative to dictate direction. So how do we get the beam
+                    to move up the screen?</p>
 
-                <pre><code>this.body.setVelocity(0, 300);</code></pre>
+                <p>The answer is by using a force field. #facepalm</p>
+
+                <p>Seriously, though, we need to tell the laser's body that the force being applied to it each update is
+                    negative. That's why we tell the body that the force is negative 8 units.</p>
+
+                <p>Lastly, we need to cap the velocity so it doesn't accidentally move faster than we want. This simply tells
+                    MelonJS that the body cannot move faster than 3 units horizontally and 16 units vertically.</p>
+
+                <pre><code>this.body.vel.set(0, 16);
+this.body.force.set(0, -8);
+this.body.setMaxVelocity(3, 16);
+</code></pre>
 
                 <p>Then we set a collision type. This is useful in collision callbacks.</p>
 
@@ -1014,9 +1055,11 @@ this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
                 <p>Speaking of the update method.</p>
 
                 <pre><code>update(dt) {
+    // because we're using melonjs' physics system, all we need to do is update the object.
+    // this call will move the object
     super.update(dt);
 
-    this.body.vel.y -= this.body.accel.y * time / 1000;
+    // if the laser is above the screen, remove it from the game world
     if (this.pos.y + this.height <= 0) {
         me.game.world.removeChild(this);
     }
@@ -1024,12 +1067,6 @@ this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
     return true;
 }
 </code></pre>
-
-                <p>The first bit is how we will move the laser. The ship was just moved by manipulating the position
-                    directly. Since this has a collision body, we will manipulate the y velocity, by subtracting the y
-                    acceleration.</p>
-
-                <pre><code>this.body.vel.y -= this.body.accel.y * time / 1000;</code></pre>
 
                 <p>If the position of the laser plus the height (so the bottom of the laser) is less than zero, we can
                     remove the laser from the game world. Again, this will function now work because alwaysUpdate is set
@@ -1050,10 +1087,12 @@ this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
 
                 <pre><code>me.pool.register("laser", Laser);</code></pre>
 
-                <p>Then back in the player.js file, add the laser shooting in the update method:</p>
+                <p>Then back in the player.js file, import the constants and add the laser shooting in the update method:</p>
+
+                <pre><code>import CONSTANTS from '../constants.js';</code></pre>
 
                 <pre><code>if (me.input.isKeyPressed("shoot")) {
-    me.game.world.addChild(me.pool.pull("laser", this.pos.x - game.Laser.width, this.pos.y - game.Laser.height))
+    me.game.world.addChild(me.pool.pull("laser", this.pos.x - game.Laser.width, this.pos.y - this.pos.y))
 }
 </code></pre>
 
@@ -1066,32 +1105,24 @@ this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
             <a id="part4" class="offset-anchor"></a>
             <div class="subcontent">
                 <h2>Collisions</h2>
-                <p>First lets give our Enemy a physics body. Append this to the init method in enemy.js</p>
+                <p>First lets give our Enemy a physics body. Append this to the constructor method in enemy.js</p>
 
-                <pre><code>this.body.setVelocity(0, 0);
+                <pre><code>this.body.vel.set(0, 0);
 this.body.collisionType = me.collision.types.ENEMY_OBJECT;
-</code></pre>
-
-                <p>Then add an update method so we can update the body:</p>
-
-                <pre><code>update : function (time) {
-    this._super(me.Entity, "update", [time]);
-
-    this.body.update();
-
-    return true;
-}
 </code></pre>
 
                 <p>Now lets add a collision handler to the laser.js file.</p>
 
-                <pre><code>onCollision : function (res, other) {
-    if (other.body.collisionType === me.collision.types.ENEMY_OBJECT) {
-        me.game.world.removeChild(this);
-        game.playScreen.enemyManager.removeChild(other);
-        return false;
+                <pre><code>onCollision(response, other) {
+
+        if (other.body.collisionType === me.collision.types.ENEMY_OBJECT) {
+            me.game.world.removeChild(this);
+
+            me.state.current().enemyManager.removeChild(other);
+
+            return false;
+        }
     }
-}
 </code></pre>
 
                 <p>The res parameter that we are not using, is simply the collision result. So it contains details on
@@ -1105,7 +1136,7 @@ this.body.collisionType = me.collision.types.ENEMY_OBJECT;
                 <p>Then we remove the enemy from the laser, along with the enemy from the enemyManager container.</p>
 
                 <pre><code>me.game.world.removeChild(this);
-game.playScreen.enemyManager.removeChild(other);
+me.state.current().enemyManager.removeChild(other);
 </code></pre>
 
                 <p>The return false in this case isn't strictly necessary, but it's important to point out. When you

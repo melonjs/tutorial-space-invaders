@@ -10,12 +10,6 @@ class EnemyManager extends me.Container {
 
 
         this.vel = 16;
-
-        //
-        this.onChildChange = () => {
-            // force update on all child bounds
-            this.updateBounds(true);
-        };
     }
 
 

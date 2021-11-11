@@ -15,6 +15,7 @@ class EnemyEntity extends me.Sprite {
         // give the sprite a physics body so it can collide and stuff
         this.body = new me.Body(this);
         this.body.addShape(new me.Rect(0, 0, this.width, this.height));
+
         this.body.ignoreGravity = true;
 
         //

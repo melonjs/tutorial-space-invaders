@@ -16,6 +16,9 @@ class EnemyEntity extends me.Sprite {
         this.body = new me.Body(this);
         this.body.addShape(new me.Rect(0, 0, this.width, this.height));
 
+        this.body.vel.set(0, 0);
+        this.body.collisionType = me.collision.types.ENEMY_OBJECT;
+
         this.body.ignoreGravity = true;
 
         //

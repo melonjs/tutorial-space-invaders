@@ -71,6 +71,31 @@ class Laser extends me.Entity {
 
         return true;
     }
+
+
+    /**
+     *
+     * @param response
+     * @param other
+     * @returns {boolean}
+     */
+    onCollision(response, other) {
+
+        if (other.body.collisionType === me.collision.types.ENEMY_OBJECT) {
+            me.game.world.removeChild(this);
+
+            // this works, but I'm not a huge fan of it. enemyManager is only defined on the PlayScreen, so this assumes
+            //  that the only time this handler will fire is in the play state. I would prefer something like:
+            //
+            // me.state.get(me.state.PLAY).enemyManager.removeChild(other);
+            //
+            // that would ensure that the screen trying to access the enemyManager is always the play screen
+
+            me.state.current().enemyManager.removeChild(other);
+
+            return false;
+        }
+    }
 }
 
 export default Laser;
