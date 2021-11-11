@@ -2,45 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="67846138-a850-45c9-9b79-ee31d3bde0ac" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/tutorial_step5/data/bgm/.placeholder" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step5/data/fnt/LICENSE.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step5/data/img/.placeholder" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step5/data/map/.placeholder" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step5/data/sfx/.placeholder" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step5/favicon/logo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step5/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step5/js/constants.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step5/js/managers/enemy-manager.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step5/js/plugin/debug/debugPanel.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step5/js/plugin/debug/font/PressStart2P.fnt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step5/js/plugin/debug/font/PressStart2P.ltr" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step5/js/plugin/debug/font/PressStart2P.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step5/js/renderables/enemy.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step5/js/renderables/laser.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step5/js/renderables/player.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tutorial_step5/manifest.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step5/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/tutorial_step5/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step5/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/tutorial_step5/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step5/js/enemy.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step5/js/enemy_manager.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step5/js/game.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step5/js/laser.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step5/js/player.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step5/js/resources.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorial_step5/js/screens/play.js" beforeDir="false" afterPath="$PROJECT_DIR$/tutorial_step5/js/stage/play.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step5/js/managers/enemy-manager.js" beforeDir="false" afterPath="$PROJECT_DIR$/tutorial_step5/js/managers/enemy-manager.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step5/js/renderables/laser.js" beforeDir="false" afterPath="$PROJECT_DIR$/tutorial_step5/js/renderables/laser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorial_step5/js/stage/play.js" beforeDir="false" afterPath="$PROJECT_DIR$/tutorial_step5/js/stage/play.js" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="ComposerSettings">
-    <execution>
-      <executable />
-    </execution>
+    <execution />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -61,7 +35,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/tutorial_step5" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -72,19 +46,7 @@
       <recent name="C:\Users\kkeiper1103\PhpstormProjects\tutorial-space-invaders\tutorial_step2" />
     </key>
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
-  </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -98,23 +60,23 @@
       <workItem from="1636550126507" duration="15391000" />
       <workItem from="1636578271839" duration="1865000" />
       <workItem from="1636625226408" duration="7129000" />
+      <workItem from="1636636064946" duration="5384000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>

@@ -1248,19 +1248,19 @@ end
 
                 <p>Add the following change to the onChildChange callback previously defined in the enemy manager:</p>
 
-                <pre><code>this.onChildChange = function () {
-    this.updateChildBounds();
-
-    if (this.children.length === 0) {
-        game.playScreen.reset();
+                <pre><code>this.onChildChange = () => {
+    if(this.children.length === 0) {
+        me.state.current().reset();
     }
-};
+}
 </code></pre>
 
                 <p>This is pretty simple. Children is an array, so we check its length to be zero, and then reset the
                     game if the condition is met</p>
 
                 <p>Save and refresh the browser. Try to take out all the ships in time, and see the game reset.</p>
+
+                <p><a href="tutorial_step5/index.html">Click Here to See It Live!</a></p>
             </div>
 
             <a id="challenges" class="offset-anchor"></a>
@@ -1277,7 +1277,7 @@ end
                 <h4>Add a proper win &amp; loss screen</h4>
                 <ol>
                     <li>These screens can be made by adding additional ScreenObjects to the game, register them in
-                        game.js, and then changing state. For what states to use for the win &amp; screen, look at the
+                        index.js, and then changing state. For what states to use for the win &amp; screen, look at the
                         states available: <a href="http://melonjs.github.io/melonJS/docs/me.state.html">http://melonjs.github.io/melonJS/docs/me.state.html</a>
                     </li>
                     <li>The win and loss screen can contain a sprite, or text, or both. Whatever you wish really. Be
@@ -1297,8 +1297,8 @@ end
                 <h4>Add a UI</h4>
                 <ol>
                     <li>Add an enemy counter, and enemy velocity to the top right/left corner of the screen. These
-                        properties can be retrieved via: <strong>game.playScreen.enemyManager.children.length</strong>
-                        <strong>game.playScreen.enemyManager.vel</strong></li>
+                        properties can be retrieved via: <strong>me.state.current().enemyManager.children.length</strong>
+                        <strong>me.state.current().enemyManager.vel</strong></li>
                     <li>Again look at <a href="http://melonjs.github.io/melonJS/docs/me.Text.html">me.Text</a>, and
                         implement a renderable for drawing text. Try to only use one class that extends renderable that
                         can be used for both UI pieces.
@@ -1312,7 +1312,7 @@ end
                 <h4>Add the concept of levels</h4>
                 <ol>
                     <li>After you defeat a wave, instead of refreshing the same wave, do a new wave the starts faster.
-                        The main logic here will be keeping wave count on the game.js, and increase it after each win.
+                        The main logic here will be keeping wave count on the index.js, and increase it after each win.
                         Then use that count in the enemy manager to configure the velocity.
                     </li>
                     <li>Have each wave progress faster too (+ 8 each Y increment over + 5 for example). Play with the

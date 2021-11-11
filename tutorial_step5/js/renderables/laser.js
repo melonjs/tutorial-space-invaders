@@ -1,5 +1,6 @@
 import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js';
 
+import PlayScreen from "../stage/play.js";
 import CONSTANTS from '../constants.js';
 
 
@@ -91,7 +92,8 @@ class Laser extends me.Entity {
             //
             // that would ensure that the screen trying to access the enemyManager is always the play screen
 
-            me.state.current().enemyManager.removeChild(other);
+            if(me.state.current() instanceof PlayScreen)
+                me.state.current().enemyManager.removeChild(other);
 
             return false;
         }

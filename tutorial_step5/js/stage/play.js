@@ -39,7 +39,7 @@ class PlayScreen extends me.Stage {
 
 
     checkIfLoss(y) {
-        if (y <= this.player.pos.y) {
+        if (y >= this.player.pos.y) {
             this.reset();
         }
     }
