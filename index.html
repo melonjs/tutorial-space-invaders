@@ -1099,7 +1099,7 @@ this.body.setMaxVelocity(3, 16);
                 <p>Reload the game, and try shooting. You should see the lasers fire. However they don't collide with
                     anything.</p>
 
-                <img src="screens/screenthree.png" alt="PEW PEW PEW"/>
+                <p><a href="tutorial_step3/index.html"><img src="screens/screenthree.png" alt="PEW PEW PEW"/></a></p>
             </div>
 
             <a id="part4" class="offset-anchor"></a>
@@ -1144,6 +1144,10 @@ me.state.current().enemyManager.removeChild(other);
                     it will do a hard stop.</p>
 
                 <p>Save the changes, and reload your browser. You should now be able to take out the enemy ships.</p>
+
+                <p><a href="tutorial_step4/index.html">
+                    <img src="media/tutorial_step4.png" alt="Ships Colliding!" style="max-width: 100%; height: auto"></a></p>
+                
                 <p>Next step, is adding the win &amp; loss conditions.</p>
             </div>
 
@@ -1171,7 +1175,19 @@ end
 </pre>
 
                 <p>The PlayScreen is our current game state. It holds the reference to the player, and it has the
-                    ability to reset the state. So let's add the logic for checking a lose condition there.</p>
+                    ability to reset the state. So let's add the logic for checking a lose condition there. First, we
+                    need to store the player object on the state, then we need to check it against another object.</p>
+
+                <pre><code>onResetEvent() {
+
+    // ... omitted for brevity
+
+    this.player = me.pool.pull("player");
+    me.game.world.addChild(this.player, 1);
+
+    // ... omitted for brevity
+}
+</code></pre>
 
                 <pre><code>checkIfLoss : function (y) {
     if (y &gt;= this.player.pos.y) {
@@ -1188,43 +1204,34 @@ end
                 <p>Now to call this condition check, simply add the method call to our interval in the enemy
                     manager:</p>
 
-                <pre><code>this.timer = me.timer.setInterval(function () {
-    var bounds = _this.childBounds;
+                <pre><code>this.timer = me.timer.setInterval(() => {
 
-    if ((_this.vel &gt; 0 &amp;&amp; (bounds.right + _this.vel) &gt;= me.game.viewport.width) ||
-        (_this.vel &lt; 0 &amp;&amp; (bounds.left + _this.vel) &lt;= 0)) {
-        _this.vel *= -1;
-        _this.pos.y += 16;
-        if (_this.vel &gt; 0) {
-          _this.vel += 5;
+    let bounds = this.getBounds();
+
+    if ((this.vel > 0 && (bounds.right + this.vel) >= me.game.viewport.width) ||
+        (this.vel < 0 && (bounds.left + this.vel) <= 0)) {
+        this.vel *= -1;
+        this.pos.y += 16;
+        if (this.vel > 0) {
+            this.vel += 5;
         }
         else {
-          _this.vel -= 5;
+            this.vel -= 5;
         }
-        game.playScreen.checkIfLoss(bounds.bottom); // <<<
+
+        me.state.current().checkIfLoss(bounds.bottom); // <<<
     }
     else {
-       _this.pos.x += _this.vel;
+        this.pos.x += this.vel;
     }
+
+
 }, 1000);
 </code></pre>
 
                 <p>Since we're checking in the <strong>checkIfLoss</strong> method if the passed number is greater than
                     the Y position of the player, we need to pass the bottom edge of the container, which is just
                     bounds.bottom.</p>
-
-                <p>The problem now though, is if you run it, <strong>this.player</strong> will be undefined. That's
-                    because we haven't yet
-                    setup this property on the playScreen. You can setup the property by doing the following:</p>
-
-                <p>Replace the line in <strong>onResetEvent</strong>:</p>
-
-                <pre><code>me.game.world.addChild(me.pool.pull("player"), 1);</code></pre>
-
-                <p>With:</p>
-
-                <pre><code>this.player = me.pool.pull("player");
-me.game.world.addChild(this.player, 1);</code></pre>
 
                 <p>Save and refresh the browser. <strong>this.player</strong> will now be set properly, so calling our
                     new method will now work.
