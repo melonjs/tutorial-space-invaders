@@ -2,7 +2,6 @@ import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.mo
 
 import CONSTANTS from '../constants.js';
 
-
 /**
  *
  */
