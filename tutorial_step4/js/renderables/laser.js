@@ -26,7 +26,6 @@ export class LaserRenderable extends me.Renderable {
 }
 
 
-// Note : Jay Inheritance to be replaced with standard ES6 inheritance in melonjs 10+
 class Laser extends me.Entity {
     constructor(x, y) {
         super(x, y, { width: CONSTANTS.LASER.WIDTH, height: CONSTANTS.LASER.HEIGHT });

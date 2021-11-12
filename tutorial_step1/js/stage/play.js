@@ -1,6 +1,5 @@
 import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js';
 
-// Note : Jay Inheritance to be replaced with standard ES6 inheritance in melonjs 10+
 class PlayScreen extends me.Stage {
     /**
      *  action to perform on state change

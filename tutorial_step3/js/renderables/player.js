@@ -2,7 +2,6 @@ import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.mo
 
 import CONSTANTS from '../constants.js';
 
- // Note : Jay Inheritance to be replaced with standard ES6 inheritance in melonjs 10+
 class PlayerEntity extends me.Sprite {
 
     /**

@@ -9,12 +9,10 @@ class EnemyManager extends me.Container {
     constructor() {
         super(32, 32, EnemyManager.COLS * 64 - 32, EnemyManager.ROWS * 64 - 32);
 
-
+        this.enableChildBoundsUpdate = true;
         this.vel = 16;
 
         this.onChildChange = () => {
-            this.updateBounds(true);
-
             if(this.children.length === 0) {
                 me.state.current().reset();
             }
