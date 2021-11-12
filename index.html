@@ -912,13 +912,7 @@ import CONSTANTS from '../constants.js';</code></pre>
     }
 };
 
-Object.freeze(defines);
-
 export default defines;</code></pre>
-
-                <p><code>Object.freeze()</code> is being used to make sure no one can modify the constants outside of
-                    this file. This helps ensure the values aren't accidentally changed during development.</p>
-
 
                 <p>Traditional stuff here. Setup the x &amp; y position from its parameters, and a width+height
                     properties. A bit different from our other objects, we have set the z index on the object manually.

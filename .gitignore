@@ -19,3 +19,6 @@ $RECYCLE.BIN/
 # Package manager stuff
 bower_components/
 node_modules/
+
+# intellij project settings
+.idea

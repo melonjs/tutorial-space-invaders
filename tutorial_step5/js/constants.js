@@ -5,6 +5,4 @@ const defines = {
     }
 };
 
-Object.freeze(defines);
-
 export default defines;
