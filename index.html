@@ -647,7 +647,7 @@ class EnemyManager extends me.Container {
     constructor() {
         super(0, 32, EnemyManager.COLS * 64 - 32, EnemyManager.ROWS * 64 - 32);
 
-
+        this.enableChildBoundsUpdate = true;
         this.vel = 16;
     }
 }
@@ -658,10 +658,8 @@ export default EnemyManager;
                 <p>Essentially what we're setting up here is the start position and the base width. Starting the
                     container 32 pixels down, and at 0 left (or x).</p>
 
-                <p>Notice as well the <a href="http://melonjs.github.io/melonJS/docs/me.Container.html#onChildChange">"onChildChange"</a>
-                    callback function that we use to automatically call <a
-                            href="http://melonjs.github.io/melonJS/docs/me.Container.html#updateChildBounds">""updateChildBounds""</a>
-                    to ensure that our object container is resized properly
+                <p>Notice as well the <a href="http://melonjs.github.io/melonJS/docs/me.Container.html#enableChildBoundsUpdate">"enableChildBoundsUpdate"</a>
+                    property we are setting to true, to ensure that our object container is resized properly
                     to take in account all added and removing childs.</p>
 
                 <p>We're allotting 64 pixels per ship width &amp; height wise. Then subtracting 32 pixels because the
