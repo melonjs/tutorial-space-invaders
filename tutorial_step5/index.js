@@ -1,4 +1,4 @@
-import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js';
+import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10/dist/melonjs.module.js';
 
 import PlayScreen from './js/stage/play.js';
 import PlayerEntity from './js/renderables/player.js';

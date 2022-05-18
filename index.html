@@ -66,48 +66,37 @@
 
                     <ul>
                         <li>The melonJS <a
-                                href="https://github.com/melonjs/es6-boilerplate/archive/refs/heads/main.zip">boilerplate</a>,
-                            that we will use as default template project for our tutorial.
+                                href="https://github.com/melonjs/es6-boilerplate/archive/refs/heads/main.zip">boilerplate</a>, that
+                            we will use as default template project for our tutorial (please make sure to install the required dependencies as instructed in the <a
+                                href="https://github.com/melonjs/es6-boilerplate#readme">README</a>)
                         </li>
 
                         <li>The tutorial <a href="tutorial_data.zip">image assets</a>, to be uncompressed into the
-                            boilerplate
-                            src/data directory. So when you unzip, you should have:
+                            boilerplate src/data directory. So when you unzip, you should have:
                             <pre>
 data/img/player.png
 data/img/ships.png
-js/game.js
-etc
+
 </pre>
                         </li>
-
-                        <li>The melonJS <a href="https://github.com/melonjs/melonJS/releases"> library</a>. If you
-                            downloaded
-                            the boilerplate, you will already have this. It should be copied under the /lib directory.
-                            You
-                            can copy the development version, as the boilerplate provides a minification task.
-                        </li>
-
                         <li>The melonJS <a href="http://melonjs.github.io/melonJS/docs/">documentation</a> for more
                             details
                         </li>
                     </ul>
 
                     <p>
-                        <b>Testing/debugging :</b><br/>
-                        Your best bet is to use a local web server, as for example detailed in the melonJS <a
-                            href="https://github.com/melonjs/es6-boilerplate#readme">boilerplate</a> README, by running `npm run
-                        serve` in the command prompt, that will allow you to test your game in your browser using the <a
-                            href="http://localhost:8000">http://localhost:8000</a> url.
-                    </p>
-                    <p>
-                        If you just want to use the filesystem, the problem is you'll run into "cross-origin request"
-                        security errors. With Chrome, you need to use the "--disable-web-security" parameter or better
-                        "--allow-file-access-from-files" when launching the browser. This must be done in order to test
-                        any local content, else the browser will complain when trying to load assets through XHR.
-                        <strong>Though this method is not recommended.</strong> As long as you have the option enabled,
-                        you're adding security vulnerabilities to your session.<br/>
-                    </p>
+                    <b>Testing/debugging :</b><br/>
+                    If you just want to use the filesystem, the problem is you'll run into "cross-origin request"
+                    security errors. With Chrome, you need to use the "--disable-web-security" parameter or better
+                    "--allow-file-access-from-files" when launching the browser. This must be done in order to test
+                    any local content, else the browser will complain when trying to load assets through XHR.
+                    <strong>Though this method is not recommended, </strong> since as long as you have the option
+                    enabled, you're adding security vulnerabilities to your environmnet.
+                </p>
+                <p> A second and easier option is to use a local web server, as for example detailed in the melonJS
+                    boilerplate <a href="https://github.com/melonjs/es6-boilerplate#readme">README</a>, by using the <b>npm run dev</b>
+                    tool, and that will allow you to test your game in your browser.
+                </p>
                 </div>
             </div>
 
@@ -139,7 +128,7 @@ manifest.js
                 <p>The boilerplate provides a bunch of default code. For this tutorial there are some files that we will
                     not need. You can delete the file stage/title.js. Then
                     update the index.html file to no longer include those, and remove the references of TitleScreen from
-                    the game.js file, as well as removing the references to the debugPanel.js file. Lastly, set the scaleMethod to "flex-width"</p>
+                    the game.js file. Lastly, set the scaleMethod to "flex-width"</p>
 
                 <pre><code>me.device.onReady(function () {
 
@@ -183,7 +172,7 @@ manifest.js
                     <p>Game states can be used to for things like a menu screen, play screen, pause screen, etc. When
                         changing state, it's important to note that everything is removed from the game world, unless
                         you have it set to be <a
-                                href="http://melonjs.github.io/melonJS/docs/me.Renderable.html#isPersistent"
+                                href="http://melonjs.github.io/melonJS/docs/Renderable.html#isPersistent"
                                 target="_blank">persistent</a> across states.</p>
                 </aside>
 
@@ -629,7 +618,7 @@ export default PlayScreen;
                     and then go in the other direction. They all move together. We could take the velocity logic that we
                     used for the player, and apply it to the enemy class. But we can better leverage MelonJS to do this
                     for us. Time to use our own subclass of <strong><a
-                            href="http://melonjs.github.io/melonJS/docs/me.Container.html">me.Container</a></strong></p>
+                            href="http://melonjs.github.io/melonJS/docs/Container.html">Container</a></strong></p>
 
                 <p>Objects inside a container are relative to its parent. So when we move the container, all objects
                     inside shift with it. This applies to rotation &amp; scale operations as well. So let's create
@@ -658,7 +647,7 @@ export default EnemyManager;
                 <p>Essentially what we're setting up here is the start position and the base width. Starting the
                     container 32 pixels down, and at 0 left (or x).</p>
 
-                <p>Notice as well the <a href="http://melonjs.github.io/melonJS/docs/me.Container.html#enableChildBoundsUpdate">"enableChildBoundsUpdate"</a>
+                <p>Notice as well the <a href="http://melonjs.github.io/melonJS/docs/Container.html#enableChildBoundsUpdate">"enableChildBoundsUpdate"</a>
                     property we are setting to true, to ensure that our object container is resized properly
                     to take in account all added and removing childs.</p>
 
@@ -1266,11 +1255,11 @@ end
                 <ol>
                     <li>These screens can be made by adding additional ScreenObjects to the game, register them in
                         index.js, and then changing state. For what states to use for the win &amp; screen, look at the
-                        states available: <a href="http://melonjs.github.io/melonJS/docs/me.state.html">http://melonjs.github.io/melonJS/docs/me.state.html</a>
+                        states available: <a href="http://melonjs.github.io/melonJS/docs/state.html">http://melonjs.github.io/melonJS/docs/state.html</a>
                     </li>
                     <li>The win and loss screen can contain a sprite, or text, or both. Whatever you wish really. Be
-                        sure to look at <a href="http://melonjs.github.io/melonJS/docs/me.Text.html">me.Text</a> and <a
-                                href="http://melonjs.github.io/melonJS/docs/me.Sprite.html">me.Sprite</a>. To display a
+                        sure to look at <a href="http://melonjs.github.io/melonJS/docs/Text.html">Text</a> and <a
+                                href="http://melonjs.github.io/melonJS/docs/Sprite.html">Sprite</a>. To display a
                         <strong>me.Text</strong> object, use an instance of <strong>me.Renderable</strong> that contains
                         an instance of me.Text, and implement the draw function to invoke me.Text#draw.
                     </li>
@@ -1287,7 +1276,7 @@ end
                     <li>Add an enemy counter, and enemy velocity to the top right/left corner of the screen. These
                         properties can be retrieved via: <strong>me.state.current().enemyManager.children.length</strong>
                         <strong>me.state.current().enemyManager.vel</strong></li>
-                    <li>Again look at <a href="http://melonjs.github.io/melonJS/docs/me.Text.html">me.Text</a>, and
+                    <li>Again look at <a href="http://melonjs.github.io/melonJS/docs/Text.html">Text</a>, and
                         implement a renderable for drawing text. Try to only use one class that extends renderable that
                         can be used for both UI pieces.
                     </li>
