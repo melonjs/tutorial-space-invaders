@@ -25,7 +25,7 @@ class EnemyEntity extends me.Sprite {
      *
      */
     chooseShipImage() {
-        let frame = ~~(Math.random() * 3);
+        let frame = me.Math.random(0, 4);
 
         this.addAnimation("idle", [frame], 1);
         this.setCurrentAnimation("idle");

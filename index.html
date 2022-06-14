@@ -396,7 +396,7 @@ export default PlayScreen;
                 <p>Add a new method to our enemy:</p>
 
                 <pre><code>chooseShipImage() {
-    let frame = ~~(Math.random() * 3);
+    let frame = me.Math.random(0, 4);
 
     this.renderable.addAnimation("idle", [frame], 1);
     this.renderable.setCurrentAnimation("idle");
@@ -404,8 +404,7 @@ export default PlayScreen;
 </code></pre>
 
                 <p>The first line simply randomizes which frame we want. The ship is 32x32, the image is 64x64, so we
-                    have 4 frames. ~~ is a shortcut for Math.floor when the number is 0 or positive. On negative
-                    numbers, it works like Math.ceil.</p>
+                    have 4 possible frames.</p>
                 <p>The second line is accessing the animation sheet instance (this.renderable), and uses the
                     addAnimation function to add a new idle frame. So we simply specify the index that was generated at
                     random.</p>
@@ -433,7 +432,7 @@ export default PlayScreen;
      *
      */
     chooseShipImage() {
-        let frame = ~~(Math.random() * 3);
+        let frame = me.Math.random(0, 4);
 
         this.addAnimation("idle", [frame], 1);
         this.setCurrentAnimation("idle");
