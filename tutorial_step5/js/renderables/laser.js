@@ -14,10 +14,6 @@ export class LaserRenderable extends me.Renderable {
         this.z = 5;
     }
 
-    destroy() {
-
-    }
-
     draw(renderer) {
         let color = renderer.getColor();
         renderer.setColor('#5EFF7E');

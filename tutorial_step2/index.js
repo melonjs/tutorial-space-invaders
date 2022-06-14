@@ -25,11 +25,6 @@ me.device.onReady(function () {
     me.loader.preload(DataManifest, function() {
         // set the user defined game stages
         me.state.set(me.state.PLAY, new PlayScreen());
-
-        // add our player entity in the entity pool
-        me.pool.register("player", PlayerEntity);
-        me.pool.register("enemy", EnemyEntity);
-
         // Start the game.
         me.state.change(me.state.PLAY);
     });

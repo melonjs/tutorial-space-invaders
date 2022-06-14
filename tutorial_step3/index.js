@@ -27,9 +27,7 @@ me.device.onReady(function () {
         // set the user defined game stages
         me.state.set(me.state.PLAY, new PlayScreen());
 
-        // add our player entity in the entity pool
-        me.pool.register("player", PlayerEntity);
-        me.pool.register("enemy", EnemyEntity);
+        // add our Laser entity in the entity pool
         me.pool.register("laser", Laser);
 
         // Start the game.

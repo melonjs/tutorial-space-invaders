@@ -1,5 +1,5 @@
 import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10/dist/melonjs.module.js';
-
+import EnemyEntity from './../renderables/enemy.js';
 import PlayScreen from "../stage/play.js";
 
 class EnemyManager extends me.Container {
@@ -26,14 +26,13 @@ class EnemyManager extends me.Container {
     createEnemies() {
         for (let i = 0; i < EnemyManager.COLS; i++) {
             for (let j = 0; j < EnemyManager.ROWS; j++) {
-                this.addChild(me.pool.pull("enemy", i * 64, j * 64));
+                var enemy = new EnemyEntity(i * 64, j * 64);
+                this.addChild(enemy);
             }
         }
 
         this.createdEnemies = true;
     }
-
-
 
 
     onActivateEvent() {
@@ -54,10 +53,8 @@ class EnemyManager extends me.Container {
                     this.vel -= 5;
                 }
 
-
                 // again, I wish I could do me.state.get(me.state.PLAY).checkIfLoss()
                 // this is bugging out on bounds.bottom, because bounds.bottom === Infinity when it is moving down?
-
                 if(me.state.current() instanceof PlayScreen)
                     me.state.current().checkIfLoss(bounds.bottom); // <<<
             }
@@ -66,7 +63,6 @@ class EnemyManager extends me.Container {
             }
         }, 250);
     }
-
 
     onDeactivateEvent() {
         me.timer.clearInterval(this.timer);

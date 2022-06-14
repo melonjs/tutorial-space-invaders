@@ -21,16 +21,6 @@ class EnemyEntity extends me.Sprite {
         this.chooseShipImage();
     }
 
-    /**
-     *
-     * @param dt
-     * @returns {boolean}
-     */
-    update(dt) {
-        super.update(dt);
-
-        return true;
-    }
 
     /**
      *

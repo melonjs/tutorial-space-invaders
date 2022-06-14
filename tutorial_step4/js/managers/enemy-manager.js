@@ -1,5 +1,5 @@
 import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10/dist/melonjs.module.js';
-
+import EnemyEntity from './../renderables/enemy.js';
 
 class EnemyManager extends me.Container {
     static COLS = 9;
@@ -12,20 +12,17 @@ class EnemyManager extends me.Container {
         this.vel = 16;
     }
 
-
     /**
      *
      */
     createEnemies() {
         for (let i = 0; i < EnemyManager.COLS; i++) {
             for (let j = 0; j < EnemyManager.ROWS; j++) {
-                this.addChild(me.pool.pull("enemy", i * 64, j * 64));
+                var enemy = new EnemyEntity(i * 64, j * 64);
+                this.addChild(enemy);
             }
         }
     }
-
-
-
 
     onActivateEvent() {
         this.timer = me.timer.setInterval(() => {
@@ -46,7 +43,6 @@ class EnemyManager extends me.Container {
             else {
                 this.pos.x += this.vel;
             }
-
 
         }, 1000);
     }

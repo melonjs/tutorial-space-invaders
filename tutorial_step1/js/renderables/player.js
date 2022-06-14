@@ -1,6 +1,5 @@
 import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10/dist/melonjs.module.js';
 
-
 class PlayerEntity extends me.Sprite {
 
     /**
@@ -14,16 +13,6 @@ class PlayerEntity extends me.Sprite {
             me.game.viewport.height - image.height - 20,
             { image : image, width: 32, height: 32 }
         );
-    }
-
-    /**
-     * update the entity
-     */
-    update(dt) {
-        // change body force based on inputs
-        //....
-        // call the parent method
-        return super.update(dt);
     }
 
    /**

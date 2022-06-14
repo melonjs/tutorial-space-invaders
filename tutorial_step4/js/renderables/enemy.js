@@ -26,17 +26,6 @@ class EnemyEntity extends me.Sprite {
 
     /**
      *
-     * @param dt
-     * @returns {boolean}
-     */
-    update(dt) {
-        super.update(dt);
-
-        return true;
-    }
-
-    /**
-     *
      */
     chooseShipImage() {
         let frame = ~~(Math.random() * 3);

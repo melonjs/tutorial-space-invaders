@@ -149,9 +149,6 @@ manifest.js
         // set the user defined game stages
         me.state.set(me.state.PLAY, new PlayScreen());
 
-        // add our player entity in the entity pool
-        me.pool.register("mainPlayer", PlayerEntity);
-
         // Start the game.
         me.state.change(me.state.PLAY);
     });
@@ -179,9 +176,6 @@ manifest.js
                 <pre><code>me.loader.preload(DataManifest, function() {
         // set the user defined game stages
         me.state.set(me.state.PLAY, new PlayScreen());
-
-        // add our player entity in the entity pool
-        me.pool.register("mainPlayer", PlayerEntity);
 
         // Start the game.
         me.state.change(me.state.PLAY);
@@ -281,24 +275,23 @@ export default DataManifest;
                     positioned in the center. And then set its y property to be 20 pixels above the bottom. Then finally
                     pass the image instance to it.</p>
 
-                <p>Let's setup the player in the entity pool. Open index.js and add the following at the top of the
-                    loaded method:</p>
-
-                <pre><code>me.pool.register("player", PlayerEntity);</code></pre>
-
                 <p>
                     Now open up <strong>js/stage/play.js</strong>, and edit the onResetEvent method so it looks like
                     this:
                 </p>
 
-                <pre><code>import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js';
+                <pre><code>
+
+import * as me from 'https://esm.run/melonjs@10';
+import PlayerEntity from "../renderables/player.js";
 
 class PlayScreen extends me.Stage {
     /**
      *  action to perform on state change
      */
     onResetEvent() {
-        me.game.world.addChild(me.pool.pull("player"));
+        this.player = new PlayerEntity();
+        me.game.world.addChild(this.player, 1);
     }
 };
 
@@ -336,8 +329,8 @@ export default PlayScreen;
                 <p>Since enemies will have to collide with things like the player's laser, it should extend <strong>me.Entity</strong>
                     as opposed to <strong>me.Sprite</strong>, so lets get that going:</p>
 
-                <pre><code>import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js';
-
+                <pre><code>
+import * as me from 'https://esm.run/melonjs@10';
 
 class EnemyEntity extends me.Sprite {
     constructor(x, y) {
@@ -358,16 +351,6 @@ class EnemyEntity extends me.Sprite {
         this.body.ignoreGravity = true;
     }
 
-    /**
-     *
-     * @param dt
-     * @returns {boolean}
-     */
-    update(dt) {
-        super.update(dt);
-
-        return true;
-    }
 }
 
 export default EnemyEntity;
@@ -378,18 +361,12 @@ export default EnemyEntity;
                     is a hash of settings. The settings specifies the image as "ships", referencing our DataManifest
                     array. The width and height are set to 32x32.</p>
 
-                <p>We're creating a custom update method, to tell the game engine to redraw. When melon goes through the
-                    game loop, it does an <strong>or</strong> on the result.
-                    If there are no changes in a given frame, it won't repaint. Returning true, and calling the super
-                    method will ensure the enemies do indeed render.</p>
-
-                <p>In index.js, add the enemy to the entity pool:</p>
-
-                <pre><code>me.pool.register("enemy", EnemyEntity);</code></pre>
-
                 <p>Back in play.js, add an enemy to the game world. Your play.js should now look like:</p>
 
-                <pre><code>import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js';
+                <pre><code>
+import * as me from 'https://esm.run/melonjs@10';
+import PlayerEntity from "../renderables/player.js";
+import EnemyEntity from './../renderables/enemy.js';
 
 class PlayScreen extends me.Stage {
     /**
@@ -399,8 +376,11 @@ class PlayScreen extends me.Stage {
 
         me.game.world.addChild(new me.ColorLayer("background", "#000000"), 0);
 
-        me.game.world.addChild(me.pool.pull("player"), 1);
-        me.game.world.addChild(me.pool.pull("enemy", 50, 50), 2);
+        this.player = new PlayerEntity();
+        this.enemy = new EnemyEntity(50, 50);
+
+        me.game.world.addChild(this.player, 1);
+        me.game.world.addChild(this.enemy, 2);
     }
 };
 
@@ -489,9 +469,11 @@ export default PlayScreen;
 
         me.game.world.addChild(new me.ColorLayer("background", "#000000"), 0);
 
-        me.game.world.addChild(me.pool.pull("player"), 1);
-        me.game.world.addChild(me.pool.pull("enemy", 50, 50), 2);
+        this.player = new PlayerEntity();
+        this.enemy = new EnemyEntity(50, 50);
 
+        me.game.world.addChild(this.player, 1);
+        me.game.world.addChild(this.enemy, 2);
 
 
         me.input.bindKey(me.input.KEY.LEFT, "left");
@@ -626,8 +608,9 @@ export default PlayScreen;
 
                 <p>Create a new file: js/managers/enemy-manager.js, and add it to the index.html.</p>
 
-                <pre><code>import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js';
-
+                <pre><code>
+import * as me from 'https://esm.run/melonjs@10';
+import EnemyEntity from './../renderables/enemy.js';
 
 class EnemyManager extends me.Container {
     static COLS = 9;
@@ -659,7 +642,8 @@ export default EnemyManager;
                 <pre><code>createEnemies() {
     for (let i = 0; i < EnemyManager.COLS; i++) {
         for (let j = 0; j < EnemyManager.ROWS; j++) {
-            this.addChild(me.pool.pull("enemy", i * 64, j * 64));
+            var enemy = new EnemyEntity(i * 64, j * 64);
+            this.addChild(enemy);
         }
     }
 }
@@ -675,7 +659,8 @@ export default EnemyManager;
 
     me.game.world.addChild(new me.ColorLayer("background", "#000000"), 0);
 
-    me.game.world.addChild(me.pool.pull("player"), 1);
+    this.player = new PlayerEntity();
+    me.game.world.addChild(this.player, 1);
 
     this.enemyManager = new EnemyManager();
     this.enemyManager.createEnemies();
@@ -808,7 +793,8 @@ else {
                 <p>Before we wire up the player to shoot, we need a laser. Create a laser.js file, and add the following
                     code to it. As always, be sure to import the laser.js script tag in the index.js file.</p>
 
-                <pre><code>import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js';
+                <pre><code>
+import * as me from 'https://esm.run/melonjs@10';
 
 import CONSTANTS from '../constants.js';
 
@@ -888,7 +874,8 @@ export default Laser;
 
                 <p>First, we declare our imports, MelonJS itself, as well as a new file called constants.js</p>
 
-                <pre><code>import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js';
+                <pre><code>
+import * as me from 'https://esm.run/melonjs@10';
 
 import CONSTANTS from '../constants.js';</code></pre>
 
@@ -1057,7 +1044,7 @@ this.body.setMaxVelocity(3, 16);
                 <p>One of the new features in MelonJS 10 is that you no longer need to manually tell the entity to
                     check collisions or update the body!</p>
 
-                <p>The next step for this feature, is to add the laser to the entity pool. Add the following code to
+                <p>The next step, we are going to use the object pooling feature,  for this we need to add the laser to the objet pool. Add the following code to
                     index.js, same as the Player &amp; Enemy objects.</p>
 
                 <pre><code>import Laser from './js/renderables/laser.js';</code></pre>
@@ -1159,7 +1146,7 @@ end
 
     // ... omitted for brevity
 
-    this.player = me.pool.pull("player");
+    this.player = new PlayerEntity();
     me.game.world.addChild(this.player, 1);
 
     // ... omitted for brevity

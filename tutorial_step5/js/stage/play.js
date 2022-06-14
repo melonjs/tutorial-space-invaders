@@ -1,5 +1,6 @@
 import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10/dist/melonjs.module.js';
 
+import PlayerEntity from "../renderables/player.js";
 import EnemyManager from "../managers/enemy-manager.js";
 
 class PlayScreen extends me.Stage {
@@ -10,7 +11,7 @@ class PlayScreen extends me.Stage {
 
         me.game.world.addChild(new me.ColorLayer("background", "#000000"), 0);
 
-        this.player = me.pool.pull("player");
+        this.player = new PlayerEntity();
         me.game.world.addChild(this.player, 1);
 
         this.enemyManager = new EnemyManager();

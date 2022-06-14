@@ -8,7 +8,6 @@ import CONSTANTS from '../constants.js';
 export class LaserRenderable extends me.Renderable {
     constructor() {
         super(0, 0, CONSTANTS.LASER.WIDTH, CONSTANTS.LASER.HEIGHT);
-
         this.z = 5;
     }
 
