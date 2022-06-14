@@ -4,9 +4,6 @@ class EnemyEntity extends me.Sprite {
     constructor(x, y) {
         super(x, y, {
             image: "ships",
-            width: 32,
-            height: 32,
-
             framewidth: 32,
             frameheight: 32,
         });
