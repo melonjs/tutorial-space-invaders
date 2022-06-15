@@ -326,8 +326,7 @@ export default PlayScreen;
                 <p>Now the pesky loading bar should be gone. Time to add in an enemy. Create a new file under the js
                     folder called enemy.js, and add it to the index.html file.</p>
 
-                <p>Since enemies will have to collide with things like the player's laser, it should extend <strong>me.Entity</strong>
-                    as opposed to <strong>me.Sprite</strong>, so lets get that going:</p>
+                <p>Since enemies will have to collide with things like the player's laser, we also need to add a me.Body object to our EnemyEntity, so lets get that going:</p>
 
                 <pre><code>
 import * as me from 'https://esm.run/melonjs@10';
@@ -354,9 +353,9 @@ export default EnemyEntity;
 </code></pre>
 
                 <p>With the enemy, we will need to place them in different spots, so x &amp; y will be added to its
-                    constructor, and then passed along to the me.Entity's constructor. The third parameter in the array
+                    constructor, and then passed along to the me.Sprite's constructor. The third parameter in the array
                     is a hash of settings. The settings specifies the image as "ships", referencing our DataManifest
-                    array. The width and height are set to 32x32.</p>
+                    array, with the frame width and height set to 32x32.</p>
 
                 <p>Back in play.js, add an enemy to the game world. Your play.js should now look like:</p>
 
@@ -388,9 +387,8 @@ export default PlayScreen;
                     browser.</p>
 
                 <p>You'll likely notice that the ship is constantly changing how it looks. If you open the ships.png
-                    file under data/img, you can see that it is a sprite sheet containing 4 different ships. <strong>me.Entity</strong>
-                    for its renderable uses the <strong>me.AnimationSheet</strong> class. Since we didn't add and set
-                    any animations on the renderable property, it is just looping through each &amp; every frame. Let's
+                    file under data/img, you can see that it is a sprite sheet containing 4 different ships. Since we didn't add and set
+                    any default animation yet, it is just looping through each &amp; every frame. Let's
                     fix that.</p>
 
                 <p>Add a new method to our enemy:</p>
@@ -789,57 +787,42 @@ else {
                 <pre><code>
 import * as me from 'https://esm.run/melonjs@10';
 
+import PlayScreen from "../stage/play.js";
 import CONSTANTS from '../constants.js';
 
 
-/**
- *
- */
-export class LaserRenderable extends me.Renderable {
-    constructor() {
-        super(0, 0, CONSTANTS.LASER.WIDTH, CONSTANTS.LASER.HEIGHT);
+export class Laser extends me.Renderable {
 
-        this.z = 5;
-    }
-
-    destroy() {
-
-    }
-
-    draw(renderer) {
-        let color = renderer.getColor();
-        renderer.setColor('#5EFF7E');
-        renderer.fillRect(0, 0, this.width, this.height);
-        renderer.setColor(color);
-    }
-}
-
-
-class Laser extends me.Entity {
+    /**
+     * constructor
+     */
     constructor(x, y) {
-        super(x, y, { width: CONSTANTS.LASER.WIDTH, height: CONSTANTS.LASER.HEIGHT });
+        super(x, y, CONSTANTS.LASER.WIDTH, CONSTANTS.LASER.HEIGHT);
 
-
-        this.z = 5;
-
+        // add a physic body and configure it
+        this.body = new me.Body(this);
+        // add a default collision shape
+        this.body.addShape(new me.Rect(0, 0, this.width, this.height));
         // this body has a velocity of 0 units horizontal and 16 units vertically
         this.body.vel.set(0, 16);
-
         // the force to be applied at each update is -8 units vertically (in html, this means towards top of window)
         this.body.force.set(0, -8);
-
         // cap the velocity of the laser beam to the initial velocity
         this.body.setMaxVelocity(3, 16);
-
         // this object is officially a projectile
         this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
-
         // don't let gravity affect the object
         this.body.ignoreGravity = true;
 
-
-        this.renderable = new LaserRenderable();
+        // always update, so that we can track it when outside the screen
         this.alwaysUpdate = true;
+    }
+
+    /**
+     * call when the object instance is being recycled
+     */
+    onResetEvent(x, y) {
+        this.pos.set(x, y);
     }
 
     /**
@@ -848,20 +831,26 @@ class Laser extends me.Entity {
      * @returns {boolean}
      */
     update(dt) {
-        // because we're using melonjs' physics system, all we need to do is update the object.
-        // this call will move the object
-        super.update(dt);
-
         // if the laser is above the screen, remove it from the game world
         if (this.pos.y + this.height <= 0) {
             me.game.world.removeChild(this);
         }
+        return super.update(dt);
+    }
 
-        return true;
+    /**
+     * draw the laser
+     */
+    draw(renderer) {
+        let color = renderer.getColor();
+        renderer.setColor('#5EFF7E');
+        renderer.fillRect(this.pos.x, this.pos.y, this.width, this.height);
+        renderer.setColor(color);
     }
 }
 
 export default Laser;
+
 </code></pre>
                 <p>Oof! That's a lot of code! Let's step through it, line by line.</p>
 
@@ -893,19 +882,23 @@ export default defines;</code></pre>
 this.z = 5;
 </code></pre>
 
-                <p>These next methods for setting up a physics body. Which we will use to move the laser across the
-                    screen.</p>
-
-                <pre><code>this.body.vel.set(0, 16);
+                <p>Next is to add a physics body. Which we will use to move the laser across the
+                    screen and enable collisio detection with the eneny ships.</p>
+                <pre><code>
+// add a physic body and configure it
+this.body = new me.Body(this);
+// add a default collision shape
+this.body.addShape(new me.Rect(0, 0, this.width, this.height));
+this.body.vel.set(0, 16);
 this.body.force.set(0, -8);
 this.body.setMaxVelocity(3, 16);
 this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
 </code></pre>
 
-                <p>By default, me.Body will not setup shapes for you. me.Entity however creates a shape based on the
-                    position, width, and height.</p>
+                <p>By default, me.Body will not setup shapes for you, so here we pass a shape based on the
+                    laser width, and height.</p>
 
-                <p>First we set a velocity. Velocity is a vector, and we want the laser to move up.
+                <p>Then we set a velocity. Velocity is a vector, and we want the laser to move up.
                     Now, note that velocity should never be negative to dictate direction. So how do we get the beam
                     to move up the screen?</p>
 
@@ -926,77 +919,9 @@ this.body.setMaxVelocity(3, 16);
 
                 <pre><code>this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;</code></pre>
 
-                <p>This is a fairly meaty bit of the code. <strong>me.Renderable</strong> is the base drawing class in
-                    melon. It gives the minimum setup required to be a valid drawing object in the game world.</p>
+                <p>For the rest we basically extend the draw method to actually draw our laser using melonJS basic primitive drawing.</p>
 
-                <pre><code>export class LaserRenderable extends me.Renderable {
-    constructor() {
-        super(0, 0, CONSTANTS.LASER.WIDTH, CONSTANTS.LASER.HEIGHT);
-    }
-
-    destroy() {
-
-    }
-
-    draw(renderer) {
-        let color = renderer.getColor();
-        renderer.setColor('#5EFF7E');
-        renderer.fillRect(0, 0, this.width, this.height);
-        renderer.setColor(color);
-    }
-};
-</code></pre>
-
-                <p>The constructor is pretty traditional, we set the x &amp; y to zero, as this is going to be relative to the
-                    laser entity. Use the same width &amp; height as the entity itself.</p>
-
-                <pre><code>constructor() {
-    super(0, 0, CONSTANTS.LASER.WIDTH, CONSTANTS.LASER.HEIGHT);
-}
-</code></pre>
-
-                <p>The empty destroy method is a callback for when the renderable is removed. We don't need to define
-                    callback logic, but the function still needs to be defined.</p>
-                <pre><code>destroy() {},</code></pre>
-
-                <p>Then we implement the draw method. The classes we've used so far have provided a working draw method
-                    for our purposes, now we're going to use the renderer to draw something by hand.</p>
-
-                <pre><code>draw(renderer) {
-    let color = renderer.getColor();
-    renderer.setColor('#5EFF7E');
-    renderer.fillRect(0, 0, this.width, this.height);
-    renderer.setColor(color);
-}
-</code></pre>
-
-                <p>The renderer can be either <strong>me.CanvasRenderer</strong> or <strong>me.WebGLRenderer</strong>,
-                    depending on your settings in <strong>me.video.init</strong>. The renderer provides basic drawing
-                    operations.</p>
-
-                <p>So we first get a reference of the original color. the return value of <strong>getColor()</strong> is
-                    an instance of <strong>me.Color</strong>.</p>
-
-                <pre><code>let color = renderer.getColor();</code></pre>
-
-                <p>Set the color to a nice laser green.</p>
-
-                <pre><code>renderer.setColor('#5EFF7E');</code></pre>
-
-                <p>Then use a fill rect number. Again, 0, 0 is relative. Then use the width &amp; height to dictate the
-                    size of the rect we're filling</p>
-
-                <pre><code>renderer.fillRect(0, 0, this.width, this.height);</code></pre>
-
-                <p>Then set the color back. This is important so our other draw calls will not be effected by the colour
-                    change.</p>
-
-                <pre><code>renderer.setColor(color);</code></pre>
-
-                <p>Generally speaking you should create your game using images over using pure canvas draw calls, but
-                    knowing how and when to use the canvas can be rather useful.</p>
-
-                <p>The final step for our Laser's init method:</p>
+                <p>The final step for our Laser's constructor:</p>
 
                 <pre><code>constructor(x, y) {
     // ...
@@ -1037,19 +962,22 @@ this.body.setMaxVelocity(3, 16);
                 <p>One of the new features in MelonJS 10 is that you no longer need to manually tell the entity to
                     check collisions or update the body!</p>
 
-                <p>The next step, we are going to use the object pooling feature,  for this we need to add the laser to the objet pool. Add the following code to
-                    index.js, same as the Player &amp; Enemy objects.</p>
+                <p>The next step, we are going to use the object pooling feature,
+                    for this we need to register the laser to the objet pool,
+                    and importantly to pass true as the third parameter to actually reuse any available instance (if false, which is the default, the object pooling system will return only new intances).
+                    You will notice as well that we have a <b>onResetEvent()</b> method, this one is called by the object pooling when reusing an object instance (since the constructor is only called one time when created)
+                    Add the following code to index.js, same as the Player &amp; Enemy objects.</p>
 
                 <pre><code>import Laser from './js/renderables/laser.js';</code></pre>
 
-                <pre><code>me.pool.register("laser", Laser);</code></pre>
+                <pre><code>me.pool.register("laser", Laser, true);</code></pre>
 
                 <p>Then back in the player.js file, import the constants and add the laser shooting in the update method:</p>
 
                 <pre><code>import CONSTANTS from '../constants.js';</code></pre>
 
                 <pre><code>if (me.input.isKeyPressed("shoot")) {
-    me.game.world.addChild(me.pool.pull("laser", this.pos.x - game.Laser.width, this.pos.y - this.pos.y))
+    me.game.world.addChild(me.pool.pull("laser", this.getBounds().centerX - CONSTANTS.LASER.WIDTH / 2, this.getBounds().top));
 }
 </code></pre>
 

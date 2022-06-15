@@ -28,7 +28,7 @@ me.device.onReady(function () {
         me.state.set(me.state.PLAY, new PlayScreen());
 
         // add our Laser entity in the entity pool
-        me.pool.register("laser", Laser);
+        me.pool.register("laser", Laser, true);
 
         // Start the game.
         me.state.change(me.state.PLAY);

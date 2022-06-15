@@ -35,7 +35,7 @@ class PlayerEntity extends me.Sprite {
         }
 
         if (me.input.isKeyPressed("shoot")) {
-            me.game.world.addChild(me.pool.pull("laser", this.pos.x - CONSTANTS.LASER.WIDTH, this.pos.y));
+            me.game.world.addChild(me.pool.pull("laser", this.getBounds().centerX - CONSTANTS.LASER.WIDTH / 2, this.getBounds().top));
         }
 
         this.pos.x = me.Math.clamp(this.pos.x, 32, this.maxX);
