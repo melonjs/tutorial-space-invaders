@@ -876,11 +876,7 @@ export default defines;</code></pre>
                     properties. A bit different from our other objects, we have set the z index on the object manually.
                     This is an alternative to passing the z index in the addChild call.</p>
 
-                <pre><code>super(x, y, { width: CONSTANTS.LASER.WIDTH, height: CONSTANTS.LASER.HEIGHT });
-
-
-this.z = 5;
-</code></pre>
+                <pre><code>super(x, y, { width: CONSTANTS.LASER.WIDTH, height: CONSTANTS.LASER.HEIGHT });</code></pre>
 
                 <p>Next is to add a physics body. Which we will use to move the laser across the
                     screen and enable collisio detection with the eneny ships.</p>
